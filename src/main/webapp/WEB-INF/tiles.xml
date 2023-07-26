@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this template
+-->
+<!DOCTYPE tiles-definitions PUBLIC "-//ApacheSoftware Foundation//DTD Tiles Configuration 3.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+    <!--LAYOUT PAGE-->
+    <definition name="baseLayout" template="/WEB-INF/layout/base.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="header" value="/WEB-INF/layout/header.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/layout/footer.jsp"/>
+        <put-attribute name="content" value=""/>
+    </definition>
+    <definition name="adminLayout" template="/WEB-INF/layout/admin-base.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="sidebar" value="/WEB-INF/layout/admin-sidebar.jsp"/>
+        <put-attribute name="topbar" value="/WEB-INF/layout/admin-topbar.jsp"/>
+        <put-attribute name="footer" value="/WEB-INF/layout/footer.jsp"/>
+        <put-attribute name="content" value=""/>
+    </definition>
+    <definition name="blankLayout" template="/WEB-INF/layout/blank-base.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="content" value=""/>
+    </definition>
+
+
+    <!--PAGE ADMINISTRARTOR-->
+    <definition name="admin" extends="adminLayout">
+        <put-attribute name="title" value="Trang chủ quản trị" />
+        <put-attribute name="content" value="/WEB-INF/pages/admin/admin.jsp" />
+    </definition>
+    <definition name="account-admin" extends="adminLayout">
+        <put-attribute name="title" value="Quản lý tài khoản người dùng" />
+        <put-attribute name="content" value="/WEB-INF/pages/admin/account/account.jsp" />
+    </definition>
+    <definition name="account-view" extends="adminLayout">
+        <put-attribute name="title" value="Thông tin tài khoản"/>
+        <put-attribute name="content" value="/WEB-INF/pages/admin/account/profile.jsp"/>
+    </definition>
+
+
+    <!--PAGE LOGIN-->
+    <definition name="login" extends="blankLayout">
+        <put-attribute name="title" value="Đăng nhập"/>
+        <put-attribute name="content" value="/WEB-INF/pages/login.jsp"/>
+    </definition>
+    <definition name="register" extends="blankLayout">
+        <put-attribute name="title" value="Đăng ký"/>
+        <put-attribute name="content" value="/WEB-INF/pages/register.jsp"/>
+    </definition>
+    <definition name="forgot-password" extends="blankLayout">
+        <put-attribute name="title" value="Quên mật khẩu"/>
+        <put-attribute name="content" value="/WEB-INF/pages/forgot-password.jsp"/>
+    </definition>
+    <definition name="change-password" extends="blankLayout">
+        <put-attribute name="title" value="Đổi mật khẩu"/>
+        <put-attribute name="content" value="/WEB-INF/pages/change-password.jsp"/>
+    </definition>
+
+
+    <!--PAGE USER-->
+    <definition name="index" extends="baseLayout">
+        <put-attribute name="title" value="Phú An Shop"/>
+        <put-attribute name="content" value="/WEB-INF/pages/index.jsp"/>
+    </definition>
+    <definition name="access-denied" extends="blankLayout">
+        <put-attribute name="title" value="Truy cập bị từ chối"/>
+        <put-attribute name="content" value="/WEB-INF/pages/access-denied.jsp"/>
+    </definition>
+  
+
+    <!--PAGE USER PAY-->
+    <definition name="cart" extends="baseLayout">
+        <put-attribute name="title" value="Giỏ hàng" />
+        <put-attribute name="content" value="/WEB-INF/pages/cart.jsp" />
+    </definition>
+    <definition name="stats" extends="baseLayout">
+        <put-attribute name="title" value="Thống kê" />
+        <put-attribute name="content" value="/WEB-INF/pages/stats.jsp" />
+    </definition>
+
+
+    <!--PAGE PRODUCT-->
+    <definition name="product-detail" extends="baseLayout">
+        <put-attribute name="title" value="Chi tiết sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/pages/product-detail.jsp" />
+    </definition>
+    <definition name="products" extends="baseLayout">
+        <put-attribute name="title" value="Quản trị sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/pages/products.jsp" />
+    </definition>
+
+</tiles-definitions>
