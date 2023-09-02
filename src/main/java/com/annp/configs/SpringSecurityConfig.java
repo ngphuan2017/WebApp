@@ -30,10 +30,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableWebSecurity
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
-        "com.annp.controllers",
-        "com.annp.repository",
-        "com.annp.service",
-        "com.annp.handlers",
+    "com.annp.controllers",
+    "com.annp.repository",
+    "com.annp.service",
+    "com.annp.handlers",
+    "com.annp.validator"
 })
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -55,7 +56,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
-    
+
     @Bean
     public DefaultAuthenticationEventPublisher defaultAuthenticationEventPublisher() {
         return new DefaultAuthenticationEventPublisher();
@@ -63,20 +64,27 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/login")
+        http.formLogin()
+                .loginPage("/login")
                 .usernameParameter("username")
-                .passwordParameter("password");
-        
-//        http.formLogin().defaultSuccessUrl("/")
-//                .failureUrl("/login?error");
-        http.formLogin().successHandler(this.loginHandler).failureUrl("/login?error");
-        
-//        http.logout().logoutSuccessUrl("/login");
+                .passwordParameter("password")
+                .successHandler(this.loginHandler)
+                .failureHandler((request, response, exception) -> {
+                    String errorMessage = "Tên đăng nhập hoặc mật khẩu không đúng";
+                    request.setAttribute("error", errorMessage);
+                    request.getRequestDispatcher("/login").forward(request, response);
+                });
+        http.rememberMe()
+                .key("uniqueAndSecretKey")
+                .rememberMeParameter("remember-me")
+                .rememberMeCookieName("remember-me-cookie")
+                .tokenValiditySeconds(604800);
         http.logout().addLogoutHandler(this.logoutHandler);
-        
+
         http.exceptionHandling().accessDeniedHandler(this.accessDenied);
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/me/**").authenticated()
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')");
 
         http.csrf().disable();
@@ -86,10 +94,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public Cloudinary cloudinary() {
         Cloudinary cloudinary
                 = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", "dkmug1913",
-                "api_key", "156722768334643",
-                "api_secret", "QwtPQ45_8f6BhyTDrGK0C2qG4yk",
-                "secure", true));
+                        "cloud_name", "dkmug1913",
+                        "api_key", "156722768334643",
+                        "api_secret", "QwtPQ45_8f6BhyTDrGK0C2qG4yk",
+                        "secure", true));
         return cloudinary;
     }
 }

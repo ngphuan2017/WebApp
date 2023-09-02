@@ -25,46 +25,37 @@ const btns = document.querySelectorAll('.js-add-cart');
 const cart = document.querySelector('.js-modal');
 const modalClose = document.querySelector('.js-modal-close');
 const modalContainer = document.querySelector('.js-modal-container');
-function showCart(){
+
+function showCart() {
     // alert('Modal opened successfully');
     cart.classList.add('js-modal-open');
 }
-function hideCart(){
+function hideCart() {
     cart.classList.remove('js-modal-open');
 }
 
-function productView(endpointview) {
-    debugger;
+function productView(endpointview, endpoint) {
     fetch(endpointview, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/xml'
         }
-    }).then(res => {
-        res.text();
-        debugger;
-    }
+    }).then(res =>
+        res.text()
     ).then(data => {
-        debugger;
         const parser = new DOMParser();
         const xml = parser.parseFromString(data, 'application/xml');
         const json = xmlToJson(xml);
         console.log(json);
-        let js = document.getElementById("modal-body");
+        let js = document.getElementById("modal-product-img");
         js.innerHTML = `
-        <div class="modal-img">
-          <img src="${json.product.image}" alt="image">
-        </div>
-        <div class="modal-quantity">
-          <button type="button" class="quantity">-</button>
-          <input style="width: 50px; background-color: #fff;" type="number" class="quantity" id="quantity"
-            maxlength="12" min="1" size="2" value="1" step="0.01">
-          <button type="button" class="quantity">+</button>
-        </div>
-        <div class="btn-buy-product">
-          <a href="javascript:;" onclick="addToCart('/api/cart', ${json.product.id}, '${json.product.name}', ${json.product.price})" id="btn-buy-product"><i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng</a>
-        </div>
-    `;
+            <img src="${json.product.image}" alt="image">
+        `;
+        let jss = document.getElementById("modal-product-buy");
+        jss.innerHTML = `
+            <a href="javascript:;" onclick="addToCart('${endpoint}', ${json.product.id}, '${json.product.name}', ${json.product.discount} > 0 ? ${json.product.price} * (1 - ${json.product.discount} / 100) : ${json.product.price}, '${json.product.image}')" id="btn-buy-product">
+                <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng</a>
+        `;
         for (const btn of btns) {
             btn.addEventListener('click', showCart);
         }

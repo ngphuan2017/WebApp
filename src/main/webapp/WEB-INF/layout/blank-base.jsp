@@ -11,6 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
             <tiles:insertAttribute name="title"/>
         </title>
@@ -19,7 +20,9 @@
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
         <link href="<c:url value="/resources/css/style.css"/> " rel="stylesheet"/>
         <link rel="stylesheet" href="<c:url value="/resources/css/login.css"/> ">
+        <link rel="stylesheet" href="<c:url value="/resources/css/register.css"/> ">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>
         <tiles:insertAttribute name="content"/>

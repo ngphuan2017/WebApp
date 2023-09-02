@@ -40,24 +40,27 @@
         </div>
     </div>
 </div>
-<section class="container mt-2">
+<section class="container">
     <div class="content-title">
         <h2 class="section-heading"><span class="colored-letter">Top bán chạy</span></h2>
     </div>
     <div class="row">
         <c:forEach items="${products}" var="p">
             <c:url value="/products/${p.id}" var="detail" />
-            <div class="col-md-2 col-sm-6 col-xs-12">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
                 <div class="card card-block">
                     <h4 class="card-title text-right"><i class="fa-solid fa-gear"></i></h4>
-                    <img style="width: 100%; max-height: 120px; padding: 10px;" src="${p.image}" alt="image">
-                    <div class="card-body" style="height: 150px;">
-                        <h6 class="card-title text-center" style="height: 36px;">${p.name}</h6>
-                        <p class="text-center">${p.price} VNĐ</p>
+                    <div class="price-discount" style="display: none;">-<span class="discount">${p.discount}</span>%</div>
+                    <img style="width: 100%; max-height: 120px; min-height: 120px; padding: 5px 15%;" src="${p.image}" alt="image">
+                    <div class="card-body" style="height: 160px;">
+                        <h6 class="card-title text-center" style="min-height: 50px; margin-bottom: 5px; font-weight: 700;">${p.name}</h6>
+                        <div class="currency text-center"><del class="price-del" style="display: none; margin: 0; color: #999;"><span class="money price-old">${p.price}</span></del></div>
+                        <div class="currency text-center" style="height: 30px; margin: 0; color: #dc3545; font-weight: 700;"><span class="money price-new">${p.price}</span> <i class="fa-solid fa-coins" style="color: #ffdd10;"></i></div>
                         <div class="d-flex justify-content-center">
                             <c:url value="/api/products/${p.id}/view" var="endpointview" />
+                            <c:url value="/api/cart" var="endpoint" />
                             <a href="${detail}" class="btn btn-primary" style="margin-right: 20px;"><i class="far fa-eye"></i></a>
-                            <a href="javascript:;" onclick="productView('${endpointview}')" class="btn btn-danger js-add-cart"><i class="fa-solid fa-cart-shopping"></i></a>
+                            <a href="javascript:;" onclick="productView('${endpointview}', '${endpoint}')" class="btn btn-danger js-add-cart"><i class="fa-solid fa-cart-shopping"></i></a>
                         </div>
                     </div>
                 </div>
@@ -68,24 +71,7 @@
         <h2 class="section-heading"><span class="colored-letter">Khuyến mãi hôm nay</span></h2>
     </div>
     <div class="row">
-        <c:forEach items="${products}" var="p">
-            <c:url value="/products/${p.id}" var="detail" />
-            <div class="col-md-2 col-sm-6 col-xs-12">
-                <div class="card card-block">
-                    <h4 class="card-title text-right"><i class="fa-solid fa-gear"></i></h4>
-                    <img style="width: 100%; max-height: 120px; padding: 10px;" src="${p.image}" alt="image">
-                    <div class="card-body" style="height: 150px;">
-                        <h6 class="card-title text-center" style="height: 36px;">${p.name}</h6>
-                        <p class="text-center">${p.price} VNĐ</p>
-                        <div class="d-flex justify-content-center">
-                            <c:url value="/api/products/${p.id}/view" var="endpointview" />
-                            <a href="${detail}" class="btn btn-primary" style="margin-right: 20px;"><i class="far fa-eye"></i></a>
-                            <a href="javascript:;" onclick="productView('${endpointview}')" class="btn btn-danger js-add-cart"><i class="fa-solid fa-cart-shopping"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </c:forEach>
+        
     </div>
 </section>
 <div class="js-modal">
@@ -98,10 +84,37 @@
             <p style="margin-top: 10px;">Giỏ Hàng</p>
         </header>
         <div class="modal-body">
+            <div class="modal-img" id="modal-product-img">
 
+            </div>
+            <div class="container">
+                <div class="row button-quantity">
+                    <div class="col-md-4 col-sm-6 col-12">
+                        <div class="input-group">
+                            <span class="input-group-btn">
+                                <button type="button" style="padding: 9px;" class="quantity-left-minus btn btn-danger btn-number" data-type="minus"
+                                        data-field="">
+                                    <i class="fa-solid fa-minus"></i>
+                                </button>
+                            </span>
+                            <input type="number" id="quantity" name="quantity" class="form-control input-number text-center" value="1" min="1"
+                                   max="1000">
+                            <span class="input-group-btn">
+                                <button type="button" style="padding: 9px;" class="quantity-right-plus btn btn-success btn-number" data-type="plus"
+                                        data-field="">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-buy-product" id="modal-product-buy">
+
+            </div>
         </div>
-        <div class="modal-footer">
-            <p class="modal-help">Need <a href="mailto:phuan2017@gmail.com">help?</a></p>
+        <div class="footer-modal">
+            <p class="modal-help">Báo cáo <a href="mailto:phuan2017@gmail.com">sự cố?</a></p>
         </div>
     </div>
 </div>

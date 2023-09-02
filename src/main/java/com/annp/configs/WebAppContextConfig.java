@@ -30,9 +30,11 @@ import org.springframework.web.servlet.view.JstlView;
 @EnableWebMvc
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
-        "com.annp.controllers",
-        "com.annp.repository",
-        "com.annp.service"
+    "com.annp.controllers",
+    "com.annp.repository",
+    "com.annp.service",
+    "com.btl.handlers",
+    "com.btl.validator"
 })
 public class WebAppContextConfig implements WebMvcConfigurer {
 
@@ -47,9 +49,7 @@ public class WebAppContextConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
     }
 
-
-
-        @Bean
+    @Bean
     public InternalResourceViewResolver internalResourceViewResolver() {
         InternalResourceViewResolver r = new InternalResourceViewResolver();
         r.setViewClass(JstlView.class);
@@ -60,6 +60,7 @@ public class WebAppContextConfig implements WebMvcConfigurer {
 
         return r;
     }
+
     @Bean(name = "validator")
     public LocalValidatorFactoryBean validator() {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();

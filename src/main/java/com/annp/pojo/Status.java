@@ -124,5 +124,5 @@ public class Status implements Serializable {
     public String toString() {
         return "com.annp.pojo.Status[ id=" + id + " ]";
     }
-    
+
 }

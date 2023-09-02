@@ -5,17 +5,19 @@ public class Cart {
     private String name;
     private Integer price;
     private int quantity;
+    private String image;
 
     public Cart() {
     }
 
 
 
-    public Cart(int id, String name, Integer price, int quantity) {
+    public Cart(int id, String name, Integer price, int quantity, String image) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.image = image;
     }
 
 
@@ -74,6 +76,20 @@ public class Cart {
      */
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    /**
+     * @return the image
+     */
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     * @param image the image to set
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 }
 

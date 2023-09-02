@@ -7,60 +7,76 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<h1 class="text-center text-success">GIỎ HÀNG</h1>
+<h1 class="text-center text-success mt-4 mb-4"><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG</h1>
 
 <c:if test="${carts != null}">
-    
-    <table class="table">
-        <tr>
-            <th>Mã sản phẩm</th>
-            <th>Tên sản phẩm</th>
-            <th>Đơn giá</th>
-            <th>Số lượng</th>
-            <th></th>
-        </tr>
-        <c:forEach items="${carts.values()}" var="c">
-            <c:url value="/api/cart/${c.id}" var="endpoint" />
-            <tr id="cart${c.id}">
-                <td>${c.id}</td>
-                <td>${c.name}</td>
-                <td>${String.format("%,.0f", Double.parseDouble(c.price))} VNĐ</td>
-                <td>
-                    <input type="number" value="${c.quantity}"
-                           onblur="updateItem('${endpoint}', this)"
-                           class="form-control" />
-                </td>
-                <td>
-                    
-                    <button class="btn btn-danger" onclick="deleteItem('${endpoint}', ${c.id})">Xóa</button>
-                </td>
-            </tr>
-        </c:forEach>
-    </table> 
-    
-    <div class="alert alert-info">
-        <h4>Tổng số sản phẩm: <span class="cart-counter">${cartStats.totalQuantity}</span></h4>
-        <h4>Tổng số tiền: <span class="cart-amount">${String.format("%,.0f", Double.parseDouble(cartStats.totalAmount))}</span> VNĐ</h4>
-    </div>
+    <div class="container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Sản phẩm</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Đơn giá</th>
+                    <th>Số lượng</th>
+                    <th>Số tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach items="${carts.values()}" var="c">
+                    <c:url value="/api/cart/${c.id}" var="endpoint" />
+                    <tr id="cart${c.id}">
+                        <td>
+                            <a href="<c:url value="/products/${c.id}"/>"><i class="fa-solid fa-eye"></i></a>
+                        </td>
+                        <td>
+                            <img src="${c.image}" width="33px" height="33px" />
+                        </td>
+                        <td>${c.name}</td>
+                        <td class="currency">
+                            <span class="money">${c.price} VNĐ</span>
+                        </td>
+                        <td>
+                            <input type="number" value="${c.quantity}"
+                                   onblur="updateItem('${endpoint}', this, ${c.id}, ${c.price})"
+                                   class="form-control" />
+                        </td>
+                        <td class="currency">
+                            <span class="money" id="total${c.id}" style="color: #ee4d2d;">
+                                ${(c.price*c.quantity)}
+                            </span> <i class="fa-solid fa-coins" style="color: #ffdd10;"></i>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteItem('${endpoint}', ${c.id})">Xóa</button>
+                        </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table> 
 
-    <div>
-         <c:choose>
-            <c:when test="${pageContext.request.userPrincipal.name == null}">
-                <c:url value="/login" var="loginUrl" />
-                <p>Vui lòng <a href="${loginUrl}">đăng nhập</a> để thanh toán!</p>
-            </c:when>
-            <c:when test="${pageContext.request.userPrincipal.name != null}">
-                <c:url value="/api/pay" var="pUrl" />
-                <input type="button" onclick="pay('${pUrl}')" value="Thanh toán" class="btn btn-success" />
-            </c:when>
-        </c:choose>
-        
+        <div class="container alert alert-info text-center">
+            <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-counter">${cartStats.totalQuantity}</span> sản phẩm</h6>
+            <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h5>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4 mb-4">
+            <c:choose>
+                <c:when test="${pageContext.request.userPrincipal.name == null}">
+                    <c:url value="/login" var="loginUrl" />
+                    <p style="font-size: 16px;">Vui lòng <a href="${loginUrl}">đăng nhập</a> để thanh toán!</p>
+                </c:when>
+                <c:when test="${pageContext.request.userPrincipal.name != null}">
+                    <c:url value="/api/pay" var="pUrl" />
+                    <a href="javascript:;" class="animated-button1" onclick="pay('${pUrl}')">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        Thanh Toán
+                    </a>
+                </c:when>
+            </c:choose>
+        </div>
     </div>
 </c:if>
-
-<script src="<c:url value="/js/cart.js" />"></script>
-<script>
-    window.onload = function() {
-        
-    }
-</script>

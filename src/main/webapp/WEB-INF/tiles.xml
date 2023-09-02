@@ -51,9 +51,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Đăng ký"/>
         <put-attribute name="content" value="/WEB-INF/pages/register.jsp"/>
     </definition>
-    <definition name="forgot-password" extends="blankLayout">
-        <put-attribute name="title" value="Quên mật khẩu"/>
-        <put-attribute name="content" value="/WEB-INF/pages/forgot-password.jsp"/>
+    <definition name="notification" extends="blankLayout">
+        <put-attribute name="title" value="Phú An Shop"/>
+        <put-attribute name="content" value="/WEB-INF/pages/notification.jsp"/>
     </definition>
     <definition name="change-password" extends="blankLayout">
         <put-attribute name="title" value="Đổi mật khẩu"/>
@@ -66,6 +66,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Phú An Shop"/>
         <put-attribute name="content" value="/WEB-INF/pages/index.jsp"/>
     </definition>
+    <definition name="profile" extends="baseLayout">
+        <put-attribute name="title" value="Phú An Shop"/>
+        <put-attribute name="content" value="/WEB-INF/pages/profile.jsp"/>
+    </definition>
+    <definition name="maintenance" extends="blankLayout">
+        <put-attribute name="title" value="Bảo trì"/>
+        <put-attribute name="content" value="/WEB-INF/pages/maintenance.jsp"/>
+    </definition>
     <definition name="access-denied" extends="blankLayout">
         <put-attribute name="title" value="Truy cập bị từ chối"/>
         <put-attribute name="content" value="/WEB-INF/pages/access-denied.jsp"/>
@@ -74,22 +82,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
 
     <!--PAGE USER PAY-->
     <definition name="cart" extends="baseLayout">
-        <put-attribute name="title" value="Giỏ hàng" />
+        <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/cart.jsp" />
     </definition>
     <definition name="stats" extends="baseLayout">
-        <put-attribute name="title" value="Thống kê" />
+        <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/stats.jsp" />
     </definition>
 
 
     <!--PAGE PRODUCT-->
     <definition name="product-detail" extends="baseLayout">
-        <put-attribute name="title" value="Chi tiết sản phẩm" />
+        <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/product-detail.jsp" />
     </definition>
     <definition name="products" extends="baseLayout">
-        <put-attribute name="title" value="Quản trị sản phẩm" />
+        <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/products.jsp" />
     </definition>
 

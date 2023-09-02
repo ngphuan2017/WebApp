@@ -40,7 +40,7 @@ public class ApiCartController {
         
         if (cart.containsKey(c.getId()) == true) {
            Cart t = cart.get(c.getId());
-           t.setQuantity(t.getQuantity() + 1);
+           t.setQuantity(t.getQuantity() + c.getQuantity());
         } else {
             cart.put(c.getId(), c);
         }

@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,7 +58,7 @@ public class Category implements Serializable {
     @Column(name = "UPDATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @OneToMany(mappedBy = "categoryId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryId")
     private Set<Product> productSet;
 
     public Category() {
@@ -132,5 +133,5 @@ public class Category implements Serializable {
     public String toString() {
         return "com.annp.pojo.Category[ id=" + id + " ]";
     }
-    
+
 }

@@ -53,6 +53,39 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Users.findByUpdatedDate", query = "SELECT u FROM Users u WHERE u.updatedDate = :updatedDate")})
 public class Users implements Serializable {
 
+    @Size(max = 45)
+    @Column(name = "OTP")
+    private String otp;
+    @Column(name = "OtpGeneratedTime")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date otpGeneratedTime;
+
+    @Size(max = 255)
+    @Column(name = "GoogleID")
+    private String googleID;
+    @Size(max = 255)
+    @Column(name = "TokenGoogle")
+    private String tokenGoogle;
+    @Size(max = 255)
+    @Column(name = "FacebookID")
+    private String facebookID;
+    @Size(max = 255)
+    @Column(name = "TokenFacbook")
+    private String tokenFacbook;
+
+    @Size(max = 255)
+    @Column(name = "facebook")
+    private String facebook;
+    @Size(max = 255)
+    @Column(name = "instagram")
+    private String instagram;
+    @Size(max = 255)
+    @Column(name = "youtube")
+    private String youtube;
+    @Size(max = 255)
+    @Column(name = "tiktok")
+    private String tiktok;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,10 +107,10 @@ public class Users implements Serializable {
     @Size(max = 50)
     @Column(name = "USERNAME")
     private String username;
-    @Size(max = 50)
+    @Size(max = 255)
     @Column(name = "PASSWORD")
     private String password;
-    @Size(max = 500)
+    @Size(max = 255)
     @Column(name = "ADDRESS")
     private String address;
     @Column(name = "GENDER")
@@ -85,6 +118,8 @@ public class Users implements Serializable {
     @Size(max = 500)
     @Column(name = "AVATAR")
     private String avatar;
+    @Column(name = "EXP")
+    private Integer exp;
     @Column(name = "CREATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -103,13 +138,22 @@ public class Users implements Serializable {
     @JoinColumn(name = "USERSTATUS", referencedColumnName = "ID")
     @ManyToOne
     private Status userstatus;
-    
+
     @Transient
     @JsonIgnore
     private String confirmPassword;
     @Transient
     @JsonIgnore
     private MultipartFile file;
+    @Transient
+    @JsonIgnore
+    private String city;
+    @Transient
+    @JsonIgnore
+    private String district;
+    @Transient
+    @JsonIgnore
+    private String ward;
 
     public Users() {
     }
@@ -117,7 +161,7 @@ public class Users implements Serializable {
     public Users(Integer id) {
         this.id = id;
     }
-    
+
     public Users(Integer id, String fullname, String email, String phone, String username, String password, String address, Integer gender) {
         this.id = id;
         this.fullname = fullname;
@@ -128,7 +172,7 @@ public class Users implements Serializable {
         this.address = address;
         this.gender = gender;
     }
-    
+
     public Integer getId() {
         return id;
     }
@@ -275,7 +319,7 @@ public class Users implements Serializable {
     public String toString() {
         return "com.annp.pojo.Users[ id=" + id + " ]";
     }
-    
+
     public String getConfirmPassword() {
         return confirmPassword;
     }
@@ -300,6 +344,136 @@ public class Users implements Serializable {
      */
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public Integer getExp() {
+        return exp;
+    }
+
+    public void setExp(Integer exp) {
+        this.exp = exp;
+    }
+
+    /**
+     * @return the city
+     */
+    public String getCity() {
+        return city;
+    }
+
+    /**
+     * @param city the city to set
+     */
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    /**
+     * @return the district
+     */
+    public String getDistrict() {
+        return district;
+    }
+
+    /**
+     * @param district the district to set
+     */
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    /**
+     * @return the ward
+     */
+    public String getWard() {
+        return ward;
+    }
+
+    /**
+     * @param ward the ward to set
+     */
+    public void setWard(String ward) {
+        this.ward = ward;
+    }
+
+    public String getFacebook() {
+        return facebook;
+    }
+
+    public void setFacebook(String facebook) {
+        this.facebook = facebook;
+    }
+
+    public String getInstagram() {
+        return instagram;
+    }
+
+    public void setInstagram(String instagram) {
+        this.instagram = instagram;
+    }
+
+    public String getYoutube() {
+        return youtube;
+    }
+
+    public void setYoutube(String youtube) {
+        this.youtube = youtube;
+    }
+
+    public String getTiktok() {
+        return tiktok;
+    }
+
+    public void setTiktok(String tiktok) {
+        this.tiktok = tiktok;
+    }
+
+    public String getGoogleID() {
+        return googleID;
+    }
+
+    public void setGoogleID(String googleID) {
+        this.googleID = googleID;
+    }
+
+    public String getTokenGoogle() {
+        return tokenGoogle;
+    }
+
+    public void setTokenGoogle(String tokenGoogle) {
+        this.tokenGoogle = tokenGoogle;
+    }
+
+    public String getFacebookID() {
+        return facebookID;
+    }
+
+    public void setFacebookID(String facebookID) {
+        this.facebookID = facebookID;
+    }
+
+    public String getTokenFacbook() {
+        return tokenFacbook;
+    }
+
+    public void setTokenFacbook(String tokenFacbook) {
+        this.tokenFacbook = tokenFacbook;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }
+
+    public Date getOtpGeneratedTime() {
+        return otpGeneratedTime;
+    }
+
+    public void setOtpGeneratedTime(Date otpGeneratedTime) {
+        this.otpGeneratedTime = otpGeneratedTime;
     }
     
 }

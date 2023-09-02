@@ -1,6 +1,7 @@
 package com.annp.repository.impl;
 
 import com.annp.pojo.Comment;
+import com.annp.pojo.Report;
 import com.annp.repository.CommentRepository;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -11,19 +12,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 
 @Repository
 @Transactional
 public class CommentRepositoryImpl implements CommentRepository {
+
     @Autowired
     private LocalSessionFactoryBean factory;
 
     @Override
-    public List<Comment> getComments() {
+    public List<Comment> getCommentsByProductId(int id) {
         Session s = this.factory.getObject().getCurrentSession();
-        Query q = s.createQuery("FROM Comment");
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Comment> q = b.createQuery(Comment.class);
+        Root root = q.from(Comment.class);
+        q.select(root);
 
-        return q.getResultList();
+        q.where(b.equal(root.get("productid"), id));
+        q.orderBy(b.desc(root.get("createdDate")));
+        Query query = s.createQuery(q);
+        List<Comment> comments = query.getResultList();
+
+        return comments;
     }
 
     @Override
@@ -35,6 +48,70 @@ public class CommentRepositoryImpl implements CommentRepository {
         } catch (HibernateException ex) {
             ex.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public Comment getCommentById(int id) {
+        Session s = this.factory.getObject().getCurrentSession();
+        return s.get(Comment.class, id);
+    }
+
+    @Override
+    public boolean updateComment(Comment c) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            s.update(c);
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public Report getReportByCommentId(int id) {
+        try {
+            Session s = factory.getObject().getCurrentSession();
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Report> q = b.createQuery(Report.class);
+            Root root = q.from(Report.class);
+            q.select(root);
+            Comment c = getCommentById(id);
+            q.where(b.equal(root.get("commentid"), c));
+            Query query = s.createQuery(q);
+            return (Report) query.getSingleResult();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public boolean addOrUpdateReportComment(Report r) {
+        Session session = this.factory.getObject().getCurrentSession();
+        try {
+            if (r.getId() != 0) {
+                session.update(r);
+            } else {
+                session.save(r);
+            }
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean deleteComment(int id) {
+        Comment c = this.getCommentById(id);
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            s.delete(c);
+            return true;
+        } catch (HibernateException ex) {
+            return false;
         }
     }
 }

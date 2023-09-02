@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
     @Autowired
     private Cloudinary cloudinary;
 
@@ -35,17 +36,21 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean addOrUpdateProduct(Product p) {
-        if (!p.getFile().isEmpty()) {
-            try {
-                Map res = this.cloudinary.uploader().upload(p.getFile().getBytes(),
-                        ObjectUtils.asMap("resource_type", "auto"));
-                p.setImage(res.get("secure_url").toString());
-            } catch (IOException ex) {
-                Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (p.getFile() != null && !p.getFile().isEmpty()) {
+                try {
+                    Map res = this.cloudinary.uploader().upload(p.getFile().getBytes(),
+                            ObjectUtils.asMap("resource_type", "auto"));
+                    p.setImage(res.get("secure_url").toString());
+                } catch (IOException ex) {
+                    Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-        }
 
-        return this.productRepository.addOrUpdateProduct(p);
+            return this.productRepository.addOrUpdateProduct(p);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -55,8 +60,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public boolean addReceipt(Map<String, Cart> cart) {
-        if (cart != null)
+        if (cart != null) {
             return this.productRepository.addReceipt(cart);
+        }
         return false;
     }
 }

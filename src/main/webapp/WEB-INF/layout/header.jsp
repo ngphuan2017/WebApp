@@ -8,9 +8,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="se" uri="http://www.springframework.org/security/tags"  %>
 
+
+<c:url value="/" var="action" />
+<c:url value="/me/profile" var="profile" />
+<c:url value="/cart" var="cart" />
+<c:url value="/login" var="login" />
+<c:url value="/logout" var="logout" />
+<c:url value="/admin/products" var="admin" />
 <header>
     <div class="shop">
-        <c:url value="/" var="action" />
         <div class="inline-block logo">
             <a href="${action}" title="Phú An Shop" rel="home">
                 <img src="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png" />" alt="Phú An Shop" />
@@ -57,27 +63,27 @@
                             </ul>
                         </li>
                     </c:forEach>
-                    <se:authorize access="!hasRole('ROLE_ADMIN') and !hasRole('ROLE_MANAGER')">
+                    <se:authorize access="!hasRole('ROLE_MANAGER')">
                         <li class="nav-item">
-                            <a class="nav-link" href="<c:url value="/cart" />"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng <span class="badge bg-danger cart-counter">${cartStats.totalQuantity}</span></a>
+                            <a class="nav-link" href="${cart}"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng <span class="badge bg-danger cart-counter">${cartStats.totalQuantity}</span></a>
                         </li>
                     </se:authorize>
                     <c:choose>
                         <c:when test="${pageContext.request.userPrincipal.name == null}">
                             <li class="nav-item">
-                                <a class="nav-link text-primary" href="<c:url value="/login" />"><i class="fa-solid fa-user"></i> Đăng nhập</a>
+                                <a class="nav-link text-primary" href="${login}"><i class="fa-solid fa-user"></i> Đăng nhập</a>
                             </li>
                         </c:when>
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
                             <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)" onmouseout="hideDropdownMenu(this)">
-                                <a class="nav-link text-success" href="<c:url value="/" />" data-bs-toggle="dropdown">
+                                <a class="nav-link text-success" href="javascript:;" data-bs-toggle="dropdown">
                                     <img class="rounded-circle" width="27px" height="27px" src="${pageContext.session.getAttribute("currentUser").avatar}" />
                                     <span>&nbsp;${pageContext.session.getAttribute("currentUser").fullname}</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#"><i class="fa-solid fa-user"></i> Tài khoản</a></li>
+                                    <li><a class="dropdown-item" href="${profile}"><i class="fa-solid fa-user"></i> Tài khoản</a></li>
                                     <li>
-                                        <a class="dropdown-item" href="<c:url value="/logout" />">
+                                        <a class="dropdown-item" href="${logout}">
                                             <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
                                         </a>
                                     </li>
@@ -87,7 +93,7 @@
                     </c:choose>
                     <se:authorize access="hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')">
                         <li class="nav-item">
-                            <a id="admin" style="font-size: 12px;" class="nav-link" href="<c:url value="/admin/products" />">Admin</a>
+                            <a id="admin" style="font-size: 12px;" class="nav-link" href="${admin}">Admin</a>
                         </li>
                     </se:authorize>
                 </ul>

@@ -6,6 +6,7 @@ package com.annp.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Basic;
@@ -51,8 +52,12 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Product.findByUpdatedDate", query = "SELECT p FROM Product p WHERE p.updatedDate = :updatedDate")})
 public class Product implements Serializable {
 
-//    @OneToMany(mappedBy = "productid")
-//    private Set<Comment> commentSet;
+    @Column(name = "review_count")
+    private Integer reviewCount;
+    @Column(name = "average_rating")
+    private BigDecimal averageRating;
+    @Column(name = "units_sold")
+    private Integer unitsSold;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -239,12 +244,28 @@ public class Product implements Serializable {
         this.file = file;
     }
 
-//    @XmlTransient
-//    public Set<Comment> getCommentSet() {
-//        return commentSet;
-//    }
-//
-//    public void setCommentSet(Set<Comment> commentSet) {
-//        this.commentSet = commentSet;
-//    }
+    public Integer getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(Integer reviewCount) {
+        this.reviewCount = reviewCount;
+    }
+
+    public BigDecimal getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(BigDecimal averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public Integer getUnitsSold() {
+        return unitsSold;
+    }
+
+    public void setUnitsSold(Integer unitsSold) {
+        this.unitsSold = unitsSold;
+    }
+
 }
