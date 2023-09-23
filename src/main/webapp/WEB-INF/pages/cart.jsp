@@ -7,11 +7,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-<h1 class="text-center text-success mt-4 mb-4"><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG</h1>
+<h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down"><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG</h1>
 
 <c:if test="${carts != null}">
     <div class="container">
-        <table class="table">
+        <table class="table" data-aos="fade-left">
             <thead>
                 <tr>
                     <th></th>
@@ -55,11 +55,16 @@
             </tbody>
         </table> 
 
-        <div class="container alert alert-info text-center">
+        <div class="container alert alert-info text-center" data-aos="zoom-in">
             <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-counter">${cartStats.totalQuantity}</span> sản phẩm</h6>
             <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h5>
         </div>
-
+        <label for="optionPay" class="form-labe">Phương thức thanh toán:</label>
+        <select class="form-select text-center" name="optionPay" id="option-pay">
+            <option value="1">Thanh toán khi nhận hàng</option>
+            <option value="2">Chuyển khoản ngân hàng</option>
+            <option value="3">Ví điện tử Momo</option>
+        </select>
         <div class="d-flex justify-content-center mt-4 mb-4">
             <c:choose>
                 <c:when test="${pageContext.request.userPrincipal.name == null}">
@@ -73,7 +78,7 @@
                         <span></span>
                         <span></span>
                         <span></span>
-                        Thanh Toán
+                        Đặt Hàng
                     </a>
                 </c:when>
             </c:choose>

@@ -4,6 +4,7 @@
  */
 package com.annp.controllers;
 
+import com.annp.dto.PaginatesDto;
 import com.annp.pojo.Cart;
 import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
@@ -11,11 +12,13 @@ import com.annp.pojo.Product;
 import com.annp.pojo.UserLevels;
 import com.annp.service.CategoryService;
 import com.annp.service.CategorySubService;
+import com.annp.service.PaginatesService;
 import com.annp.service.ProductService;
 import com.annp.service.UserLevelsService;
 import com.annp.utils.Utils;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,6 +45,8 @@ public class HomeController {
     private CategorySubService categorySubService;
     @Autowired
     private UserLevelsService userLevelsService;
+    @Autowired
+    private PaginatesService paginatesService;
 
     @ModelAttribute
     public void commonAttributes(Model model, HttpSession session) {
@@ -55,11 +60,21 @@ public class HomeController {
     }
 
     @GetMapping(path = "/")
-    public String index(Model model, @RequestParam Map<String, String> params) {
-        List<Product> products = this.productService.getProducts(params);
+    public String index(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 18; //Số sản phẩm 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.productService.getProducts(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<Product> products = this.productService.getProducts(params, paginates.getStart(), paginates.getLimit());
         model.addAttribute("products", products);
 
         return "index";
+    }
+    
+    @GetMapping(path = "/about")
+    public String about() {
+        return "about";
     }
     
     @GetMapping(path = "/maintenance")

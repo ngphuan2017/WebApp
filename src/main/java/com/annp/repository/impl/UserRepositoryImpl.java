@@ -134,7 +134,7 @@ public class UserRepositoryImpl implements UserRepository {
             CriteriaBuilder builder = session.getCriteriaBuilder();
             CriteriaQuery<Users> query = builder.createQuery(Users.class);
             Root root = query.from(Users.class);
-            query = query.select(root);
+            query = query.multiselect(root.get("id"), root.get("fullname"), root.get("avatar"));
 
             if (!email.isEmpty()) {
                 Predicate p = builder.equal(root.get("email"), email);
@@ -148,6 +148,42 @@ public class UserRepositoryImpl implements UserRepository {
             return users != null && !users.isEmpty() ? users : new ArrayList<>();
         } catch (Exception ex) {
             ex.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public Users getUserByTicket(String ticket) {
+        Session s = factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Users> q = b.createQuery(Users.class);
+        Root root = q.from(Users.class);
+        q.select(root);
+        q.where(b.equal(root.get("otp"), ticket));
+        Query query = s.createQuery(q);
+        try {
+            Users user = (Users) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public Users getUserAccountById(int id) {
+        Session s = factory.getObject().getCurrentSession();
+        CriteriaBuilder b = s.getCriteriaBuilder();
+        CriteriaQuery<Users> q = b.createQuery(Users.class);
+        Root root = q.from(Users.class);
+        q.multiselect(root.get("id"), root.get("fullname"), root.get("avatar"),
+                root.get("gender"), root.get("userstatus"),
+                root.get("createdDate"), root.get("exp"));
+        q.where(b.equal(root.get("id"), id));
+        Query query = s.createQuery(q);
+        try {
+            Users user = (Users) query.getSingleResult();
+            return user;
+        } catch (Exception e) {
             return null;
         }
     }

@@ -15,10 +15,12 @@ public interface UserRepository {
     
     public Users getUserById(int id);
     public Users getUserByUsername(String username);
-    boolean addOrUpdateUser(Users user);
-    boolean getByUsername(String username);
-    boolean updateUser(Users user);
+    public boolean addOrUpdateUser(Users user);
+    public boolean getByUsername(String username);
+    public boolean updateUser(Users user);
     public Users getUserByGoogleId(String googleId);
     public Users getUserByFacebookId(String facebookId);
     public List<Users> getUserByEmail(String email);
+    public Users getUserByTicket(String ticket);
+    public Users getUserAccountById(int id);
 }

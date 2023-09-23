@@ -33,8 +33,8 @@ import org.springframework.web.servlet.view.JstlView;
     "com.annp.controllers",
     "com.annp.repository",
     "com.annp.service",
-    "com.btl.handlers",
-    "com.btl.validator"
+    "com.annp.handlers",
+    "com.annp.validator"
 })
 public class WebAppContextConfig implements WebMvcConfigurer {
 

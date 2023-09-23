@@ -78,6 +78,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Truy cập bị từ chối"/>
         <put-attribute name="content" value="/WEB-INF/pages/access-denied.jsp"/>
     </definition>
+    <definition name="about" extends="baseLayout">
+        <put-attribute name="title" value="Phú An Shop"/>
+        <put-attribute name="content" value="/WEB-INF/pages/about.jsp"/>
+    </definition>
   
 
     <!--PAGE USER PAY-->
@@ -99,6 +103,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     <definition name="products" extends="baseLayout">
         <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/products.jsp" />
+    </definition>
+    <!--PAGE ORDER-->
+    <definition name="order-detail" extends="baseLayout">
+        <put-attribute name="title" value="Phú An Shop" />
+        <put-attribute name="content" value="/WEB-INF/pages/order-detail.jsp" />
     </definition>
 
 </tiles-definitions>

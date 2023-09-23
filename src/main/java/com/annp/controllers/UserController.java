@@ -10,6 +10,8 @@ import com.annp.pojo.City;
 import com.annp.pojo.District;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
+import com.annp.pojo.OrderDetail;
+import com.annp.pojo.Orders;
 import com.annp.pojo.Role;
 import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
@@ -17,15 +19,17 @@ import com.annp.pojo.Users;
 import com.annp.pojo.Ward;
 import com.annp.service.CityService;
 import com.annp.service.DistrictService;
+import com.annp.service.OrdersService;
 import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
 import com.annp.service.WardService;
 import com.annp.validator.UserValidator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +41,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,6 +72,8 @@ public class UserController {
     @Autowired
     private UserLevelsService userLevelsService;
     @Autowired
+    private OrdersService ordersService;
+    @Autowired
     private UserValidator userValidator;
     @Autowired
     private GoogleHandler googleHandler;
@@ -73,7 +81,7 @@ public class UserController {
     private FacebookHandler fbHandler;
 
     @ModelAttribute
-    public void addAttributes(Model model, Authentication authentication) throws JsonProcessingException {
+    public void addAttributes(Model model, Authentication authentication) {
         if (authentication != null) {
             Users user = this.userService.getUserByUsername(authentication.getName());
             model.addAttribute("currentUser", user);
@@ -89,10 +97,13 @@ public class UserController {
     }
 
     @GetMapping(path = "/me/profile")
-    public String userProfile(Model model) {
+    public String userProfile(Model model, Authentication authentication) {
         Users user = new Users();
         user.setId(0);
         model.addAttribute("user", user);
+        Users userid = this.userService.getUserByUsername(authentication.getName());
+        List<Orders> orders = this.ordersService.getOrderByUserId(userid.getId());
+        model.addAttribute("orders", orders);
         return "profile";
     }
 
@@ -129,6 +140,7 @@ public class UserController {
         Users u = this.userService.getUserByGoogleId(google.getId());
         if (u == null) {
             this.userService.addUserGoogle(google);
+            u = this.userService.getUserByGoogleId(google.getId());
         } else {
             Date currentDate = new Date();
             if (!this.googleHandler.isSameDay(u.getUpdatedDate(), currentDate)) {
@@ -142,7 +154,9 @@ public class UserController {
                 userDetail.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "redirect:/";
+        HttpSession session = request.getSession();
+        session.setAttribute("currentUser", u);
+        return "index";
     }
 
     @RequestMapping("/login/login-facebook")
@@ -164,6 +178,7 @@ public class UserController {
             facebook.setLocation(user.getLocation());
             facebook.setPicture(user.getPicture());
             this.userService.addUserFacebook(facebook);
+            u = this.userService.getUserByFacebookId(user.getId());
         } else {
             Date currentDate = new Date();
             if (!this.fbHandler.isSameDay(u.getUpdatedDate(), currentDate)) {
@@ -177,7 +192,9 @@ public class UserController {
                 userDetail.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "redirect:/";
+        HttpSession session = request.getSession();
+        session.setAttribute("currentUser", u);
+        return "index";
     }
 
     @GetMapping(value = "/register")
@@ -219,26 +236,75 @@ public class UserController {
     }
 
     @PostMapping("/forgot-password")
-    public ModelAndView forgotPassword(@RequestParam("g-recaptcha-response") String captchaResponse,
-            @RequestParam("email") String email) {
+    public ModelAndView forgotPassword(HttpServletRequest request, @RequestParam("g-recaptcha-response") String captchaResponse,
+            @RequestParam("email") String email, @RequestParam("selectedUserId") Integer userId) {
         ModelAndView modelAndView = new ModelAndView();
+
+        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+        baseUrl += "/forgot-password/change-password";
         if (!userService.verifyRecaptcha(captchaResponse)) {
             modelAndView.addObject("notification", "reCaptcha verification failed");
             modelAndView.setViewName("notification");
             return modelAndView;
-        }
-        if (!userService.sendConfirmationCodeByEmail(email)) {
+        } else if (!this.userService.sendCodeToEmail(userId, email, baseUrl)) {
             modelAndView.addObject("notification", "Hệ thống đang có lỗi, vui lòng quay lại sau!");
             modelAndView.setViewName("notification");
             return modelAndView;
         }
-        modelAndView.addObject("notification", "Vui lòng kiểm tra Email để xác nhận!");
+        modelAndView.addObject("notification", "Xác nhận đã được gửi đến " + email + ".<br/>Vui lòng kiểm tra hộp thư để tiếp tục bước tiếp theo!");
+        modelAndView.addObject("isHtml", true);
         modelAndView.setViewName("notification");
         return modelAndView;
     }
 
-    @RequestMapping("/me/profile/change-password")
-    public String changePassword() {
+    @GetMapping("/forgot-password/change-password")
+    public String getChangePassword(Model model, HttpServletRequest request) {
+
+        String ticket = request.getParameter("ticket");
+        model.addAttribute("ticket", ticket);
         return "change-password";
+    }
+
+    @PostMapping("/forgot-password/change-password")
+    public String changePassword(Model model, HttpServletRequest request, @RequestParam("g-recaptcha-response") String captchaResponse,
+            HttpServletResponse response, @RequestParam("password") String password, Authentication authentication) {
+
+        String ticket = request.getParameter("ticket");
+        if (authentication != null) {
+            if (!userService.verifyRecaptcha(captchaResponse)) {
+                return "redirect:/forgot-password/change-password?reCaptch=error";
+            }
+            Users user = this.userService.getUserByUsername(authentication.getName());
+            if (this.userService.changePassword(password, user)) {
+                new SecurityContextLogoutHandler().logout(request, response, authentication);
+                return "redirect:/login";
+            }
+        } else if (ticket != null && !ticket.isEmpty()) {
+            if (!userService.verifyRecaptcha(captchaResponse)) {
+                return "redirect:/forgot-password/change-password?reCaptch=error";
+            }
+            Users user = this.userService.getUserByTicket(ticket);
+            Date currentDate = new Date();
+            if (this.userValidator.isOneHourApart(user.getOtpGeneratedTime(), currentDate)) {
+                if (this.userService.changePassword(password, user)) {
+                    return "login";
+                }
+            }
+        }
+        model.addAttribute("notification", "Lỗi: Yêu cầu của bạn đã quá hạn!");
+        return "notification";
+    }
+
+    @GetMapping("/me/orders/{orderId}")
+    public String details(Model model, Authentication authentication, @PathVariable(value = "orderId") int id) {
+        Users user = this.userService.getUserByUsername(authentication.getName());
+        Orders orders = this.ordersService.getOrderById(id);
+        if (orders != null && user.getId() == orders.getUserid().getId()) {
+            List<OrderDetail> orderdetails = this.ordersService.getOrderDetailByOrderId(id);
+            model.addAttribute("orders", orderdetails);
+            return "order-detail";
+        } else {
+            return "access-denied";
+        }
     }
 }

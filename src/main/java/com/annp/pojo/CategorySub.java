@@ -127,5 +127,5 @@ public class CategorySub implements Serializable {
     public String toString() {
         return "com.annp.pojo.CategorySub[ id=" + id + " ]";
     }
-    
+
 }

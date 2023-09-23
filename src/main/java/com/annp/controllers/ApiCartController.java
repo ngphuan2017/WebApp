@@ -29,59 +29,79 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 public class ApiCartController {
+
     @Autowired
     private ProductService productService;
-    
+
     @PostMapping(value = "/cart")
     public ResponseEntity<Map<String, String>> addToCart(@RequestBody Cart c, HttpSession session) {
         Map<Integer, Cart> cart = (Map<Integer, Cart>) session.getAttribute("cart");
-        if (cart == null)
+        if (cart == null) {
             cart = new HashMap<>();
-        
+        }
+
         if (cart.containsKey(c.getId()) == true) {
-           Cart t = cart.get(c.getId());
-           t.setQuantity(t.getQuantity() + c.getQuantity());
+            Cart t = cart.get(c.getId());
+            t.setQuantity(t.getQuantity() + c.getQuantity());
         } else {
             cart.put(c.getId(), c);
         }
-        
+
         session.setAttribute("cart", cart);
-        
+
         return new ResponseEntity<>(Utils.cartStats(cart), HttpStatus.OK);
     }
-    
+
     @PutMapping(path = "/cart/{productId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, String>> updateItemCart(@PathVariable(value = "productId") int id, 
+    public ResponseEntity<Map<String, String>> updateItemCart(@PathVariable(value = "productId") int id,
             @RequestBody Map<String, Integer> params, HttpSession session) {
         Map<Integer, Cart> cart = (Map<Integer, Cart>) session.getAttribute("cart");
         if (cart != null && cart.containsKey(id)) {
             Cart c = cart.get(id);
             c.setQuantity(params.get("quantity"));
         }
-        
+
         session.setAttribute("cart", cart);
-        
+
         return new ResponseEntity<>(Utils.cartStats(cart), HttpStatus.OK);
     }
-    
+
     @DeleteMapping(path = "/cart/{productId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, String>> deleteItemCart(@PathVariable(value = "productId") int id, HttpSession session) {
         Map<Integer, Cart> cart = (Map<Integer, Cart>) session.getAttribute("cart");
-        if (cart != null && cart.containsKey(id))
+        if (cart != null && cart.containsKey(id)) {
             cart.remove(id);
-        
+        }
+
         session.setAttribute("cart", cart);
-        
+
         return new ResponseEntity<>(Utils.cartStats(cart), HttpStatus.OK);
     }
-    
+
     @PostMapping("/pay")
-    public ResponseEntity pay(HttpSession session) {
-        if (this.productService.addReceipt((Map<String, Cart>) session.getAttribute("cart"))) {
-            session.removeAttribute("cart");
-            return new ResponseEntity(HttpStatus.OK);
-        }
+    public ResponseEntity pay(HttpSession session, @RequestBody Map<String, String> params) {
         
+        int option = Integer.parseInt(params.get("optionPay"));
+        
+        switch (option) {
+            case 1:
+                if (this.productService.addReceipt((Map<String, Cart>) session.getAttribute("cart"))) {
+                    session.removeAttribute("cart");
+                    return new ResponseEntity(HttpStatus.OK);
+                }   break;
+            case 2:
+                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"))) {
+                    session.removeAttribute("cart");
+                    return new ResponseEntity(HttpStatus.OK);
+                }   break;
+            case 3:
+                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"))) {
+                    session.removeAttribute("cart");
+                    return new ResponseEntity(HttpStatus.OK);
+                }   break;
+            default:
+                break;
+        }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 }

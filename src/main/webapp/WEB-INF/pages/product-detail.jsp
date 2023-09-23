@@ -125,6 +125,35 @@
         </div>
     </section>
 </div>
+
+<div class="js-modal">
+    <div class="modal-container-black js-modal-container">
+        <div class="js-modal-close">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        <header class="modal-header-black">
+            <h3><i class="fa-solid fa-address-card"></i> Thông tin</h3>
+        </header>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                    <div class="modal-img-black" id="modal-account-img">
+
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6 col-12">
+                    <div class="modal-content" id="modal-account-about">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-modal-black" id="modal-account-title">
+            
+        </div>
+    </div>
+</div>
+
 <div class="alert alert-danger alert-absolute" style="display: none; position: fixed; right: 1%; bottom: 1%; z-index: 106;">
     <strong>Thông Báo!</strong> Bạn đã bình chọn cho bình luận này rồi.
 </div>
@@ -135,8 +164,6 @@
     <strong>Thông Báo!</strong> Báo cáo đã được gửi đến <strong>Quản trị viên</strong>.
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment-with-locales.min.js"></script>
 <script src="<c:url value="/js/comment.js" />"></script>
 <script src="<c:url value="/js/product-detail.js" />"></script>
 <script>
@@ -208,4 +235,25 @@
                             });
     </c:forEach>
                         }
+                        const quantityInput = document.getElementById('quantity');
+                        const quantityValue = quantityInput.value;
+                        let quantityCart = quantityValue;
+                        const updateQuantityValue = () => {
+                            quantityCart = quantityInput.value;
+                        };
+                        const handleQuantityIncrease = () => {
+                            quantityInput.stepUp();
+                            updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
+                        };
+
+// Hàm xử lý sự kiện khi ấn nút trừ
+                        const handleQuantityDecrease = () => {
+                            quantityInput.stepDown();
+                            updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
+                        };
+// Gọi hàm cập nhật giá trị khi có sự kiện 'input'
+                        quantityInput.addEventListener('input', updateQuantityValue);
+// Gọi hàm cập nhật giá trị khi ấn nút cộng hoặc nút trừ
+                        document.querySelector('.quantity-right-plus').addEventListener('click', handleQuantityIncrease);
+                        document.querySelector('.quantity-left-minus').addEventListener('click', handleQuantityDecrease);
 </script>

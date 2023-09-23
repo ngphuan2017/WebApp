@@ -324,6 +324,18 @@ body a:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     animation: modalFadeIn ease 0.5s;
 }
+.js-modal .modal-container-black {
+    position: fixed;
+    bottom: 30%;
+    width: 600px;
+    max-width: 60%;
+    min-height: 200px;
+    background-color: #212121;
+    color: #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 27px rgba(255, 255, 255, 0.9);
+    animation: modalFadeIn ease 0.5s;
+}
 .js-modal .js-modal-close {
     position: absolute;
     color: #fff;
@@ -344,9 +356,33 @@ body a:hover {
     padding: 5px;
     text-align: center;
 }
+.js-modal .modal-img-black {
+    width: 100%;
+    padding: 5px;
+}
 .js-modal .modal-img img {
     width: 70%;
     height: 90%;
+}
+.js-modal .modal-img-black img {
+    border-radius: 10px;
+    padding: 2px;
+    border: 1px solid #8d8d8d;
+    width: 160px;
+    height: 170px;
+}
+.js-modal .level {
+    margin: 10px;
+    background: #000;
+    color: #6ebee5;
+    padding: 5px;
+    border-radius: 50px;
+    font-weight: 700;
+    box-shadow: 0 0 5px 3px;
+}
+.js-modal .text-account-title {
+    color: #FF2400;
+    text-shadow: 1px 0 1px rgba(255, 255, 255, 0.75);
 }
 .js-modal .modal-header {
     background-color: #00bbb3;
@@ -357,11 +393,36 @@ body a:hover {
     font-size: 20px;
     text-transform: uppercase;
 }
+.js-modal .modal-header-black {
+    color: #f98d8d;
+    display: block;
+    border-bottom: 1px dashed #f98d8d;
+    padding: 10px 0;
+    margin: 0 10px 15px;
+    height: 50px;
+    font-weight: 700;
+    font-size: 16px;
+    text-transform: uppercase;
+}
 .js-modal .modal-body {
     padding: 1px;
 }
+.js-modal .modal-content {
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+}
 .js-modal .footer-modal {
     margin-bottom: 5%;
+}
+.js-modal .footer-modal-black {
+    border-top: 1px dashed #f98d8d;
+    margin: 0 10px;
+    padding: 10px 0;
+    font-family: Roboto, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
 }
 .js-modal .footer-modal a{
     color: #2196f3;
@@ -692,29 +753,6 @@ body a:hover {
     }
 }
 /*-----------------footer------------------*/
-.slider-letter {
-    font-weight: 700;
-    margin-top: 25px;
-    white-space: nowrap;
-    animation: colorChange 3s linear infinite;
-}
-@keyframes colorChange {
-    0% {
-        color: red;
-    }
-    25% {
-        color: orange;
-    }
-    50% {
-        color: yellow;
-    }
-    75% {
-        color: green;
-    }
-    100% {
-        color: blue;
-    }
-}
 .sticky-footer{
     background: url(https://res.cloudinary.com/dkmug1913/image/upload/v1690293307/WebApp/footer-background-2_mk5whj.jpg) top center / cover no-repeat;
     background-size: cover;
@@ -739,7 +777,7 @@ body a:hover {
 .rate {
     float: left;
     height: 46px;
-    padding: 0 10px;
+    padding-left: 5px;
 }
 .rate:not(:checked) > input {
     position:absolute;
@@ -770,4 +808,20 @@ body a:hover {
 .rate > input:checked ~ label:hover ~ label,
 .rate > label:hover ~ input:checked ~ label {
     color: #c59b08;
+}
+
+/***********************About******************/
+.about-us-bg {
+    background: url(https://res.cloudinary.com/dkmug1913/image/upload/v1695124125/WebApp/about-us-bg_rqlp5r.png) top center / cover no-repeat;
+    background-size: 100% 100%;
+}
+.about-us-content {
+    font-size: 16px;
+    font-family: Open sans, sans-serif;
+    align-items: center;
+}
+.about-us-img img{
+    width: 100%;
+    height: 60%;
+    object-fit: cover;
 }

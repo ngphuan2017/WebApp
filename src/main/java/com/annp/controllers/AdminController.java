@@ -31,7 +31,7 @@ public class AdminController {
     
     @ModelAttribute
     public void commonAttributes(Model model) {
-        model.addAttribute("products", this.productService.getProducts(null));
+        model.addAttribute("products", this.productService.getProducts(null, 0, 0));
     }
     
     @RequestMapping("/products")

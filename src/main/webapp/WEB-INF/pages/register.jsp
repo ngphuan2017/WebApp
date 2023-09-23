@@ -12,7 +12,7 @@
 <c:url value="/" var="action" />
 <c:url value="/login" var="login" />
 <c:url value="/register" var="register"/>
-<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png" var="background" />
+<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png" var="logoBackground" />
 <div class="main">
     <div class="content">
         <div class="wrapper">
@@ -22,7 +22,7 @@
                 <form:hidden path="avatar"/>
                 <div style="display: flex; width: 100%; justify-content: center; margin-bottom: 20px;">
                     <a href="${action}">
-                        <img style="width: 90px; border-radius: 50%;" src="${background}" alt="logo">
+                        <img style="width: 90px; border-radius: 50%;" src="${logoBackground}" alt="logo">
                     </a>
                     <div>
                         <span class="form-heading">&nbsp;&nbsp;&nbsp;ĐĂNG KÝ</span>

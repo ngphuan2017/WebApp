@@ -6,6 +6,8 @@ package com.annp.validator;
 
 import com.annp.pojo.Users;
 import com.annp.service.UserService;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,5 +80,23 @@ public class UserValidator implements Validator {
         Pattern pattern = Pattern.compile("^[0-9]{10}$");
         Matcher matcher = pattern.matcher(phoneStr);
         return matcher.matches();
+    }
+
+    public boolean isOneHourApart(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+
+        if (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)) {
+            long timeDifferenceMillis = Math.abs(date1.getTime() - date2.getTime());
+            long oneHourMillis = 60 * 60 * 1000; // 1 giờ = 60 phút x 60 giây x 1000 mili giây
+
+            return timeDifferenceMillis <= oneHourMillis;
+        }
+
+        return false;
     }
 }

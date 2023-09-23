@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<footer class="sticky-footer">
+<footer class="sticky-footer" data-aos="fade-up" data-aos-delay="300" data-aos-offset="150">
     <div class="container">
         <div class="row">
             <div id="icon">
@@ -61,7 +61,7 @@
                             </div>
                             <div class="col-md-8 col-sm-7 col-6 text-start">
                                 <p><span style="font-size: 20px; font-weight: 700;">Phone</span><br>
-                                +(84) 941 622 670
+                                    <a href="tel:0941622670" class="text-decoration-none">+(84) 941 622 670</a>
                             </p>
                             </div>
                         </li>

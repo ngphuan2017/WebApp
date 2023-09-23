@@ -4,6 +4,7 @@ import com.annp.pojo.Cart;
 import com.annp.pojo.Orders;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
+import com.annp.pojo.Status;
 import com.annp.repository.ProductRepository;
 import com.annp.repository.UserRepository;
 import org.hibernate.HibernateException;
@@ -21,19 +22,21 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 @Repository
 @Transactional
 public class ProductRepositoryImpl implements ProductRepository {
+
     @Autowired
     private LocalSessionFactoryBean factory;
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public List<Product> getProducts(Map<String, String> params) {
+    public List<Product> getProducts(Map<String, String> params, int start, int limit) {
         Session s = factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Product> q = b.createQuery(Product.class);
@@ -49,23 +52,9 @@ public class ProductRepositoryImpl implements ProductRepository {
                 predicates.add(p);
             }
 
-            String fromPrice = params.get("fromPrice");
-            if (fromPrice != null && !fromPrice.isEmpty()) {
-                Predicate p = b.greaterThanOrEqualTo(root.get("price").as(Double.class),
-                        Double.parseDouble(fromPrice));
-                predicates.add(p);
-            }
-
-            String toPrice = params.get("toPrice");
-            if (toPrice != null && !toPrice.isEmpty()) {
-                Predicate p = b.lessThanOrEqualTo(root.get("price").as(Double.class),
-                        Double.parseDouble(toPrice));
-                predicates.add(p);
-            }
-
-            String cateId = params.get("categoryId");
-            if (cateId != null) {
-                Predicate p = b.lessThanOrEqualTo(root.get("categoryId"), Integer.parseInt(cateId));
+            String cateId = params.get("categorysubId");
+            if (cateId != null && cateId.matches("^\\d+$")) {
+                Predicate p = b.equal(root.get("categorysubId"), Integer.parseInt(cateId));
                 predicates.add(p);
             }
             q.where(predicates.toArray(Predicate[]::new));
@@ -73,9 +62,11 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         q.orderBy(b.desc(root.get("id")));
         Query query = s.createQuery(q);
-        List<Product> products = query.getResultList();
-
-        return products;
+        if (start != 0 || limit != 0) {
+            query.setFirstResult(start - 1); // Vị trí bắt đầu
+            query.setMaxResults(limit); // Số lượng kết quả trả về
+        }
+        return query.getResultList();
     }
 
     @Override
@@ -88,10 +79,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     public boolean addOrUpdateProduct(Product p) {
         Session s = this.factory.getObject().getCurrentSession();
         try {
-            if (p.getId() > 0)
+            if (p.getId() > 0) {
                 s.update(p);
-            else
+            } else {
                 s.save(p);
+            }
 
             return true;
         } catch (HibernateException ex) {
@@ -113,25 +105,65 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public boolean addReceipt(Map<String, Cart> cart) {
+    public boolean addReceipt(Map<String, Cart> cart, Integer amount) {
         Session s = this.factory.getObject().getCurrentSession();
 
         try {
             Orders r = new Orders();
+            r.setId(0);
             r.setUserid(userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
+            r.setAmount(amount);
+            r.setType(new Status(17));
+            r.setCreatedDate(new Date());
             s.save(r);
 
-            for (Cart c: cart.values()) {
+            for (Cart c : cart.values()) {
                 OrderDetail d = new OrderDetail();
-                d.setTotalprice(c.getPrice());
+                d.setId(0);
+                d.setPrice(c.getPrice());
                 d.setNumber(c.getQuantity());
+                d.setOrderstatus(new Status(9));
                 d.setOrderId(r);
                 d.setProductId(this.getProductById(c.getId()));
+                d.setCreatedDate(new Date());
                 s.save(d);
             }
             return true;
         } catch (HibernateException ex) {
+            ex.printStackTrace();
             return false;
         }
     }
+
+    @Override
+    public boolean addReceiptPaid(Map<String, Cart> cart, Integer amount) {
+        Session s = this.factory.getObject().getCurrentSession();
+
+        try {
+            Orders r = new Orders();
+            r.setId(0);
+            r.setUserid(userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
+            r.setAmount(amount);
+            r.setType(new Status(18));
+            r.setCreatedDate(new Date());
+            s.save(r);
+
+            for (Cart c : cart.values()) {
+                OrderDetail d = new OrderDetail();
+                d.setId(0);
+                d.setPrice(c.getPrice());
+                d.setNumber(c.getQuantity());
+                d.setOrderstatus(new Status(9));
+                d.setOrderId(r);
+                d.setProductId(this.getProductById(c.getId()));
+                d.setCreatedDate(new Date());
+                s.save(d);
+            }
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
 }

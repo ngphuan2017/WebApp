@@ -53,6 +53,12 @@ public class ApiComment {
 
         return new ResponseEntity<>(comments, HttpStatus.OK);
     }
+    
+    @GetMapping("/products/{productId}/comments/{userId}")
+    public ResponseEntity<Users> aboutAccountView(@PathVariable(value = "userId") int id) {
+        Users user = this.userService.getUserAccountById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
 
     @PostMapping(path = "/products/{productId}/comments", produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Comment> addComment(@RequestBody Map<String, String> params,
@@ -132,7 +138,7 @@ public class ApiComment {
                     r.setUserid(c.getUserid());
                     r.setContent(c.getContent());
                     r.setReportCount(1);
-                    r.setReportstatus(new Status(15));
+                    r.setReportstatus(new Status(14));
                     r.setCreatedDate(new Date());
                 } else {
                     r.setUpdatedDate(new Date());

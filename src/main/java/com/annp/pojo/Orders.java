@@ -44,6 +44,10 @@ import lombok.AllArgsConstructor;
     @NamedQuery(name = "Orders.findByNote", query = "SELECT o FROM Orders o WHERE o.note = :note")})
 public class Orders implements Serializable {
 
+    @JoinColumn(name = "TYPE", referencedColumnName = "ID")
+    @ManyToOne
+    private Status type;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,9 +66,6 @@ public class Orders implements Serializable {
     @Size(max = 500)
     @Column(name = "NOTE")
     private String note;
-    @JoinColumn(name = "ORDERSTATUS", referencedColumnName = "ID")
-    @ManyToOne
-    private Status orderstatus;
     @JoinColumn(name = "USERID", referencedColumnName = "ID")
     @ManyToOne
     private Users userid;
@@ -118,14 +119,6 @@ public class Orders implements Serializable {
         this.note = note;
     }
 
-    public Status getOrderstatus() {
-        return orderstatus;
-    }
-
-    public void setOrderstatus(Status orderstatus) {
-        this.orderstatus = orderstatus;
-    }
-
     public Users getUserid() {
         return userid;
     }
@@ -166,6 +159,14 @@ public class Orders implements Serializable {
     @Override
     public String toString() {
         return "com.annp.pojo.Orders[ id=" + id + " ]";
+    }
+
+    public Status getType() {
+        return type;
+    }
+
+    public void setType(Status type) {
+        this.type = type;
     }
     
 }

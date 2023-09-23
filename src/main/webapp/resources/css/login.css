@@ -8,7 +8,7 @@
     justify-content: center;
     align-items: center;
 }
-#form-login, #forgot-password{
+#form-login, #forgot-password, #form-change-password{
     max-width: 400px;
     background: rgba(0, 0, 0 , 0.8);
     flex-grow: 1;

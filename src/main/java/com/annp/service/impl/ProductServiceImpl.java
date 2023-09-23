@@ -25,8 +25,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> getProducts(Map<String, String> params) {
-        return this.productRepository.getProducts(params);
+    public List<Product> getProducts(Map<String, String> params, int start, int limit) {
+        return this.productRepository.getProducts(params, start, limit);
     }
 
     @Override
@@ -61,8 +61,25 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean addReceipt(Map<String, Cart> cart) {
         if (cart != null) {
-            return this.productRepository.addReceipt(cart);
+            Integer amount = 0;
+            for (Cart c: cart.values()) {
+                amount += c.getQuantity()*c.getPrice();
+            }
+            return this.productRepository.addReceipt(cart, amount);
         }
         return false;
     }
+
+    @Override
+    public boolean addReceiptPaid(Map<String, Cart> cart) {
+        if (cart != null) {
+            Integer amount = 0;
+            for (Cart c: cart.values()) {
+                amount += c.getQuantity()*c.getPrice();
+            }
+            return this.productRepository.addReceiptPaid(cart, amount);
+        }
+        return false;
+    }
+
 }

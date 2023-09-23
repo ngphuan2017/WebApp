@@ -18,6 +18,13 @@ $(document).ready(function () {
         return false;
     });
 });
+/////////////////////////
+AOS.init({
+  offset: 150,
+  delay: 0,
+  duration: 1000
+});
+
 //////////////////////////
 function showDropdownMenu(elem) {
     elem.querySelector('.dropdown-menu').classList.add('show');
@@ -41,13 +48,13 @@ function numberWithCommas(x) {
     return parseFloat(x).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",").toString();
 }
 
-const currencyElements = document.querySelectorAll(".currency .money");
+let currencyElements = document.querySelectorAll(".currency .money");
 currencyElements.forEach((element) => {
     const amountValue = parseFloat(element.textContent);
     element.textContent = numberWithCommas(amountValue);
 });
 //format date
-const createDate = document.querySelectorAll(".row .create-date");
+let createDate = document.querySelectorAll(".row .create-date");
 createDate.forEach((element) => {
     const dateValue = moment(element.textContent);
     element.textContent = dateValue.format('DD-MM-YYYY');

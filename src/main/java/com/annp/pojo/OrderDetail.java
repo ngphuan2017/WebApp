@@ -34,10 +34,14 @@ import lombok.AllArgsConstructor;
 @NamedQueries({
     @NamedQuery(name = "OrderDetail.findAll", query = "SELECT o FROM OrderDetail o"),
     @NamedQuery(name = "OrderDetail.findById", query = "SELECT o FROM OrderDetail o WHERE o.id = :id"),
-    @NamedQuery(name = "OrderDetail.findByTotalprice", query = "SELECT o FROM OrderDetail o WHERE o.totalprice = :totalprice"),
+    @NamedQuery(name = "OrderDetail.findByPrice", query = "SELECT o FROM OrderDetail o WHERE o.price = :price"),
     @NamedQuery(name = "OrderDetail.findByNumber", query = "SELECT o FROM OrderDetail o WHERE o.number = :number"),
     @NamedQuery(name = "OrderDetail.findByCreatedDate", query = "SELECT o FROM OrderDetail o WHERE o.createdDate = :createdDate")})
 public class OrderDetail implements Serializable {
+
+    @JoinColumn(name = "ORDERSTATUS", referencedColumnName = "ID")
+    @ManyToOne
+    private Status orderstatus;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,8 +50,8 @@ public class OrderDetail implements Serializable {
     @NotNull
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "TOTALPRICE")
-    private Integer totalprice;
+    @Column(name = "PRICE")
+    private Integer price;
     @Column(name = "NUMBER")
     private Integer number;
     @Column(name = "CREATED_DATE")
@@ -75,12 +79,12 @@ public class OrderDetail implements Serializable {
         this.id = id;
     }
 
-    public Integer getTotalprice() {
-        return totalprice;
+    public Integer getPrice() {
+        return price;
     }
 
-    public void setTotalprice(Integer totalprice) {
-        this.totalprice = totalprice;
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     public Integer getNumber() {
@@ -138,6 +142,14 @@ public class OrderDetail implements Serializable {
     @Override
     public String toString() {
         return "com.annp.pojo.OrderDetail[ id=" + id + " ]";
+    }
+
+    public Status getOrderstatus() {
+        return orderstatus;
+    }
+
+    public void setOrderstatus(Status orderstatus) {
+        this.orderstatus = orderstatus;
     }
     
 }

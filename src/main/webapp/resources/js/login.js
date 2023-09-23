@@ -71,21 +71,34 @@ function selectUserByEmail(endpoint, obj) {
                 radioInput.type = "radio";
                 radioInput.name = "user";
                 radioInput.value = user.id;
+                radioInput.style.marginRight = "10px";
+
+                const img = document.createElement("img");
+                img.src = user.avatar;
+                img.width = 20;
+                img.height = 20;
+                img.style.borderRadius = "50%";
+                img.style.marginRight = "10px";
+                radioInput.onclick = function () {
+                    document.getElementById("selectedUserId").value = user.id;
+                    flagEmail = 1;
+                    if (flagCaptcha === 1 && flagEmail === 1) {
+                        submitButton.classList.remove("disabled-link");
+                    }
+                };
+
                 userContainer.appendChild(radioInput);
+                userContainer.appendChild(img);
 
                 const label = document.createElement("label");
-                label.textContent = user.username;
+                label.textContent = user.fullname;
                 label.style.color = "yellow";
                 label.style.fontSize = "14px";
                 userContainer.appendChild(label);
 
                 userContainer.appendChild(document.createElement("br"));
             });
-            const firstRadio = userContainer.querySelector("input[type='radio']");
-            if (firstRadio) {
-                firstRadio.checked = true;
-            }
-            flagEmail = 1;
+
             if (flagCaptcha === 1 && flagEmail === 1) {
                 submitButton.classList.remove("disabled-link");
             }

@@ -12,13 +12,14 @@
 <c:url value="/login" var="login" />
 <c:url value="/register" var="register" />
 <c:url value="/forgot-password" var="forgot" />
+<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png" var="logoBackground" />
 <div class="main">
     <div class="content">
         <div class="wrapper">
             <form method="post" action="${login}" id="form-login">
                 <div style="display: flex; width: 100%; justify-content: center; margin-bottom: 20px;">
                     <a href="${action}">
-                        <img style="width: 90px; border-radius: 50%;" src="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png" />" alt="logo">
+                        <img style="width: 90px; border-radius: 50%;" src="${logoBackground}" alt="logo">
                     </a>
                     <div>
                         <span class="form-heading">&nbsp;&nbsp;&nbsp;ĐĂNG NHẬP</span>
@@ -103,8 +104,8 @@
                     <i class="fa-solid fa-envelope"></i>
                     <input type="email" class="form-input" id="sendverify" name="email" placeholder="Email" onchange="selectUserByEmail('${forgot}', this)">
                 </div>
-                <div style="margin-top: 15px; margin-bottom: 20px; display: flex; line-height: 20px;" id="user-email">
-
+                <input type="hidden" id="selectedUserId" name="selectedUserId" value="">
+                <div style="margin-top: 15px; margin-bottom: 20px; line-height: 20px;" id="user-email">
                 </div>
                 <div style="display: flex; justify-content: center;">
                     <div class="g-recaptcha" data-sitekey="6LfuJ-UnAAAAAJ5PRW85U1UQy4JS8lqUe7vfrcxs" data-callback="enableSubmitButton"></div>
@@ -121,7 +122,7 @@
                     </a>
                 </p>
                 <div class="facebook-btn">
-                    <a href="javascript:;" onclick="cancelForgotPassword()" disabled>
+                    <a href="javascript:;" onclick="cancelForgotPassword()">
                         <p class="btn-text"><b>Quay lại đăng nhập</b></p> 
                     </a>
                 </div>

@@ -10,15 +10,18 @@ public interface UserService extends UserDetailsService {
     
     public Users getUserById(int id);
     public Users getUserByUsername(String username);
-    boolean addOrUpdateUser(Users user);
+    public boolean addOrUpdateUser(Users user);
     public boolean getByUsername(String username);
-    boolean updateUser(Users user);
-    boolean updateProfileUser(Users user);
-    boolean addUserGoogle(Google google);
+    public boolean updateUser(Users user);
+    public boolean updateProfileUser(Users user);
+    public boolean addUserGoogle(Google google);
     public Users getUserByGoogleId(String googleId);
-    boolean addUserFacebook(Facebook facebook);
+    public boolean addUserFacebook(Facebook facebook);
     public Users getUserByFacebookId(String facebookId);
     public boolean verifyRecaptcha(String captchaResponse);
     public List<Users> getUserByEmail(String email);
-    public boolean sendConfirmationCodeByEmail(String email);
+    public boolean sendCodeToEmail(int userId, String email, String baseUrl);
+    public boolean changePassword(String password, Users user);
+    public Users getUserByTicket(String ticket);
+    public Users getUserAccountById(int id);
 }

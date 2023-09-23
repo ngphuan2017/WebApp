@@ -16,12 +16,12 @@
             <tiles:insertAttribute name="title"/>
         </title>
         <link href="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1687075781/WebApp/iconshop_uxsy3a.png" />" rel="shortcut icon"/>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
         <link href="<c:url value="/resources/css/style.css"/> " rel="stylesheet"/>
         <link rel="stylesheet" href="<c:url value="/resources/css/login.css"/> ">
         <link rel="stylesheet" href="<c:url value="/resources/css/register.css"/> ">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="<c:url value="/resources/jquery-3.6.1/jquery-3.6.1.min.js" />"></script>
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </head>
     <body>

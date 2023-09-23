@@ -24,6 +24,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.HtmlEmail;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
@@ -39,7 +42,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private Environment env;
-    
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -232,14 +235,64 @@ public class UserServiceImpl implements UserService {
         return recaptcha != null && recaptcha.isSuccess();
     }
 
-
     @Override
     public List<Users> getUserByEmail(String email) {
         return this.userRepository.getUserByEmail(email);
     }
 
     @Override
-    public boolean sendConfirmationCodeByEmail(String email) {
-        return true;
+    public boolean sendCodeToEmail(int userId, String email, String baseUrl) {
+        try {
+            Users user = this.userRepository.getUserById(userId);
+            UUID token = UUID.randomUUID();
+            String ticket = token.toString().replace("-", "");
+            user.setOtp(ticket);
+            user.setOtpGeneratedTime(new Date());
+            this.userRepository.updateUser(user);
+            HtmlEmail htmlEmail = new HtmlEmail();
+            htmlEmail.setHostName(env.getProperty("spring.mail.host")); // SMTP server
+            htmlEmail.setSmtpPort(Integer.parseInt(env.getProperty("spring.mail.port"))); // Port
+            htmlEmail.setAuthenticator(new DefaultAuthenticator(env.getProperty("spring.mail.username"), env.getProperty("spring.mail.password"))); // Email và mật khẩu
+            htmlEmail.setStartTLSEnabled(true); // Bật TLS
+
+            htmlEmail.setFrom(env.getProperty("spring.mail.username"), "PhuAnShop");
+            htmlEmail.setCharset("UTF-8");
+            htmlEmail.setSubject("Phục hồi mật khẩu cho tài khoản tại PhuAnShop");
+            String htmlMessage = "<html><body>";
+            htmlMessage += "<p>Chào bạn,</p>";
+            htmlMessage += "<p>Bạn vừa thực hiện yêu cầu phục hồi mật khẩu, để thay đổi mật khẩu, bạn vui lòng click vào đường link bên dưới:</p>";
+            htmlMessage += "<p><a href=\"" + baseUrl + "?ticket=" + ticket + "\">Đường dẫn đến trang đổi mật khẩu</a></p>";
+            htmlMessage += "<p>Lưu ý: Đường dẫn trên chỉ tồn tại trong vòng 1 giờ.</p>";
+            htmlMessage += "<p>Đây là email tự động, vui lòng không phản hồi lại trên email này.</p>";
+            htmlMessage += "<p>Trân trọng,</p>";
+            htmlMessage += "<p>PhuAnShop</p>";
+            htmlMessage += "</body></html>";
+            htmlEmail.setHtmlMsg(htmlMessage);
+            htmlEmail.addTo(email);
+
+            htmlEmail.send();
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
+
+    @Override
+    public boolean changePassword(String password, Users user) {
+        String pass = password.trim();
+        user.setPassword(this.bCryptPasswordEncoder.encode(pass));
+        return this.userRepository.updateUser(user);
+    }
+
+    @Override
+    public Users getUserByTicket(String ticket) {
+        return this.userRepository.getUserByTicket(ticket);
+    }
+
+    @Override
+    public Users getUserAccountById(int id) {
+        return this.userRepository.getUserAccountById(id);
+    }
+
 }

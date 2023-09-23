@@ -7,6 +7,8 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<c:url value="/" var="action" />
+
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
@@ -35,19 +37,25 @@
             </div>
         </div>
         <div class="text-slider">
-            <img id="logo-banner" src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075874/WebApp/shops_ibolhy.png" alt="Phú An Shop">
-            <h5 style="font-weight: bolder;">Giá rẻ và chất lượng</h5>
+            <img id="logo-banner" data-aos="fade-down" data-aos-delay="300" src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075874/WebApp/shops_ibolhy.png" alt="Phú An Shop">
+            <h5 style="font-weight: bolder;" data-aos="fade-right" data-aos-delay="500" data-aos-once="true">Giá rẻ và chất lượng</h5>
         </div>
     </div>
 </div>
 <section class="container">
-    <div class="content-title">
+    <div class="content-title" data-aos="fade-left">
+        <h2 class="section-heading"><span class="colored-letter">Khuyến mãi hôm nay</span></h2>
+    </div>
+    <div class="row">
+
+    </div>
+    <div class="content-title" data-aos="fade-left">
         <h2 class="section-heading"><span class="colored-letter">Top bán chạy</span></h2>
     </div>
     <div class="row">
         <c:forEach items="${products}" var="p">
             <c:url value="/products/${p.id}" var="detail" />
-            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3" data-aos="fade-left" data-aos-once="true">
                 <div class="card card-block">
                     <h4 class="card-title text-right"><i class="fa-solid fa-gear"></i></h4>
                     <div class="price-discount" style="display: none;">-<span class="discount">${p.discount}</span>%</div>
@@ -67,12 +75,71 @@
             </div>
         </c:forEach>
     </div>
-    <div class="content-title">
-        <h2 class="section-heading"><span class="colored-letter">Khuyến mãi hôm nay</span></h2>
-    </div>
-    <div class="row">
-        
-    </div>
+    <ul class="pagination justify-content-center">
+        <c:if test="${page.totalPage > 1}">
+            <c:choose>
+                <c:when test="${page.page > 1}">
+                    <c:choose>
+                        <c:when test="${not empty param.categorysubId}">
+                            <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}" />
+                            <li class="page-item">
+                                <a class="page-link" href="${action}?${cateIdParam}&page=${page.page - 1}">Previous</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page - 1}">Previous</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:when>
+                    <c:otherwise>
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    </c:otherwise>
+                </c:choose>
+                <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
+                    <c:set var="pageParam" value="page=${loop.index}" />
+                    <c:choose>
+                        <c:when test="${not empty param.categorysubId}">
+                            <c:set var="categorysubIdParam" value="categorysubId=${param.categorysubId}" />
+                            <c:if test="${not empty pageContext.request.queryString}">
+                                <c:set var="queryStringWithoutPage" value="" />
+                                <c:forEach var="paramName" items="${pageContext.request.parameterMap.keySet()}">
+                                    <c:if test="${not 'page' == paramName}">
+                                        <c:set var="queryStringWithoutPage" value="${queryStringWithoutPage}&amp;${paramName}=${param[paramName]}" />
+                                    </c:if>
+                                </c:forEach>
+                                <c:set var="pageParam" value="${pageParam}&amp;${queryStringWithoutPage}${categorysubIdParam}" />
+                            </c:if>
+                        <li class="page-item${loop.index == page.page ? ' active' : ''}">
+                            <a class="page-link" href="${action}?${pageParam}">${loop.index}</a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item${loop.index == page.page ? ' active' : ''}">
+                            <a class="page-link" href="${action}?${pageParam}">${loop.index}</a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+            <c:choose>
+                <c:when test="${page.page < page.totalPage}">
+                    <c:choose>
+                        <c:when test="${not empty param.categorysubId}">
+                            <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}" />
+                            <li class="page-item">
+                                <a class="page-link" href="${action}?${cateIdParam}&page=${page.page + 1}">Next</a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page + 1}">Next</a></li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:when>
+                    <c:otherwise>
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    </c:otherwise>
+                </c:choose>
+            </c:if>
+    </ul>
 </section>
 <div class="js-modal">
     <div class="modal-container js-modal-container">
@@ -118,4 +185,26 @@
         </div>
     </div>
 </div>
-<marquee class="slider-letter">PHÚ AN SHOP LUÔN ĐẶT CHẤT LƯỢNG VÀ UY TÍN LÊN HÀNG ĐẦU</marquee>
+<script>
+    const quantityInput = document.getElementById('quantity');
+    const quantityValue = quantityInput.value;
+    let quantityCart = quantityValue;
+    const updateQuantityValue = () => {
+        quantityCart = quantityInput.value;
+    };
+    const handleQuantityIncrease = () => {
+        quantityInput.stepUp();
+        updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
+    };
+
+// Hàm xử lý sự kiện khi ấn nút trừ
+    const handleQuantityDecrease = () => {
+        quantityInput.stepDown();
+        updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
+    };
+// Gọi hàm cập nhật giá trị khi có sự kiện 'input'
+    quantityInput.addEventListener('input', updateQuantityValue);
+// Gọi hàm cập nhật giá trị khi ấn nút cộng hoặc nút trừ
+    document.querySelector('.quantity-right-plus').addEventListener('click', handleQuantityIncrease);
+    document.querySelector('.quantity-left-minus').addEventListener('click', handleQuantityDecrease);
+</script>

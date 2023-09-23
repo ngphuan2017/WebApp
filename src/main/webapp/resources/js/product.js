@@ -12,7 +12,6 @@ function deleteProduct(endpoint, id) {
             method: "delete"
         }).then(res => {
             s.style.display = "none";
-            console.info(res);
             if (res.status === 204) {
                 document.getElementById(`product${id}`).style.display = "none";
             } else
@@ -21,10 +20,10 @@ function deleteProduct(endpoint, id) {
     }
 }
 
-const btns = document.querySelectorAll('.js-add-cart');
-const cart = document.querySelector('.js-modal');
-const modalClose = document.querySelector('.js-modal-close');
-const modalContainer = document.querySelector('.js-modal-container');
+let btns = document.querySelectorAll('.js-add-cart');
+let cart = document.querySelector('.js-modal');
+let modalClose = document.querySelector('.js-modal-close');
+let modalContainer = document.querySelector('.js-modal-container');
 
 function showCart() {
     // alert('Modal opened successfully');
@@ -46,7 +45,6 @@ function productView(endpointview, endpoint) {
         const parser = new DOMParser();
         const xml = parser.parseFromString(data, 'application/xml');
         const json = xmlToJson(xml);
-        console.log(json);
         let js = document.getElementById("modal-product-img");
         js.innerHTML = `
             <img src="${json.product.image}" alt="image">

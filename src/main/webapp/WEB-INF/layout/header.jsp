@@ -10,7 +10,9 @@
 
 
 <c:url value="/" var="action" />
+<c:url value="/about" var="about" />
 <c:url value="/me/profile" var="profile" />
+<c:url value="/forgot-password/change-password" var="changePassword" />
 <c:url value="/cart" var="cart" />
 <c:url value="/login" var="login" />
 <c:url value="/logout" var="logout" />
@@ -44,7 +46,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="${action}">Giới thiệu</a>
+                        <a class="nav-link" href="${about}">Giới thiệu</a>
                     </li>
                     <c:forEach items="${categories}" var="c">
                         <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)" onmouseout="hideDropdownMenu(this)">
@@ -52,7 +54,7 @@
                             <ul class="dropdown-menu">
                                 <c:forEach items="${categorySub}" var="s">
                                     <c:url value="/" var="url">
-                                        <c:param name="categoryId" value="${s.id}" />
+                                        <c:param name="categorysubId" value="${s.id}" />
                                     </c:url>
                                     <c:choose>
                                         <c:when test="${s.categoryId.id == c.id}">
@@ -77,16 +79,13 @@
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
                             <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)" onmouseout="hideDropdownMenu(this)">
                                 <a class="nav-link text-success" href="javascript:;" data-bs-toggle="dropdown">
-                                    <img class="rounded-circle" width="27px" height="27px" src="${pageContext.session.getAttribute("currentUser").avatar}" />
-                                    <span>&nbsp;${pageContext.session.getAttribute("currentUser").fullname}</span>
+                                    <img class="rounded-circle" width="27px" height="27px" src="${sessionScope.currentUser.avatar}" />
+                                    <span>&nbsp;${sessionScope.currentUser.fullname}</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="${profile}"><i class="fa-solid fa-user"></i> Tài khoản</a></li>
-                                    <li>
-                                        <a class="dropdown-item" href="${logout}">
-                                            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
-                                        </a>
-                                    </li>
+                                    <li><a class="dropdown-item" href="${changePassword}"><i class="fa-solid fa-unlock-keyhole"></i> Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item" href="${logout}"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
                                 </ul>
                             </li>
                         </c:when>

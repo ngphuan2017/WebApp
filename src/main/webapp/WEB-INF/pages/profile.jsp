@@ -8,17 +8,17 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:url value="/me/profile" var="changeProfile" />
-<h1 class="text-center text-success mt-4 mb-4" style="text-transform: uppercase;"><i class="fa-solid fa-user-gear"></i> Thông tin tài khoản</h1>
+<h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down" style="text-transform: uppercase;"><i class="fa-solid fa-user-gear"></i> Thông tin tài khoản</h1>
 <div class="container">
     <div class="main-body" style="padding: 15px;">
         <div class="row gutters-sm">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-4 mb-3" data-aos="fade-right">
                 <div class="card-profile">
                     <div class="card-body-profile">
                         <div class="d-flex flex-column align-items-center text-center">
-                            <img id="img-preview" src="${currentUser.avatar}" alt="Admin" class="rounded-circle"
+                            <img id="img-preview" src="${currentUser.avatar}" alt="Avatar" class="rounded-circle"
                                  width="150" height="150">
-                            <img id="img-oldview" src="${currentUser.avatar}" alt="Admin" class="rounded-circle d-none"
+                            <img id="img-oldview" src="${currentUser.avatar}" alt="Avatar" class="rounded-circle d-none"
                                  width="150" height="150">
                             <div class="mt-3">
                                 <span id="currentUserId" style="display: none;">${currentUser.id}</span>
@@ -114,7 +114,7 @@
                     </form:form>
                 </div>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8" data-aos="fade-left">
                 <div class="card-profile mb-3">
                     <form:form method="POST" action="${changeProfile}"
                                modelAttribute="user" enctype="multipart/form-data">
@@ -125,7 +125,17 @@
                                     <h6 class="mb-0">Tên đăng nhập</h6>
                                 </div>
                                 <div class="col-sm-9 text-secondary">
-                                    <span id="editUsername">${currentUser.username}</span>
+                                    <c:choose>
+                                        <c:when test="${currentUser.googleID != null}">
+                                            <span id="editUsername">Tài khoản đăng nhập bằng liên kết Google #ID: ${currentUser.username}</span>
+                                        </c:when>
+                                        <c:when test="${currentUser.facebookID != null}">
+                                            <span id="editUsername">Tài khoản đăng nhập bằng liên kết Facebook #ID: ${currentUser.username}</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span id="editUsername">${currentUser.username}</span>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div><hr/>
                             <div class="row">
@@ -280,7 +290,9 @@
                         <div class="card-profile h-100">
                             <div class="card-body-profile">
                                 <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-list-ul" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Đơn Mua</h6>
-                                <span>Chưa có đơn hàng nào</span>
+                                <c:forEach items="${orders}" var="o">
+                                    <li id="${o.id}"><a href="<c:url value="/me/orders/${o.id}" />">Đơn hàng ngày: ${o.createdDate}</a></li>
+                                    </c:forEach>
                             </div>
                         </div>
                     </div>

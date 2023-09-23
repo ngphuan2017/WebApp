@@ -9,6 +9,73 @@ function loadSpinner(flag) {
         d.style.display = flag;
 }
 
+function accountView(endpoint) {
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.text()
+    ).then(data => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data, 'application/xml');
+        const json = xmlToJson(xml);
+        let js = document.getElementById("modal-account-img");
+        js.innerHTML = `
+            <img src="${json.users.avatar}" alt="avatar">
+            <div class="level">
+                Lv.${json.users.exp <= 10 ? "0" : json.users.exp <= 20 ? "1" : json.users.exp <= 40 ? "2" :
+                json.users.exp <= 80 ? "3" : json.users.exp <= 160 ? "4" : json.users.exp <= 320 ? "5" :
+                json.users.exp <= 640 ? "6" : json.users.exp <= 1280 ? "7" : json.users.exp <= 2560 ? "8" :
+                json.users.exp <= 5120 ? "9" : json.users.exp <= 10240 ? "10" : "11"}
+            </div>
+        `;
+        let jss = document.getElementById("modal-account-about");
+        let requiredExp = json.users.exp <= 10 ? 10 : json.users.exp <= 20 ? 20 : json.users.exp <= 40 ? 40 : json.users.exp <= 80 ? 80 : json.users.exp <= 160 ? 160 : json.users.exp <= 320 ? 320 : json.users.exp <= 640 ? 640 : json.users.exp <= 1280 ? 1280 : json.users.exp <= 2560 ? 2560 : json.users.exp <= 5120 ? 5120 : json.users.exp <= 10240 ? 10240 : 99999;
+        jss.innerHTML = `
+            <span style="margin: 7px 0;">ID: #${json.users.id}</span>
+            <span style="margin: 7px 0;">Họ và tên: <span class="text-info">${json.users.fullname}</span></span>
+            <span style="margin: 7px 0;">Giới tính: ${json.users.gender === "1" ? `Nam` : json.users.gender === "2" ? `Nữ` : `Khác`}</span>
+            <span style="margin: 7px 0;">Trạng thái: <span class="${json.users.userstatus.id === "1" ? `text-success` : json.users.userstatus.id === "2" ? `text-warning` : `text-danger`}">${json.users.userstatus.statusname}</span></span>
+            <span style="margin: 7px 0;">Cấp độ: </span>
+            <span class="profile-exp"><span class="profile-exp-bar" style="width: ${json.users.exp * 100 / requiredExp}%;">${json.users.exp * 100 / requiredExp}% (${json.users.exp}/${requiredExp})</span></span>
+            <span style="margin: 14px 0;">Ngày tham gia: <span class="create-date">${json.users.createdDate}</span></span>
+        `;
+        let jsss = document.getElementById("modal-account-title");
+        jsss.innerHTML = `
+            <i class="fa-solid fa-crown" style="color: yellow;"></i>
+            <span class="text-account-title">
+                ${json.users.exp <= 10 ? "Sắt" : json.users.exp <= 20 ? "Đồng" : json.users.exp <= 40 ? "Bạc" :
+                json.users.exp <= 80 ? "Vàng" : json.users.exp <= 160 ? "Bạch Kim" : json.users.exp <= 320 ? "Kim cương" :
+                json.users.exp <= 640 ? "Tinh anh" : json.users.exp <= 1280 ? "Cao thủ" : json.users.exp <= 2560 ? "Chiến tướng" :
+                json.users.exp <= 5120 ? "Thách đấu" : json.users.exp <= 10240 ? "Phi thăng" : "Tiên nhân"}
+            </span>
+            <i class="fa-solid fa-crown" style="color: yellow;"></i>
+        `;
+        let btns = document.querySelectorAll('.js-add-cart');
+        let cart = document.querySelector('.js-modal');
+        let modalClose = document.querySelector('.js-modal-close');
+        let modalContainer = document.querySelector('.js-modal-container');
+        let createDated = document.querySelectorAll(".modal-content .create-date");
+        createDated.forEach((element) => {
+            const dateValue = moment(element.textContent);
+            element.textContent = dateValue.format('DD-MM-YYYY');
+        });
+        for (const btn of btns) {
+            btn.addEventListener('click', showCart);
+        }
+        modalClose.addEventListener('click', hideCart);
+        cart.addEventListener('click', hideCart);
+        modalContainer.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    }
+    ).catch(error => {
+        console.info(error);
+    });
+}
+
 function loadComments(endpoint, voted, report, deleted, changed, callback) {
     loadSpinner("block");
     fetch(endpoint).then(res => res.json()).then(data => {
@@ -18,8 +85,9 @@ function loadComments(endpoint, voted, report, deleted, changed, callback) {
         for (let d of data) {
             msg += `
                 <div class="d-flex flex-start m-2" id="comment${d.id}">
-                    <img class="rounded-circle shadow-1-strong me-3"
-                      src="${d.userid.avatar}" alt="avatar" width="50" height="50" />
+                    <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}')" class="js-add-cart">
+                        <img class="rounded-circle shadow-1-strong me-3" src="${d.userid.avatar}" alt="avatar" width="50" height="50" />
+                    </a>
                     <div class="card w-100">
                       <div class="card-body p-1">
                         <div>

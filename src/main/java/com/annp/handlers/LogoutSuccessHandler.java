@@ -30,5 +30,4 @@ public class LogoutSuccessHandler implements LogoutHandler {
         }
     }
 
-
 }

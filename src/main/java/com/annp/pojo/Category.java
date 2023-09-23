@@ -58,8 +58,6 @@ public class Category implements Serializable {
     @Column(name = "UPDATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "categoryId")
-    private Set<Product> productSet;
 
     public Category() {
     }
@@ -98,15 +96,6 @@ public class Category implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
-    }
-
-    @XmlTransient
-    public Set<Product> getProductSet() {
-        return productSet;
-    }
-
-    public void setProductSet(Set<Product> productSet) {
-        this.productSet = productSet;
     }
 
     @Override

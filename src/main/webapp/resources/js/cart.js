@@ -4,28 +4,6 @@
  */
 /* global Double */
 
-const quantityInput = document.getElementById('quantity');
-const quantityValue = quantityInput.value;
-let quantityCart = quantityValue;
-const updateQuantityValue = () => {
-    quantityCart = quantityInput.value;
-};
-const handleQuantityIncrease = () => {
-    quantityInput.stepUp();
-    updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
-};
-
-// Hàm xử lý sự kiện khi ấn nút trừ
-const handleQuantityDecrease = () => {
-    quantityInput.stepDown();
-    updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
-};
-// Gọi hàm cập nhật giá trị khi có sự kiện 'input'
-quantityInput.addEventListener('input', updateQuantityValue);
-// Gọi hàm cập nhật giá trị khi ấn nút cộng hoặc nút trừ
-document.querySelector('.quantity-right-plus').addEventListener('click', handleQuantityIncrease);
-document.querySelector('.quantity-left-minus').addEventListener('click', handleQuantityDecrease);
-
 function addToCart(endpoint, id, name, price, image) {
     fetch(endpoint, {
         method: "POST",
@@ -40,7 +18,6 @@ function addToCart(endpoint, id, name, price, image) {
             "Content-Type": "application/json"
         }
     }).then(res => res.json()).then(data => {
-        console.info(data);
         let counters = document.getElementsByClassName("cart-counter");
         for (let d of counters)
             d.innerText = data.totalQuantity;
@@ -66,7 +43,8 @@ function updateItem(endpoint, obj, id, price) {
         let quantity = obj.value;
         let totalElement = document.getElementById(`total${id}`);
         let totalPrice = price * quantity;
-        totalElement.innerText = parseFloat(totalPrice).toLocaleString("en-US");;
+        totalElement.innerText = parseFloat(totalPrice).toLocaleString("en-US");
+        ;
     });
 }
 
@@ -89,17 +67,39 @@ function deleteItem(endpoint, id) {
 }
 
 function pay(endpoint) {
-    fetch(endpoint, {
-        method: "post"
-    }).then(res => {
-        console.info(res);
-        if (res.status === 200) {
-            let e = document.getElementById("content");
-            e.innerText = "Đơn hàng đã được ghi nhận";
-
-            let counters = document.getElementsByClassName("cart-counter");
-            for (let d of counters)
-                d.innerText = 0;
+    Swal.fire({
+        title: 'Xác nhận',
+        text: 'Bạn có chắc chắn muốn đặt hàng chứ ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Hành động khi người dùng xác nhận
+            fetch(endpoint, {
+                method: "POST",
+                body: JSON.stringify({
+                    "optionPay": document.getElementById("option-pay").value
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(res => {
+                if (res.status === 200) {
+                    let counters = document.getElementsByClassName("cart-counter");
+                    document.querySelector('.table').innerHTML = ``;
+                    document.querySelector('.cart-amount').innerHTML = 0;
+                    for (let d of counters)
+                        d.innerText = 0;
+                    Swal.fire('Đặt hàng thành công!', 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
+                } else {
+                    Swal.fire('Đặt hàng không thành công!', 'Hệ thống đang có lỗi, vui lòng quay lại sau!', 'error');
+                }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Hành động khi người dùng hủy
+            Swal.fire('Hủy', 'Bạn đã hủy đặt hàng!');
         }
-    })
+    });
 }

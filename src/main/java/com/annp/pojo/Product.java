@@ -52,6 +52,10 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Product.findByUpdatedDate", query = "SELECT p FROM Product p WHERE p.updatedDate = :updatedDate")})
 public class Product implements Serializable {
 
+    @JoinColumn(name = "CATEGORYSUB_ID", referencedColumnName = "id")
+    @ManyToOne
+    private CategorySub categorysubId;
+
     @Column(name = "review_count")
     private Integer reviewCount;
     @Column(name = "average_rating")
@@ -87,9 +91,6 @@ public class Product implements Serializable {
     @Column(name = "UPDATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
-    @JoinColumn(name = "CATEGORY_ID", referencedColumnName = "ID")
-    @ManyToOne
-    private Category categoryId;
     @JoinColumn(name = "PRODUCTSTATUS", referencedColumnName = "ID")
     @ManyToOne
     private Status productstatus;
@@ -179,14 +180,6 @@ public class Product implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Category getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Category categoryId) {
-        this.categoryId = categoryId;
-    }
-
     public Status getProductstatus() {
         return productstatus;
     }
@@ -266,6 +259,14 @@ public class Product implements Serializable {
 
     public void setUnitsSold(Integer unitsSold) {
         this.unitsSold = unitsSold;
+    }
+
+    public CategorySub getCategorysubId() {
+        return categorysubId;
+    }
+
+    public void setCategorysubId(CategorySub categorysubId) {
+        this.categorysubId = categorysubId;
     }
 
 }
