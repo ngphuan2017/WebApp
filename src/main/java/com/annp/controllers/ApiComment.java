@@ -4,20 +4,24 @@
  */
 package com.annp.controllers;
 
+import com.annp.dto.PaginatesDto;
 import com.annp.pojo.Comment;
 import com.annp.pojo.Product;
 import com.annp.pojo.Report;
 import com.annp.pojo.Status;
 import com.annp.pojo.Users;
 import com.annp.service.CommentService;
+import com.annp.service.PaginatesService;
 import com.annp.service.ProductService;
 import com.annp.service.UserService;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.Principal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,14 +50,25 @@ public class ApiComment {
     private ProductService productService;
     @Autowired
     private UserService userService;
+    @Autowired
+    PaginatesService paginatesService;
 
     @GetMapping("/products/{productId}/comments")
-    public ResponseEntity<List<Comment>> getComments(@PathVariable(value = "productId") int id) {
-        List<Comment> comments = this.commentService.getCommentsByProductId(id);
+    public ResponseEntity<Object> getComments(HttpServletRequest request,
+            @PathVariable(value = "productId") int id) {
 
-        return new ResponseEntity<>(comments, HttpStatus.OK);
+        int limit = 5; //Số comment 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.commentService.getCommentsByProductId(id, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+
+        List<Comment> comments = this.commentService.getCommentsByProductId(id, paginates.getStart(), paginates.getLimit());
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("comments", comments);
+        responseMap.put("paginates", paginates);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
-    
+
     @GetMapping("/products/{productId}/comments/{userId}")
     public ResponseEntity<Users> aboutAccountView(@PathVariable(value = "userId") int id) {
         Users user = this.userService.getUserAccountById(id);
@@ -124,7 +139,7 @@ public class ApiComment {
     }
 
     @PutMapping(path = "/products/{productId}/comments/report/{commentId}")
-    public ResponseEntity reportComment(@PathVariable(value = "productId") int productId, 
+    public ResponseEntity reportComment(@PathVariable(value = "productId") int productId,
             @PathVariable(value = "commentId") int commentId, Principal pricipal) {
         try {
             Users u = this.userService.getUserByUsername(pricipal.getName());
@@ -153,7 +168,7 @@ public class ApiComment {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     @PutMapping(path = "/products/{productId}/comments/changed/{commentId}")
     public ResponseEntity changeComment(@PathVariable(value = "productId") int productId, @PathVariable(value = "commentId") int commentId,
             @RequestBody Map<String, String> params, Principal pricipal) {
@@ -171,7 +186,7 @@ public class ApiComment {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     @DeleteMapping("/products/{productId}/comments/deleted/{commentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable(value = "commentId") int id) {

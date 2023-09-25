@@ -17,8 +17,8 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepo;
 
     @Override
-    public List<Comment> getCommentsByProductId(int id) {
-        return this.commentRepo.getCommentsByProductId(id);
+    public List<Comment> getCommentsByProductId(int id, int start, int limit) {
+        return this.commentRepo.getCommentsByProductId(id, start, limit);
     }
 
     @Override

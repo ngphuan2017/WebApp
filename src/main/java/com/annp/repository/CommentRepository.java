@@ -6,7 +6,7 @@ import com.annp.pojo.Report;
 import java.util.List;
 
 public interface CommentRepository {
-    List<Comment> getCommentsByProductId(int id);
+    List<Comment> getCommentsByProductId(int id, int start, int limit);
     Comment getCommentById(int id);
     Comment addComment(Comment c);
     boolean updateComment(Comment c);

@@ -83,16 +83,16 @@
                         <c:when test="${not empty param.categorysubId}">
                             <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}" />
                             <li class="page-item">
-                                <a class="page-link" href="${action}?${cateIdParam}&page=${page.page - 1}">Previous</a>
+                                <a class="page-link" href="${action}?${cateIdParam}&page=${page.page - 1}"><<</a>
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page - 1}">Previous</a></li>
+                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page - 1}"><<</a></li>
                             </c:otherwise>
                         </c:choose>
                     </c:when>
                     <c:otherwise>
-                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    <li class="page-item disabled"><span class="page-link"><<</span></li>
                     </c:otherwise>
                 </c:choose>
                 <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
@@ -126,16 +126,16 @@
                         <c:when test="${not empty param.categorysubId}">
                             <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}" />
                             <li class="page-item">
-                                <a class="page-link" href="${action}?${cateIdParam}&page=${page.page + 1}">Next</a>
+                                <a class="page-link" href="${action}?${cateIdParam}&page=${page.page + 1}">>></a>
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page + 1}">Next</a></li>
+                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page + 1}">>></a></li>
                             </c:otherwise>
                         </c:choose>
                     </c:when>
                     <c:otherwise>
-                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    <li class="page-item disabled"><span class="page-link">>></span></li>
                     </c:otherwise>
                 </c:choose>
             </c:if>

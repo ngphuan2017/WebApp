@@ -24,7 +24,7 @@ public class CommentRepositoryImpl implements CommentRepository {
     private LocalSessionFactoryBean factory;
 
     @Override
-    public List<Comment> getCommentsByProductId(int id) {
+    public List<Comment> getCommentsByProductId(int id, int start, int limit) {
         Session s = this.factory.getObject().getCurrentSession();
         CriteriaBuilder b = s.getCriteriaBuilder();
         CriteriaQuery<Comment> q = b.createQuery(Comment.class);
@@ -34,9 +34,12 @@ public class CommentRepositoryImpl implements CommentRepository {
         q.where(b.equal(root.get("productid"), id));
         q.orderBy(b.desc(root.get("createdDate")));
         Query query = s.createQuery(q);
-        List<Comment> comments = query.getResultList();
+        if (start > 0 && limit > 0) {
+            query.setFirstResult(start - 1); // Vị trí bắt đầu
+            query.setMaxResults(limit); // Số lượng kết quả trả về
+        }
+        return query.getResultList();
 
-        return comments;
     }
 
     @Override

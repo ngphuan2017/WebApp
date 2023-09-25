@@ -19,11 +19,11 @@
         <div class="d-none" id="currentUserId">${pageContext.session.getAttribute("currentUser").id}</div>
         <div class="d-none" id="currentUserRole">${pageContext.session.getAttribute("currentUser").userRole.id}</div>
         <div class="col-lg-5 col-md-5 col-sm-5 col-12">
-            <div style="padding: 15px;">
+            <div style="padding: 15px;" data-aos="zoom-in">
                 <img src="${product.image}" class="rounded" width="100%" max-height="450px"/>
             </div>
         </div>
-        <div class="col-lg-7 col-md-7 col-sm-7 col-12">
+        <div class="col-lg-7 col-md-7 col-sm-7 col-12" data-aos="fade-left">
             <div style="padding: 20px;">
                 <div style="font-size: 24px; font-family: Arial, sans-serif;">
                     <span><i class="fa-solid fa-angles-right"></i> ${product.name}</span>
@@ -117,12 +117,15 @@
     </div>
     <div class="spinner-grow text-primary spinner m-auto"></div>
     <section style="background-color: #e7effd;">
-        <div class="container m-2 p-4 text-dark">
+        <div class="container m-2 p-4 text-dark" data-aos="fade-left">
             <div class="row d-flex justify-content-center">
                 <div class="col-lg-9 col-md-10 col-sm-11 col-12" id="comments">
                 </div>
             </div>
         </div>
+        <ul class="pagination justify-content-center" id="pagination-comment">
+            
+        </ul>
     </section>
 </div>
 
@@ -143,13 +146,13 @@
                 </div>
                 <div class="col-lg-7 col-md-7 col-sm-6 col-12">
                     <div class="modal-content" id="modal-account-about">
-                        
+
                     </div>
                 </div>
             </div>
         </div>
         <div class="footer-modal-black" id="modal-account-title">
-            
+
         </div>
     </div>
 </div>

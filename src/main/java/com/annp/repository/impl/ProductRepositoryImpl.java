@@ -62,7 +62,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
         q.orderBy(b.desc(root.get("id")));
         Query query = s.createQuery(q);
-        if (start != 0 || limit != 0) {
+        if (start > 0 && limit > 0) {
             query.setFirstResult(start - 1); // Vị trí bắt đầu
             query.setMaxResults(limit); // Số lượng kết quả trả về
         }

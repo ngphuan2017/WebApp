@@ -286,17 +286,17 @@
                 </div>
 
                 <div class="row gutters-sm">
-                    <div class="col-sm-6 mb-3">
+                    <div class="col-sm-7 mb-3">
                         <div class="card-profile h-100">
                             <div class="card-body-profile">
                                 <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-list-ul" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Đơn Mua</h6>
                                 <c:forEach items="${orders}" var="o">
-                                    <li id="${o.id}"><a href="<c:url value="/me/orders/${o.id}" />">Đơn hàng ngày: ${o.createdDate}</a></li>
+                                    <li id="${o.id}"><a href="<c:url value="/me/orders/${o.id}" />">Đơn hàng: #${o.id} - Ngày: <span class="create-date">${o.createdDate}</span> ( ${o.type.statusname} )</a></li>
                                     </c:forEach>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6 mb-3">
+                    <div class="col-sm-5 mb-3">
                         <div class="card-profile h-100">
                             <div class="card-body-profile">
                                 <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-bell" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Thông Báo</h6>

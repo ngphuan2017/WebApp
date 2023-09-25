@@ -76,13 +76,16 @@ function accountView(endpoint) {
     });
 }
 
-function loadComments(endpoint, voted, report, deleted, changed, callback) {
+function loadComments(endpointed, voted, report, deleted, changed, callback) {
     loadSpinner("block");
-    fetch(endpoint).then(res => res.json()).then(data => {
+    const endpointInfo = extractBaseEndpointAndPage(endpointed);
+    const { endpoint, page } = endpointInfo;
+    const updatedEndpoint = `${endpoint}?page=${page}`;
+    fetch(updatedEndpoint).then(res => res.json()).then(data => {
         let msg = "";
         let userId = parseInt(document.getElementById("currentUserId").textContent);
         let userRole = parseInt(document.getElementById("currentUserRole").textContent);
-        for (let d of data) {
+        for (let d of data.comments) {
             msg += `
                 <div class="d-flex flex-start m-2" id="comment${d.id}">
                     <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}')" class="js-add-cart">
@@ -126,6 +129,17 @@ function loadComments(endpoint, voted, report, deleted, changed, callback) {
         }
         let el = document.getElementById("comments");
         el.innerHTML = msg;
+        let paginates = document.getElementById("pagination-comment");
+        let page = "";
+        for (let i = 1; i <= data.paginates.totalPage; i++) {
+            page += `
+                <li class="page-item"><a class="page-link" href="javascript:;" onclick="loadComments('${endpoint}?page=${i}', '${voted}', '${report}', '${deleted}', '${changed}', function () {
+                                var levelsCmt = document.querySelectorAll('.card-body .level-name');
+                                levelCmt(levelsCmt);
+                            })">${i}</a></li>
+            `;
+        }
+        paginates.innerHTML = page;
         callback();
         loadSpinner("none");
     });
@@ -330,6 +344,7 @@ function cancelChangeCmt(id) {
 }
 
 function deleteCmt(endpoint, id) {
+    debugger;
     if (confirm("Bạn chắc chắn xóa?") === true) {
         fetch(endpoint, {
             method: "delete"
@@ -339,11 +354,18 @@ function deleteCmt(endpoint, id) {
                 element.classList.remove('d-flex');
                 element.style.display = 'none';
             } else
-                alert("Hệ thống đang có lỗi, vui lòng quay lại sau!");
+                alert("Bình luận của bạn đã bị cáo vi phạm, quản trị viên đang xem xét!");
         });
     }
 }
 
 function reply(cmtid) {
     let reply = document.getElementById(`reply${cmtid}`);
+}
+
+function extractBaseEndpointAndPage(endpointed) {
+    const endpoint = endpointed.split("?page=")[0]; // Lấy đường dẫn không bao gồm query string
+    const page = endpointed.split("?page=")[1] !== undefined ? endpointed.split("?page=")[1] : 1; // Lấy giá trị của tham số "page" trong query string
+
+    return { endpoint, page };
 }
