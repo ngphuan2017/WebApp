@@ -4,10 +4,12 @@ import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
 import com.annp.pojo.Users;
 import java.util.List;
+import java.util.Map;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
     
+    public List<Users> getUsers(Map<String, String> params, int start, int limit);
     public Users getUserById(int id);
     public Users getUserByUsername(String username);
     public boolean addOrUpdateUser(Users user);
@@ -24,4 +26,5 @@ public interface UserService extends UserDetailsService {
     public boolean changePassword(String password, Users user);
     public Users getUserByTicket(String ticket);
     public Users getUserAccountById(int id);
+    public boolean deleteCustomer(int id);
 }

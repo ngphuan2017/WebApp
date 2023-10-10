@@ -295,4 +295,14 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.getUserAccountById(id);
     }
 
+    @Override
+    public List<Users> getUsers(Map<String, String> params, int start, int limit) {
+        return this.userRepository.getUsers(params, start, limit);
+    }
+
+    @Override
+    public boolean deleteCustomer(int id) {
+        return this.userRepository.deleteCustomer(id);
+    }
+
 }

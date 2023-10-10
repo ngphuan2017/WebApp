@@ -70,10 +70,10 @@ function pay(endpoint) {
     Swal.fire({
         title: 'Xác nhận',
         text: 'Bạn có chắc chắn muốn đặt hàng chứ ?',
-        icon: 'warning',
+        icon: 'question',
         showCancelButton: true,
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel'
+        confirmButtonText: 'Đặt hàng',
+        cancelButtonText: 'Hủy'
     }).then((result) => {
         if (result.isConfirmed) {
             // Hành động khi người dùng xác nhận

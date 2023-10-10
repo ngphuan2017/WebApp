@@ -1,28 +1,28 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: phuan
-  Date: 08/07/2023
-  Time: 3:13 CH
-  To change this template use File | Settings | File Templates.
+<%-- 
+    Document   : products
+    Created on : Mar 18, 2023, 1:45:57 PM
+    Author     : admin
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<c:url value="/api/admin/customer-management" var="customer" />
-<c:url value="/api/admin/customer-management/deleted" var="deleted" />
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<c:url value="/api/admin/product-management" var="product" />
+<c:url value="/api/admin/product-management/deleted" var="deleted" />
 
 <div class="container-fluid">
-    <h3 class="text-dark mb-4">Quản lý khách hàng</h3>
+    <h3 class="text-dark mb-4">Quản lý sản phẩm</h3>
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Thông tin khách hàng</p>
+            <p class="text-primary m-0 fw-bold">Thông tin sản phẩm</p>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 text-nowrap">
                     <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-                                <option value="10" selected="">10</option>
-                                <option value="25">25</option>
+                                <option value="10">10</option>
+                                <option value="25" selected="">25</option>
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                             </select>&nbsp;</label></div>
@@ -36,56 +36,38 @@
                     <thead>
                         <tr>
                             <th></th>
-                            <th>Họ và tên</th>
-                            <th>Loại tài khoản</th>
-                            <th>Email</th>
-                            <th>Số điện thoại</th>
-                            <th>Giới tính</th>
-                            <th>Cấp độ</th>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Phân loại</th>
+                            <th>Số lượng có sẵn</th>
+                            <th>Khuyến mãi</th>
+                            <th>Điểm đánh giá</th>
+                            <th>Số lượng đánh giá</th>
+                            <th>Sản phẩm đã bán</th>
                             <th>Trạng thái</th>
-                            <th>Ngày tạo</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${users}" var="u">
+                        <c:forEach items="${products}" var="p">
                             <tr>
-                                <td><a class="js-add-cart" href="javascript:;" onclick="accountView('${customer}/${u.id}')"><i class='fas fa-eye text-info'></i></a></td>
-                                <td><img class="rounded-circle me-2" width="30" height="30" src="${u.avatar}">${u.fullname}</td>
-                                <td>${u.userRole.id == 1 ? "Quản trị" : u.userRole.id == 2 ? "Quản lý" : "Người dùng"}</td>
-                                <td class="text-customer-email">${u.email}</td>
-                                <td>${u.phone}</td>
-                                <td>${u.gender == 1 ? "Nam" : u.gender == 2 ? "Nữ" : "Khác"}</td>
-                                <td>
-                                    <c:set var="foundLevel" value="false" />
-                                    <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
-                                        <c:if test="${u.exp <= exp.requiredExp && status.index > 0 && foundLevel eq false}">
-                                            ${listUserLevels[status.index - 1].levelName}
-                                            <c:set var="foundLevel" value="true" />
-                                        </c:if>
-                                    </c:forEach>
+                                <td><a class="js-add-cart" href="javascript:;" onclick="productView('${product}/${p.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td class="text-order-name"><img class="rounded-circle me-2" width="30" height="30" src="${p.image}">${p.name}</td>
+                                <td>${p.price}</td>
+                                <td>${p.categorysubId.name}</td>
+                                <td>${p.quantity}</td>
+                                <td>${p.discount}</td>
+                                <td class="text-customer-email">${p.averageRating}</td>
+                                <td>${p.reviewCount}</td>
+                                <td>${p.unitsSold}</td>
+                                <td id="product-status${o.id}">
+                                    <span class="text-customer-${p.productstatus.id == 5 ? "active" : p.productstatus.id == 6 ? "warning" : p.productstatus.id == 7 ? "danger" : "primary"}">${p.productstatus.statusname}</span>
                                 </td>
-                                <td id="customer-status${u.id}">
-                                    <c:set var="cssClass" value=""/>
-                                    <c:choose>
-                                        <c:when test="${u.userstatus.id == 1}">
-                                            <c:set var="cssClass" value="active"/>
-                                        </c:when>
-                                        <c:when test="${u.userstatus.id == 2}">
-                                            <c:set var="cssClass" value="warning"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:set var="cssClass" value="danger"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <span class="text-customer-${cssClass}">${u.userstatus.statusname}</span>
-                                </td>
-                                <td class="create-date">${u.createdDate}</td>
                                 <td>
                                     <a class="m-2" href="javascript:;">
                                         <i class="fas fa-edit text-primary"></i>
                                     </a>
-                                    <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
+                                    <a class="m-2" href="javascript:;" onclick="deleteProduct('${deleted}/${p.id}', ${p.id})">
                                         <i class='fas fa-trash text-danger'></i>
                                     </a>
                                 </td>

@@ -6,6 +6,7 @@ package com.annp.repository;
 
 import com.annp.pojo.Users;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -13,6 +14,7 @@ import java.util.List;
  */
 public interface UserRepository {
     
+    public List<Users> getUsers(Map<String, String> params, int start, int limit);
     public Users getUserById(int id);
     public Users getUserByUsername(String username);
     public boolean addOrUpdateUser(Users user);
@@ -23,4 +25,5 @@ public interface UserRepository {
     public List<Users> getUserByEmail(String email);
     public Users getUserByTicket(String ticket);
     public Users getUserAccountById(int id);
+    public boolean deleteCustomer(int id);
 }

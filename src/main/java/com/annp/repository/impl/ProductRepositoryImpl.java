@@ -37,36 +37,40 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> getProducts(Map<String, String> params, int start, int limit) {
-        Session s = factory.getObject().getCurrentSession();
-        CriteriaBuilder b = s.getCriteriaBuilder();
-        CriteriaQuery<Product> q = b.createQuery(Product.class);
-        Root root = q.from(Product.class);
-        q.select(root);
+        try {
+            Session s = factory.getObject().getCurrentSession();
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Product> q = b.createQuery(Product.class);
+            Root root = q.from(Product.class);
+            q.select(root);
 
-        if (params != null) {
-            List<Predicate> predicates = new ArrayList<>();
-            String kw = params.get("kw");
-            if (kw != null && !kw.isEmpty()) {
-                Predicate p = b.like(root.get("name").as(String.class),
-                        String.format("%%%s%%", kw));
-                predicates.add(p);
+            if (params != null) {
+                List<Predicate> predicates = new ArrayList<>();
+                String kw = params.get("kw");
+                if (kw != null && !kw.isEmpty()) {
+                    Predicate p = b.like(root.get("name").as(String.class),
+                            String.format("%%%s%%", kw));
+                    predicates.add(p);
+                }
+
+                String cateId = params.get("categorysubId");
+                if (cateId != null && cateId.matches("^\\d+$")) {
+                    Predicate p = b.equal(root.get("categorysubId"), Integer.parseInt(cateId));
+                    predicates.add(p);
+                }
+                q.where(predicates.toArray(Predicate[]::new));
             }
 
-            String cateId = params.get("categorysubId");
-            if (cateId != null && cateId.matches("^\\d+$")) {
-                Predicate p = b.equal(root.get("categorysubId"), Integer.parseInt(cateId));
-                predicates.add(p);
+            q.orderBy(b.desc(root.get("id")));
+            Query query = s.createQuery(q);
+            if (start > 0 && limit > 0) {
+                query.setFirstResult(start - 1); // Vị trí bắt đầu
+                query.setMaxResults(limit); // Số lượng kết quả trả về
             }
-            q.where(predicates.toArray(Predicate[]::new));
+            return query.getResultList();
+        } catch (Exception ex) {
+            return null;
         }
-
-        q.orderBy(b.desc(root.get("id")));
-        Query query = s.createQuery(q);
-        if (start > 0 && limit > 0) {
-            query.setFirstResult(start - 1); // Vị trí bắt đầu
-            query.setMaxResults(limit); // Số lượng kết quả trả về
-        }
-        return query.getResultList();
     }
 
     @Override

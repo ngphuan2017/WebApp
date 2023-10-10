@@ -18,7 +18,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value=""/>
         <put-attribute name="sidebar" value="/WEB-INF/layout/admin-sidebar.jsp"/>
         <put-attribute name="topbar" value="/WEB-INF/layout/admin-topbar.jsp"/>
-        <put-attribute name="footer" value="/WEB-INF/layout/footer.jsp"/>
         <put-attribute name="content" value=""/>
     </definition>
     <definition name="blankLayout" template="/WEB-INF/layout/blank-base.jsp">
@@ -32,13 +31,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Trang chủ quản trị" />
         <put-attribute name="content" value="/WEB-INF/pages/admin/admin.jsp" />
     </definition>
-    <definition name="account-admin" extends="adminLayout">
+    <definition name="admin-products" extends="adminLayout">
+        <put-attribute name="title" value="Quản lý sản phẩm" />
+        <put-attribute name="content" value="/WEB-INF/pages/admin/products/products.jsp" />
+    </definition>
+    <definition name="admin-account" extends="adminLayout">
         <put-attribute name="title" value="Quản lý tài khoản người dùng" />
         <put-attribute name="content" value="/WEB-INF/pages/admin/account/account.jsp" />
     </definition>
-    <definition name="account-view" extends="adminLayout">
-        <put-attribute name="title" value="Thông tin tài khoản"/>
-        <put-attribute name="content" value="/WEB-INF/pages/admin/account/profile.jsp"/>
+    <definition name="admin-order" extends="adminLayout">
+        <put-attribute name="title" value="Quản lý đơn hàng" />
+        <put-attribute name="content" value="/WEB-INF/pages/admin/order/order.jsp" />
     </definition>
 
 
@@ -89,20 +92,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/cart.jsp" />
     </definition>
-    <definition name="stats" extends="baseLayout">
-        <put-attribute name="title" value="Phú An Shop" />
-        <put-attribute name="content" value="/WEB-INF/pages/stats.jsp" />
-    </definition>
 
 
     <!--PAGE PRODUCT-->
     <definition name="product-detail" extends="baseLayout">
         <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/product-detail.jsp" />
-    </definition>
-    <definition name="products" extends="baseLayout">
-        <put-attribute name="title" value="Phú An Shop" />
-        <put-attribute name="content" value="/WEB-INF/pages/products.jsp" />
     </definition>
     <!--PAGE ORDER-->
     <definition name="order-detail" extends="baseLayout">

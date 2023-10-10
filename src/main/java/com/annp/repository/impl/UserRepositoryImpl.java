@@ -1,9 +1,11 @@
 package com.annp.repository.impl;
 
+import com.annp.pojo.Status;
 import com.annp.pojo.Users;
 import com.annp.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.NoResultException;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,7 +145,7 @@ public class UserRepositoryImpl implements UserRepository {
             query = query.orderBy(builder.desc(root.get("id")));
 
             Query q = session.createQuery(query);
-            
+
             List<Users> users = q.getResultList();
             return users != null && !users.isEmpty() ? users : new ArrayList<>();
         } catch (Exception ex) {
@@ -185,6 +187,52 @@ public class UserRepositoryImpl implements UserRepository {
             return user;
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    @Override
+    public List<Users> getUsers(Map<String, String> params, int start, int limit) {
+        try {
+            Session s = factory.getObject().getCurrentSession();
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Users> q = b.createQuery(Users.class);
+            Root root = q.from(Users.class);
+            q.select(root);
+
+            if (params != null) {
+                List<Predicate> predicates = new ArrayList<>();
+                String kw = params.get("kw");
+                if (kw != null && !kw.isEmpty()) {
+                    Predicate p = b.like(root.get("fullname").as(String.class),
+                            String.format("%%%s%%", kw));
+                    predicates.add(p);
+                }
+                q.where(predicates.toArray(Predicate[]::new));
+            }
+
+            q.orderBy(b.desc(root.get("id")));
+            Query query = s.createQuery(q);
+            if (start > 0 && limit > 0) {
+                query.setFirstResult(start - 1); // Vị trí bắt đầu
+                query.setMaxResults(limit); // Số lượng kết quả trả về
+            }
+            return query.getResultList();
+        } catch (Exception ex) {
+            return null;
+        }
+
+    }
+
+    @Override
+    public boolean deleteCustomer(int id) {
+        Users user = this.getUserById(id);
+        user.setUserstatus(new Status(4));
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            s.update(user);
+            return true;
+        } catch (HibernateException ex) {
+            return false;
         }
     }
 }

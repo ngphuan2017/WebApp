@@ -37,7 +37,7 @@ function accountView(endpoint) {
             <span style="margin: 7px 0;">ID: #${json.users.id}</span>
             <span style="margin: 7px 0;">Họ và tên: <span class="text-info">${json.users.fullname}</span></span>
             <span style="margin: 7px 0;">Giới tính: ${json.users.gender === "1" ? `Nam` : json.users.gender === "2" ? `Nữ` : `Khác`}</span>
-            <span style="margin: 7px 0;">Trạng thái: <span class="${json.users.userstatus.id === "1" ? `text-success` : json.users.userstatus.id === "2" ? `text-warning` : `text-danger`}">${json.users.userstatus.statusname}</span></span>
+            <span style="margin: 7px 0;">Trạng thái: <span class="${json.users.userstatus.id === "1" ? `text-customer-active` : json.users.userstatus.id === "2" ? `text-customer-warning` : `text-customer-danger`}">${json.users.userstatus.statusname}</span></span>
             <span style="margin: 7px 0;">Cấp độ: </span>
             <span class="profile-exp"><span class="profile-exp-bar" style="width: ${json.users.exp * 100 / requiredExp}%;">${json.users.exp * 100 / requiredExp}% (${json.users.exp}/${requiredExp})</span></span>
             <span style="margin: 14px 0;">Ngày tham gia: <span class="create-date">${json.users.createdDate}</span></span>
@@ -49,7 +49,7 @@ function accountView(endpoint) {
                 ${json.users.exp <= 10 ? "Sắt" : json.users.exp <= 20 ? "Đồng" : json.users.exp <= 40 ? "Bạc" :
                 json.users.exp <= 80 ? "Vàng" : json.users.exp <= 160 ? "Bạch Kim" : json.users.exp <= 320 ? "Kim cương" :
                 json.users.exp <= 640 ? "Tinh anh" : json.users.exp <= 1280 ? "Cao thủ" : json.users.exp <= 2560 ? "Chiến tướng" :
-                json.users.exp <= 5120 ? "Thách đấu" : json.users.exp <= 10240 ? "Phi thăng" : "Tiên nhân"}
+                json.users.exp <= 5120 ? "Thách đấu" : json.users.exp <= 10240 ? "Phi thăng" : json.users.exp <= 99999 ? "Á thần" : "Siêu thần"}
             </span>
             <i class="fa-solid fa-crown" style="color: yellow;"></i>
         `;

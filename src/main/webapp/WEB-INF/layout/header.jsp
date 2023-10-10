@@ -16,7 +16,7 @@
 <c:url value="/cart" var="cart" />
 <c:url value="/login" var="login" />
 <c:url value="/logout" var="logout" />
-<c:url value="/admin/products" var="admin" />
+<c:url value="/admin" var="admin" />
 <header>
     <div class="shop">
         <div class="inline-block logo">
@@ -65,7 +65,7 @@
                             </ul>
                         </li>
                     </c:forEach>
-                    <se:authorize access="!hasRole('ROLE_MANAGER')">
+                    <se:authorize access="!hasRole('ROLE_ADMIN')">
                         <li class="nav-item">
                             <a class="nav-link" href="${cart}"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng <span class="badge bg-danger cart-counter">${cartStats.totalQuantity}</span></a>
                         </li>

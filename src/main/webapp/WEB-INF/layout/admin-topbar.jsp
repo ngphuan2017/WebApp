@@ -7,16 +7,21 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<c:url value="/" var="action" />
+<c:url value="/me/profile" var="profile" />
+<c:url value="/forgot-password/change-password" var="changePassword" />
+<c:url value="/logout" var="logout" />
+
 <nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
   <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button>
     <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
-      <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ..."><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
+      <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Nhập từ khóa cần tìm..."><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
     </form>
     <ul class="navbar-nav flex-nowrap ms-auto">
       <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
         <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
           <form class="me-auto navbar-search w-100">
-            <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+            <div class="input-group"><input class="bg-light form-control border-0 small" type="text" placeholder="Nhập từ khóa cần tìm...">
               <div class="input-group-append"><button class="btn btn-primary py-0" type="button"><i class="fas fa-search"></i></button></div>
             </div>
           </form>
@@ -54,7 +59,7 @@
         <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="badge bg-danger badge-counter">7</span><i class="fas fa-envelope fa-fw"></i></a>
           <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
             <h6 class="dropdown-header">alerts center</h6><a class="dropdown-item d-flex align-items-center" href="#">
-            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="assets/img/avatars/avatar4.jpeg">
+            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="#">
               <div class="bg-success status-indicator"></div>
             </div>
             <div class="fw-bold">
@@ -62,7 +67,7 @@
               <p class="small text-gray-500 mb-0">Emily Fowler - 58m</p>
             </div>
           </a><a class="dropdown-item d-flex align-items-center" href="#">
-            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="assets/img/avatars/avatar2.jpeg">
+            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="#">
               <div class="status-indicator"></div>
             </div>
             <div class="fw-bold">
@@ -70,7 +75,7 @@
               <p class="small text-gray-500 mb-0">Jae Chun - 1d</p>
             </div>
           </a><a class="dropdown-item d-flex align-items-center" href="#">
-            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="assets/img/avatars/avatar3.jpeg">
+            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="#">
               <div class="bg-warning status-indicator"></div>
             </div>
             <div class="fw-bold">
@@ -78,7 +83,7 @@
               <p class="small text-gray-500 mb-0">Morgan Alvarez - 2d</p>
             </div>
           </a><a class="dropdown-item d-flex align-items-center" href="#">
-            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="assets/img/avatars/avatar5.jpeg">
+            <div class="dropdown-list-image me-3"><img class="rounded-circle" src="#">
               <div class="bg-success status-indicator"></div>
             </div>
             <div class="fw-bold">
@@ -92,20 +97,17 @@
       </li>
       <div class="d-none d-sm-block topbar-divider"></div>
       <li class="nav-item dropdown no-arrow">
-        <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">Valerie Luna</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+        <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">${currentUser.fullname}</span><img class="border rounded-circle img-profile" src="${currentUser.avatar}"></a>
           <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
-            <a class="dropdown-item" href="<c:url value="/profile" />">
-              <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile
+            <a class="dropdown-item" href="${profile}">
+              <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Tài khoản
             </a>
-            <a class="dropdown-item" href="#">
-              <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings
-            </a>
-            <a class="dropdown-item" href="#">
-              <i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log
+            <a class="dropdown-item" href="${changePassword}">
+              <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Đổi mật khẩu
             </a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="<c:url value="/logout" />">
-              <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout
+            <a class="dropdown-item" href="${logout}">
+              <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Đăng xuất
             </a>
           </div>
         </div>

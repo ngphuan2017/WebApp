@@ -4,9 +4,22 @@
  */
 package com.annp.controllers;
 
+import com.annp.dto.PaginatesDto;
+import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
+import com.annp.pojo.Status;
+import com.annp.pojo.UserLevels;
+import com.annp.pojo.Users;
+import com.annp.service.OrdersService;
+import com.annp.service.PaginatesService;
 import com.annp.service.ProductService;
+import com.annp.service.ReportService;
 import com.annp.service.StatsService;
+import com.annp.service.UserLevelsService;
+import com.annp.service.UserService;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,56 +29,109 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
  * @author admin
  */
 @Controller
-@RequestMapping("/admin")
 public class AdminController {
+
     @Autowired
     private ProductService productService;
     @Autowired
     private StatsService statsService;
-    
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private OrdersService orderService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserLevelsService userLevelsService;
+    @Autowired
+    private PaginatesService paginatesService;
+
     @ModelAttribute
     public void commonAttributes(Model model) {
         model.addAttribute("products", this.productService.getProducts(null, 0, 0));
     }
+
+    @GetMapping("/admin")
+    public String indexAdmin(Model model) {
+        model.addAttribute("cateStats", !this.statsService.statsCategory().isEmpty() ? this.statsService.statsCategory() : null);
+        model.addAttribute("revenues", !this.statsService.statsRevenue().isEmpty() ? this.statsService.statsRevenue() : null);
+        model.addAttribute("dayStats", !this.statsService.statsDay().isEmpty() ? this.statsService.statsDay() : null);
+        model.addAttribute("yearStats", !this.statsService.statsYear().isEmpty() ? this.statsService.statsYear() : null);
+        model.addAttribute("reports", this.reportService.getReports().size());
+        model.addAttribute("orderDetails", this.orderService.getOrderDetailByStatus(new Status(9)).size());
+        model.addAttribute("sidebar", "admin");
+        return "admin";
+    }
+
+    @GetMapping("/admin/customer-management")
+    public String adminAccount(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 10; //Số tài khoản 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.userService.getUsers(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<Users> users = this.userService.getUsers(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("users", users);
+        List<UserLevels> listUserLevelses = this.userLevelsService.getUserLevels();
+        model.addAttribute("listUserLevels", listUserLevelses);
+        model.addAttribute("sidebar", "customer");
+        return "admin-account";
+    }
     
-    @RequestMapping("/products")
-    public String addProduct(Model model, 
+    @GetMapping("/admin/order-management")
+    public String adminOrder(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 25; //Số đơn hàng 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.orderService.getOrderDetails(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<OrderDetail> orderDetail = this.orderService.getOrderDetails(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("orderDetail", orderDetail);
+        model.addAttribute("sidebar", "order");
+        return "admin-order";
+    }
+    
+    @GetMapping("/admin/product-management")
+    public String adminProducts(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 25; //Số sản phẩm 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.productService.getProducts(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<Product> products = this.productService.getProducts(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("products", products);
+        model.addAttribute("sidebar", "product");
+        return "admin-products";
+    }
+
+    @RequestMapping("/admin/products")
+    public String addProduct(Model model,
             @ModelAttribute(value = "product") @Valid Product p,
             BindingResult rs) {
-        if (rs.hasErrors())
-            return "products";
-        
-        if (this.productService.addOrUpdateProduct(p) == true)
+        if (rs.hasErrors()) {
+            return "admin-products";
+        }
+
+        if (this.productService.addOrUpdateProduct(p) == true) {
             return "redirect:/admin/products";
-        else
+        } else {
             model.addAttribute("errMsg", "Something wrong!!!");
-        
-        return "products";
+        }
+
+        return "admin-products";
     }
-    
-    @GetMapping("/products")
-    public String products(Model model) {
-        model.addAttribute("product", new Product());
-        
-        return "products";
-    }
-    
-    @GetMapping("/products/{productId}")
+
+    @GetMapping("/admin/products/{productId}")
     public String updateProduct(Model model, @PathVariable(value = "productId") int id) {
         model.addAttribute("product", this.productService.getProductById(id));
-        return "products";
+        return "admin-products";
     }
-    
-    @GetMapping("/stats")
-    public String stats(Model model) {
-        model.addAttribute("cateStats", this.statsService.statsCategory());
-        model.addAttribute("revenues", this.statsService.statsRevenue(null, null));
-        return "stats";
-    }
+
 }
