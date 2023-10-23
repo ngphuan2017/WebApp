@@ -12,5 +12,7 @@ import java.util.List;
  * @author phuan
  */
 public interface StatusService {
+    Status getStatusById(int id);
     List<Status> getStatus();
+    List<Status> getStatus(String columname);
 }

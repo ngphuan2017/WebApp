@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<footer class="sticky-footer" data-aos="fade-up" data-aos-delay="300" data-aos-offset="150">
+<footer class="sticky-footer" data-aos="fade-up" data-aos-delay="300" data-aos-offset="150" data-aos-once="true">
     <div class="container">
         <div class="row">
             <div id="icon">

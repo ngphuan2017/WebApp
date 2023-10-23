@@ -52,6 +52,10 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Product.findByUpdatedDate", query = "SELECT p FROM Product p WHERE p.updatedDate = :updatedDate")})
 public class Product implements Serializable {
 
+    @JoinColumn(name = "DISCOUNT", referencedColumnName = "ID")
+    @ManyToOne
+    private Promotion discount;
+
     @JoinColumn(name = "CATEGORYSUB_ID", referencedColumnName = "id")
     @ManyToOne
     private CategorySub categorysubId;
@@ -83,8 +87,6 @@ public class Product implements Serializable {
     private String image;
     @Column(name = "QUANTITY")
     private Integer quantity;
-    @Column(name = "DISCOUNT")
-    private Integer discount;
     @Column(name = "CREATED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -94,8 +96,6 @@ public class Product implements Serializable {
     @JoinColumn(name = "PRODUCTSTATUS", referencedColumnName = "ID")
     @ManyToOne
     private Status productstatus;
-    @OneToMany(mappedBy = "productId")
-    private Set<OrderDetail> orderDetailSet;
     
     @Transient
     @JsonIgnore
@@ -156,14 +156,6 @@ public class Product implements Serializable {
         this.quantity = quantity;
     }
 
-    public Integer getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(Integer discount) {
-        this.discount = discount;
-    }
-
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -186,15 +178,6 @@ public class Product implements Serializable {
 
     public void setProductstatus(Status productstatus) {
         this.productstatus = productstatus;
-    }
-
-    @XmlTransient
-    public Set<OrderDetail> getOrderDetailSet() {
-        return orderDetailSet;
-    }
-
-    public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
-        this.orderDetailSet = orderDetailSet;
     }
 
     @Override
@@ -267,6 +250,14 @@ public class Product implements Serializable {
 
     public void setCategorysubId(CategorySub categorysubId) {
         this.categorysubId = categorysubId;
+    }
+
+    public Promotion getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Promotion discount) {
+        this.discount = discount;
     }
 
 }

@@ -5,16 +5,24 @@
 package com.annp.controllers;
 
 import com.annp.dto.PaginatesDto;
+import com.annp.pojo.Category;
+import com.annp.pojo.CategorySub;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
+import com.annp.pojo.Promotion;
+import com.annp.pojo.Report;
 import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
+import com.annp.service.CategoryService;
+import com.annp.service.CategorySubService;
 import com.annp.service.OrdersService;
 import com.annp.service.PaginatesService;
 import com.annp.service.ProductService;
+import com.annp.service.PromotionService;
 import com.annp.service.ReportService;
 import com.annp.service.StatsService;
+import com.annp.service.StatusService;
 import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
 import java.util.List;
@@ -39,6 +47,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminController {
 
     @Autowired
+    private StatusService statusService;
+    @Autowired
     private ProductService productService;
     @Autowired
     private StatsService statsService;
@@ -51,11 +61,19 @@ public class AdminController {
     @Autowired
     private UserLevelsService userLevelsService;
     @Autowired
+    private CategorySubService categorySubService;
+    @Autowired
+    private CategoryService categoryService;
+    @Autowired
+    private PromotionService promotionService;
+    @Autowired
     private PaginatesService paginatesService;
 
     @ModelAttribute
     public void commonAttributes(Model model) {
-        model.addAttribute("products", this.productService.getProducts(null, 0, 0));
+        model.addAttribute("reportbar", this.reportService.getReportByStatus(new Status(14)).size());
+        model.addAttribute("orderDetailbar", this.orderService.getOrderDetailByStatus(new Status(9)).size());
+        model.addAttribute("orderDetailStatus", this.statusService.getStatus("ORDERDETAILSTATUS"));
     }
 
     @GetMapping("/admin")
@@ -64,8 +82,6 @@ public class AdminController {
         model.addAttribute("revenues", !this.statsService.statsRevenue().isEmpty() ? this.statsService.statsRevenue() : null);
         model.addAttribute("dayStats", !this.statsService.statsDay().isEmpty() ? this.statsService.statsDay() : null);
         model.addAttribute("yearStats", !this.statsService.statsYear().isEmpty() ? this.statsService.statsYear() : null);
-        model.addAttribute("reports", this.reportService.getReports().size());
-        model.addAttribute("orderDetails", this.orderService.getOrderDetailByStatus(new Status(9)).size());
         model.addAttribute("sidebar", "admin");
         return "admin";
     }
@@ -84,7 +100,7 @@ public class AdminController {
         model.addAttribute("sidebar", "customer");
         return "admin-account";
     }
-    
+
     @GetMapping("/admin/order-management")
     public String adminOrder(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
         int limit = 25; //Số đơn hàng 1 trang
@@ -97,7 +113,7 @@ public class AdminController {
         model.addAttribute("sidebar", "order");
         return "admin-order";
     }
-    
+
     @GetMapping("/admin/product-management")
     public String adminProducts(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
         int limit = 25; //Số sản phẩm 1 trang
@@ -109,6 +125,47 @@ public class AdminController {
         model.addAttribute("products", products);
         model.addAttribute("sidebar", "product");
         return "admin-products";
+    }
+
+    @GetMapping("/admin/category-management")
+    public String adminCategorySub(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 25; //Số danh mục 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.categorySubService.getCategorySub(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<CategorySub> categorys = this.categorySubService.getCategorySub(params, paginates.getStart(), paginates.getLimit());
+        List<Category> listCategory = this.categoryService.getCategories();
+        model.addAttribute("categorys", categorys);
+        model.addAttribute("listCategory", listCategory);
+        model.addAttribute("sidebar", "category");
+        return "admin-category";
+    }
+
+    @GetMapping("/admin/promotion-management")
+    public String adminPromotion(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 25; //Số danh mục 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.promotionService.getPromotion(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<Promotion> promotions = this.promotionService.getPromotion(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("promotions", promotions);
+        model.addAttribute("sidebar", "promotion");
+        return "admin-promotion";
+    }
+
+    @GetMapping("/admin/report-management")
+    public String adminReport(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 25; //Số danh mục 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.reportService.getReport(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<Report> reports = this.reportService.getReport(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("reports", reports);
+        model.addAttribute("sidebar", "report");
+        return "admin-report";
     }
 
     @RequestMapping("/admin/products")

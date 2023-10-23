@@ -167,4 +167,16 @@ public class OrdersRepositoryImpl implements OrdersRepository {
             return null;
         }
     }
+
+    @Override
+    public boolean updateOrderDetail(OrderDetail orderDetail) {
+        Session session = this.factory.getObject().getCurrentSession();
+        try {
+            session.update(orderDetail);
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

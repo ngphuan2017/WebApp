@@ -79,7 +79,7 @@ function accountView(endpoint) {
 function loadComments(endpointed, voted, report, deleted, changed, callback) {
     loadSpinner("block");
     const endpointInfo = extractBaseEndpointAndPage(endpointed);
-    const { endpoint, page } = endpointInfo;
+    const {endpoint, page} = endpointInfo;
     const updatedEndpoint = `${endpoint}?page=${page}`;
     fetch(updatedEndpoint).then(res => res.json()).then(data => {
         let msg = "";
@@ -344,19 +344,29 @@ function cancelChangeCmt(id) {
 }
 
 function deleteCmt(endpoint, id) {
-    debugger;
-    if (confirm("Bạn chắc chắn xóa?") === true) {
-        fetch(endpoint, {
-            method: "delete"
-        }).then(res => {
-            if (res.status === 204) {
-                var element = document.getElementById(`comment${id}`);
-                element.classList.remove('d-flex');
-                element.style.display = 'none';
-            } else
-                alert("Bình luận của bạn đã bị cáo vi phạm, quản trị viên đang xem xét!");
-        });
-    }
+    Swal.fire({
+        title: 'Xóa',
+        text: 'Bạn có chắc chắn muốn xóa ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Hành động khi người dùng xác nhận
+            fetch(endpoint, {
+                method: "delete"
+            }).then(res => {
+                if (res.status === 204) {
+                    var element = document.getElementById(`comment${id}`);
+                    element.classList.remove('d-flex');
+                    element.style.display = 'none';
+                    Swal.fire('Xóa thành công!', 'Bình luận của bạn đã bị xóa!', 'success');
+                } else
+                    Swal.fire('Xóa không thành công!', 'Bình luận của bạn đã bị cáo vi phạm, quản trị viên đang xem xét!', 'error');
+            });
+        }
+    });
 }
 
 function reply(cmtid) {
@@ -367,5 +377,5 @@ function extractBaseEndpointAndPage(endpointed) {
     const endpoint = endpointed.split("?page=")[0]; // Lấy đường dẫn không bao gồm query string
     const page = endpointed.split("?page=")[1] !== undefined ? endpointed.split("?page=")[1] : 1; // Lấy giá trị của tham số "page" trong query string
 
-    return { endpoint, page };
+    return {endpoint, page};
 }

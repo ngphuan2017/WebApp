@@ -37,7 +37,7 @@
                 <div class="text-danger currency" style="margin-top: 10px; padding: 15px 20px; font-size: 23px; background-color: #fafafa">
                     <del id="price-del" style="display: none; margin-right: 10px; font-size: 16px; color: #888;"><span class="money" id="price-old">${product.price}</span>&#x20AB;</del>
                     <span class="money" id="price-new" style="font-size: 30px; font-weight: 600;">${product.price}</span>&#x20AB;
-                    <div class="badge bg-danger" id="price-discount" style="display: none; margin: 0 0 0 15px; padding: 3px 4px; font-size: 12px;"><span id="discount">${product.discount}</span>% GIẢM</div>
+                    <div class="badge bg-danger" id="price-discount" style="display: none; margin: 0 0 0 15px; padding: 3px 4px; font-size: 12px;"><span id="discount">${product.discount.discount}</span>% GIẢM</div>
                 </div>
                 <div>
                     <p class="text-success">${product.description}</p>
@@ -62,7 +62,7 @@
                 </div>
                 <div class="d-flex justify-content-center" style="margin-top: 20px;">
                     <button style="font-size: 16px; padding: 10px;" type="button" class="btn btn-outline-success" 
-                            onclick="addToCart('${endpoint}', ${product.id}, '${product.name}', ${product.discount} > 0 ? ${product.price} * (1 - ${product.discount} / 100) : ${product.price}, '${product.image}')">
+                            onclick="addToCart('${endpoint}', ${product.id}, '${product.name}', ${product.discount.discount} > 0 ? ${product.price} * (1 - ${product.discount.discount} / 100) : ${product.price}, '${product.image}')">
                         <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ Hàng
                     </button>
                 </div>
@@ -167,8 +167,8 @@
     <strong>Thông Báo!</strong> Báo cáo đã được gửi đến <strong>Quản trị viên</strong>.
 </div>
 
-<script src="<c:url value="/js/comment.js" />"></script>
-<script src="<c:url value="/js/product-detail.js" />"></script>
+<script src="<c:url value="/resources/js/comment.js" />"></script>
+<script src="<c:url value="/resources/js/product-detail.js" />"></script>
 <script>
                         window.onload = function () {
                             loadComments('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', function () {

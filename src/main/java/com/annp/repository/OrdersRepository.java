@@ -21,5 +21,6 @@ public interface OrdersRepository {
     public List<Orders> getOrderByUserId(int id);
     public OrderDetail getOrderDetailById(int id);
     public List<OrderDetail> getOrderDetailByOrderId(int id);
+    public boolean updateOrderDetail(OrderDetail orderDetail);
     public boolean deleteOrderDetail(int id);
 }

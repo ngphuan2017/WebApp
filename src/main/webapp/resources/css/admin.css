@@ -24,6 +24,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-align: center;
 }
 
+.text-report-content {
+    max-width: 320px;
+    overflow: hidden;
+    white-space: normal;
+}
+
 .text-order-name {
     max-width: 180px;
     overflow: hidden;
@@ -75,7 +81,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-transform: uppercase;
 }
 
-.js-modal{
+.js-modal, .js-modal-edit{
     display: none;
     position: fixed;
     height: 100%;
@@ -95,7 +101,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .js-modal .modal-container-black {
     position: fixed;
-    bottom: 25%;
+    bottom: 15%;
     width: 600px;
     max-width: 60%;
     min-height: 200px;
@@ -105,6 +111,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     box-shadow: 0 0 27px rgba(255, 255, 255, 0.9);
     animation: modalFadeIn ease 0.5s;
 }
+
+.js-modal-edit .modal-container-black {
+    position: fixed;
+    bottom: 10%;
+    width: 600px;
+    max-width: 60%;
+    min-height: 200px;
+    background-color: #fdfdfd;
+    color: #222;
+    border-radius: 5px;
+    box-shadow: 0 0 27px rgba(0, 0, 0, 0.9);
+    animation: modalFadeIn ease 0.5s;
+}
+
 .js-modal .js-modal-close {
     position: absolute;
     color: #fff;
@@ -114,18 +134,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     padding: 5px;
     opacity: 0.8;
 }
-.js-modal .js-modal-close:hover {
+.js-modal-edit .js-modal-close-edit {
+    position: absolute;
+    color: #222;
+    font-size: 25px;
+    top: -7px;
+    right: 0;
+    padding: 5px;
+    opacity: 0.8;
+}
+.js-modal .js-modal-close:hover, .js-modal-edit .js-modal-close-edit:hover {
     cursor: default;
     color: red;
     opacity: 1;
 }
 
-.js-modal .modal-img-black {
+.js-modal .modal-img-black, .js-modal-edit .modal-img-black {
     width: 100%;
     padding: 5px;
 }
 
-.js-modal .modal-img-black img {
+.js-modal .modal-img-black img, .js-modal-edit .modal-img-black img {
     border-radius: 10px;
     padding: 2px;
     border: 1px solid #8d8d8d;
@@ -142,7 +171,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     font-weight: 700;
     box-shadow: 0 0 5px 3px;
 }
-.js-modal .text-account-title {
+.js-modal-edit .level {
+    margin: 10px;
+    background: #eaecf4;
+    color: #6ebee5;
+    padding: 5px;
+    border-radius: 50px;
+    font-weight: 700;
+    box-shadow: 0 0 5px 3px;
+}
+.js-modal .text-account-title, .js-modal-edit .text-account-title {
     color: #FF2400;
     text-shadow: 1px 0 1px rgba(255, 255, 255, 0.75);
 }
@@ -159,18 +197,30 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-transform: uppercase;
 }
 
-.js-modal .modal-body {
+.js-modal-edit .modal-header-black {
+    color: red;
+    display: block;
+    border-bottom: 1px dashed #f98d8d;
+    padding: 10px 0;
+    margin: 0 10px 15px;
+    height: 50px;
+    font-weight: 700;
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.js-modal .modal-body, .js-modal-edit .modal-body {
     padding: 1px;
 }
 
-.js-modal .modal-content {
+.js-modal .modal-content, .js-modal-edit .modal-content {
     font-family: Roboto, sans-serif;
     font-size: 14px;
     font-weight: 500;
     text-align: left;
 }
 
-.js-modal .footer-modal-black {
+.js-modal .footer-modal-black, .js-modal-edit .footer-modal-black {
     border-top: 1px dashed #f98d8d;
     margin: 0 10px;
     padding: 10px 0;
@@ -216,4 +266,21 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     100% {
         background-position: 0;
     }
+}
+
+.block-avatar {
+    position: relative;
+    display: inline-block;
+}
+
+.icon-camera-avatar {
+    position: absolute;
+    bottom: -19px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    border-radius: 50px;
+    background-color: #999;
+    color: #fff;
+    padding: 10px 13px;
 }

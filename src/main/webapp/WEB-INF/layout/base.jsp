@@ -40,8 +40,6 @@
         <script src="<c:url value="/resources/js/product.js" />"></script>
         <script src="<c:url value="/resources/js/cart.js" />"></script>
         <script src="<c:url value="/resources/js/orders.js" />"></script>
-        <script src="<c:url value="/resources/js/comment.js" />"></script>
-        <script src="<c:url value="/resources/js/stats.js" />"></script>
         <script src="<c:url value="/resources/js/index.js" />"></script>
         <script src="<c:url value="/resources/popperjs-2.9.1/popper.min.js" />"></script>
     </body>

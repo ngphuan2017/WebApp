@@ -309,4 +309,4 @@
         </div>
     </div>
 </div>
-<script src="<c:url value="/js/profile.js" />"></script>
+<script src="<c:url value="/resources/js/profile.js" />"></script>

@@ -16,14 +16,24 @@ import org.springframework.stereotype.Service;
  * @author phuan
  */
 @Service
-public class StatusServiceImpl implements StatusService{
+public class StatusServiceImpl implements StatusService {
 
     @Autowired
     private StatusRepository statusRepository;
-    
+
     @Override
     public List<Status> getStatus() {
         return this.statusRepository.getStatus();
     }
-    
+
+    @Override
+    public List<Status> getStatus(String columname) {
+        return this.statusRepository.getStatus(columname);
+    }
+
+    @Override
+    public Status getStatusById(int id) {
+        return this.statusRepository.getStatusById(id);
+    }
+
 }

@@ -4,29 +4,47 @@
  */
 package com.annp.controllers;
 
+import com.annp.pojo.Category;
+import com.annp.pojo.CategorySub;
+import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
+import com.annp.pojo.Promotion;
+import com.annp.pojo.Report;
+import com.annp.pojo.Role;
+import com.annp.pojo.Status;
 import com.annp.pojo.Users;
+import com.annp.service.CategorySubService;
+import com.annp.service.OrdersService;
 import com.annp.service.ProductService;
+import com.annp.service.PromotionService;
+import com.annp.service.ReportService;
 import com.annp.service.StatsService;
+import com.annp.service.StatusService;
 import com.annp.service.UserService;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 /**
@@ -34,7 +52,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
  * @author phuan
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/admin/api")
 public class ApiAdminController {
 
     @Autowired
@@ -42,21 +60,42 @@ public class ApiAdminController {
     @Autowired
     private ProductService productService;
     @Autowired
+    private OrdersService ordersService;
+    @Autowired
+    private PromotionService promotionService;
+    @Autowired
+    private CategorySubService categorySubService;
+    @Autowired
+    private ReportService reportService;
+    @Autowired
+    private StatusService statusService;
+    @Autowired
     private StatsService statsService;
 
-    @GetMapping("/admin/customer-management/{userId}")
+    @GetMapping("/customer-management/{userId}")
     public ResponseEntity<Users> aboutAccountView(@PathVariable(value = "userId") int id) {
         Users user = this.userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-    
-    @GetMapping("/admin/order-management/{productId}")
-    public ResponseEntity<Product> aboutProductView(@PathVariable(value = "productId") int id) {
+
+    @GetMapping("/{view:(?:order|product)-management}/{productId}")
+    public ResponseEntity<Object> aboutProductView(@PathVariable(value = "view") String view, @PathVariable(value = "productId") int id) {
         Product product = this.productService.getProductById(id);
+        if ("product-management".equals(view)) {
+            List<CategorySub> categorySub = this.categorySubService.getCategorySub();
+            List<Promotion> promotion = this.promotionService.getPromotions();
+            List<Status> status = this.statusService.getStatus("PRODUCTSTATUS");
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("product", product);
+            responseMap.put("listCategorySub", categorySub);
+            responseMap.put("listPromotion", promotion);
+            responseMap.put("listStatus", status);
+            return new ResponseEntity<>(responseMap, HttpStatus.OK);
+        }
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @PutMapping("/admin/customer-management/deleted/{userId}")
+    @PutMapping("/customer-management/deleted/{userId}")
     public ResponseEntity deleteCustomer(@PathVariable(value = "userId") int id) {
         try {
             if (this.userService.deleteCustomer(id)) {
@@ -68,7 +107,201 @@ public class ApiAdminController {
         }
     }
 
-    @GetMapping("/admin/download-pdf")
+    @PostMapping("/customer-management/edited/{userId}")
+    public ResponseEntity editCustomer(@PathVariable(value = "userId") int id,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam("fullname") String fullname,
+            @RequestParam("gender") String gender,
+            @RequestParam("email") String email,
+            @RequestParam("phone") String phone,
+            @RequestParam("address") String address,
+            @RequestParam("userstatus") String userstatus,
+            @RequestParam(value = "userRole", required = false) String userRole) {
+        try {
+            Users u = this.userService.getUserById(id);
+            if (file != null) {
+                u.setFile(file);
+            }
+            u.setFullname(fullname);
+            if (!gender.isEmpty()) {
+                u.setGender(Integer.valueOf(gender));
+            }
+            u.setEmail(email);
+            u.setPhone(phone);
+            u.setAddress(address);
+            u.setUserstatus(new Status(Integer.valueOf(userstatus)));
+            if (userRole != null) {
+                u.setUserRole(new Role(Integer.valueOf(userRole)));
+            }
+            if (this.userService.updateProfileUser(u)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/order-management/updated/{orderDetailId}")
+    public ResponseEntity updateOrder(@PathVariable(value = "orderDetailId") int id, @RequestBody Map<String, String> params) {
+        try {
+            OrderDetail od = this.ordersService.getOrderDetailById(id);
+            od.setOrderstatus(new Status(Integer.valueOf(params.get("orderDetailStatus"))));
+            if (this.ordersService.updateOrderDetail(od)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/order-management/deleted/{orderDetailId}")
+    public ResponseEntity deleteOrder(@PathVariable(value = "orderDetailId") int id) {
+        try {
+            if (this.ordersService.deleteOrderDetail(id)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/product-management/deleted/{productId}")
+    public ResponseEntity deleteProduct(@PathVariable(value = "productId") int id) {
+        try {
+            if (this.productService.deleteProduct(id)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/product-management/edited/{productId}")
+    public ResponseEntity editProduct(@PathVariable(value = "productId") int id,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam("name") String name,
+            @RequestParam("price") String price,
+            @RequestParam("quantity") String quantity,
+            @RequestParam("categorysubId") String categorysubId,
+            @RequestParam("productstatus") String productstatus,
+            @RequestParam("discount") String discount) {
+        try {
+            Product p = this.productService.getProductById(id);
+            if (file != null) {
+                p.setFile(file);
+            }
+            p.setName(name);
+            p.setPrice(Integer.valueOf(price));
+            p.setQuantity(Integer.valueOf(quantity));
+            p.setCategorysubId(new CategorySub(Integer.valueOf(categorysubId)));
+            p.setProductstatus(new Status(Integer.valueOf(productstatus)));
+            p.setDiscount(new Promotion(Integer.valueOf(discount)));
+            if (this.productService.addOrUpdateProduct(p)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/promotion-management/edited/{promotionId}")
+    public ResponseEntity updatePromotion(@PathVariable(value = "promotionId") int id, @RequestBody Map<String, String> params) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Promotion promotion = this.promotionService.getPromotionById(id);
+            promotion.setNote(params.get("note"));
+            promotion.setCode(params.get("code"));
+            promotion.setDiscount(Integer.valueOf(params.get("discount")));
+            promotion.setBeginDate(dateFormat.parse(params.get("beginDate")));
+            promotion.setEndDate(dateFormat.parse(params.get("endDate")));
+            promotion.setType(Integer.valueOf(params.get("type")));
+            if (this.promotionService.updatePromotion(promotion)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/promotion-management/deleted/{promotionId}")
+    public ResponseEntity deletePromotion(@PathVariable(value = "promotionId") int id) {
+        try {
+            if (this.promotionService.deletePromotion(id)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/category-management/edited/{categorySubId}")
+    public ResponseEntity updateCategorySub(@PathVariable(value = "categorySubId") int id, @RequestBody Map<String, String> params) {
+        try {
+            CategorySub categorySub = this.categorySubService.getCategorySubById(id);
+            categorySub.setName(params.get("name"));
+            categorySub.setCategoryId(new Category(Integer.valueOf(params.get("categoryId"))));
+            if (this.categorySubService.updateCategorySub(categorySub)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/category-management/deleted/{categorySubId}")
+    public ResponseEntity deleteCategorySub(@PathVariable(value = "categorySubId") int id) {
+        try {
+            if (this.categorySubService.deleteCategorySub(id)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/report-management/edited/{reportId}")
+    public ResponseEntity updateReport(@PathVariable(value = "reportId") int id, @RequestBody Map<String, Integer> params) {
+        try {
+            Report r = this.reportService.getReportById(id);
+            Users u = this.userService.getUserById(r.getUserid().getId());
+            if (params.get("statusId") == 16) {
+                u.setUserstatus(new Status(2));
+                this.userService.updateUser(u);
+            }
+            r.setReportstatus(new Status(params.get("statusId")));
+            if (this.reportService.updateReport(r)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/report-management/deleted/{reportId}")
+    public ResponseEntity deleteReport(@PathVariable(value = "reportId") int id) {
+        try {
+            if (this.reportService.deleteReport(id)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/download-pdf")
     public ResponseEntity<InputStreamResource> downloadPDF() {
         try {
             List<Object[]> statsMonth = this.statsService.statsMonth();

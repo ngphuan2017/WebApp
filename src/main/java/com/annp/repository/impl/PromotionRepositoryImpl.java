@@ -4,8 +4,8 @@
  */
 package com.annp.repository.impl;
 
-import com.annp.pojo.CategorySub;
-import com.annp.repository.CategorySubRepository;
+import com.annp.pojo.Promotion;
+import com.annp.repository.PromotionRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,39 +27,31 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class CategorySubRepositoryImpl implements CategorySubRepository {
+public class PromotionRepositoryImpl implements PromotionRepository {
 
     @Autowired
     private LocalSessionFactoryBean factory;
 
     @Override
-    public List<CategorySub> getCategorySub() {
-        Session s = factory.getObject().getCurrentSession();
-        Query q = s.createQuery("From CategorySub");
-        return q.getResultList();
-    }
-
-    @Override
-    public List<CategorySub> getCategorySub(Map<String, String> params, int start, int limit) {
+    public List<Promotion> getPromotion(Map<String, String> params, int start, int limit) {
         try {
             Session s = factory.getObject().getCurrentSession();
             CriteriaBuilder b = s.getCriteriaBuilder();
-            CriteriaQuery<CategorySub> q = b.createQuery(CategorySub.class);
-            Root root = q.from(CategorySub.class);
+            CriteriaQuery<Promotion> q = b.createQuery(Promotion.class);
+            Root root = q.from(Promotion.class);
             q.select(root);
 
             if (params != null) {
                 List<Predicate> predicates = new ArrayList<>();
                 String kw = params.get("kw");
                 if (kw != null && !kw.isEmpty()) {
-                    Predicate p = b.like(root.get("name").as(String.class),
+                    Predicate p = b.like(root.get("note"),
                             String.format("%%%s%%", kw));
                     predicates.add(p);
                 }
                 q.where(predicates.toArray(Predicate[]::new));
             }
-
-            q.orderBy(b.asc(root.get("categoryId")));
+            q.orderBy(b.desc(root.get("id")));
             Query query = s.createQuery(q);
             if (start > 0 && limit > 0) {
                 query.setFirstResult(start - 1); // Vị trí bắt đầu
@@ -67,16 +59,17 @@ public class CategorySubRepositoryImpl implements CategorySubRepository {
             }
             return query.getResultList();
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public boolean deleteCategorySub(int id) {
-        CategorySub sub = this.getCategorySubById(id);
+    public boolean deletePromotion(int id) {
+        Promotion p = this.getPromotionById(id);
         Session s = this.factory.getObject().getCurrentSession();
         try {
-            s.delete(sub);
+            s.delete(p);
             return true;
         } catch (HibernateException ex) {
             return false;
@@ -84,21 +77,28 @@ public class CategorySubRepositoryImpl implements CategorySubRepository {
     }
 
     @Override
-    public CategorySub getCategorySubById(int id) {
+    public Promotion getPromotionById(int id) {
         Session s = this.factory.getObject().getCurrentSession();
-        return s.get(CategorySub.class, id);
+        return s.get(Promotion.class, id);
     }
 
     @Override
-    public boolean updateCategorySub(CategorySub categorySub) {
+    public boolean updatePromotion(Promotion promotion) {
         Session session = this.factory.getObject().getCurrentSession();
         try {
-            session.update(categorySub);
+            session.update(promotion);
             return true;
         } catch (HibernateException ex) {
             ex.printStackTrace();
-            return false;
         }
+        return false;
+    }
+
+    @Override
+    public List<Promotion> getPromotions() {
+        Session s = factory.getObject().getCurrentSession();
+        Query q = s.createQuery("From Promotion");
+        return q.getResultList();
     }
 
 }

@@ -49,21 +49,33 @@ function updateItem(endpoint, obj, id, price) {
 }
 
 function deleteItem(endpoint, id) {
-    if (confirm("Bạn chắc chắn xóa không?") === true) {
-        fetch(endpoint, {
-            method: "delete"
-        }).then(res => res.json()).then(data => {
-            let el = document.getElementById(`cart${id}`);
-            el.style.display = "none";
+    Swal.fire({
+        title: 'Xóa',
+        text: 'Bạn có chắc chắn muốn xóa ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Hành động khi người dùng xác nhận
+            fetch(endpoint, {
+                method: "delete"
+            }).then(res => res.json()).then(data => {
+                let el = document.getElementById(`cart${id}`);
+                el.style.display = "none";
 
-            let counters = document.getElementsByClassName("cart-counter");
-            for (let d of counters)
-                d.innerText = data.totalQuantity;
-            let amounts = document.getElementsByClassName("cart-amount");
-            for (let d of amounts)
-                d.innerText = parseFloat(data.totalAmount).toLocaleString("en-US");
-        });
-    }
+                let counters = document.getElementsByClassName("cart-counter");
+                for (let d of counters)
+                    d.innerText = data.totalQuantity;
+                let amounts = document.getElementsByClassName("cart-amount");
+                for (let d of amounts) {
+                    d.innerText = parseFloat(data.totalAmount).toLocaleString("en-US");
+                }
+                Swal.fire('Xóa thành công!', 'Sản phẩm đã bị xóa khỏi giỏ hàng!', 'success');
+            });
+        }
+    });
 }
 
 function pay(endpoint) {
@@ -94,12 +106,9 @@ function pay(endpoint) {
                         d.innerText = 0;
                     Swal.fire('Đặt hàng thành công!', 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
                 } else {
-                    Swal.fire('Đặt hàng không thành công!', 'Hệ thống đang có lỗi, vui lòng quay lại sau!', 'error');
+                    Swal.fire('Đặt hàng không thành công!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
                 }
             });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            // Hành động khi người dùng hủy
-            Swal.fire('Hủy', 'Bạn đã hủy đặt hàng!');
         }
     });
 }

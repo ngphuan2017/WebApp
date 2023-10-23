@@ -7,8 +7,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<c:url value="/" var="action" />
+
 <h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down"><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG</h1>
 
+<c:if test="${carts == null}">
+    <div class="text-center m-2">
+        <h3>"Hổng" có gì trong giỏ hết</h3>
+        <p>Về trang cửa hàng để chọn mua sản phẩm bạn nhé!!!</p>
+        <a class="btn btn-outline-danger" href="${action}">Mua sắm ngay</a>
+    </div>
+</c:if>
 <c:if test="${carts != null}">
     <div class="container">
         <table class="table" data-aos="fade-left">

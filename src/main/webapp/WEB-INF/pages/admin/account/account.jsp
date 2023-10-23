@@ -7,15 +7,17 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="se" uri="http://www.springframework.org/security/tags"  %>
 
-<c:url value="/api/admin/customer-management" var="customer" />
-<c:url value="/api/admin/customer-management/deleted" var="deleted" />
+<c:url value="/admin/api/customer-management" var="customered" />
+<c:url value="/admin/api/customer-management/deleted" var="deleted" />
+<c:url value="/admin/api/customer-management/edited" var="edited" />
 
 <div class="container-fluid">
-    <h3 class="text-dark mb-4">Quản lý khách hàng</h3>
+    <h3 class="text-dark mb-4">Quản lý tài khoản</h3>
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Thông tin khách hàng</p>
+            <p class="text-primary m-0 fw-bold">Thông tin người dùng</p>
         </div>
         <div class="card-body">
             <div class="row">
@@ -36,9 +38,9 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>STT</th>
                             <th>Họ và tên</th>
                             <th>Loại tài khoản</th>
-                            <th>Email</th>
                             <th>Số điện thoại</th>
                             <th>Giới tính</th>
                             <th>Cấp độ</th>
@@ -48,12 +50,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${users}" var="u">
+                        <c:forEach items="${users}" var="u" varStatus="loop">
                             <tr>
-                                <td><a class="js-add-cart" href="javascript:;" onclick="accountView('${customer}/${u.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td><a class="js-add-cart" href="javascript:;" onclick="accountView('${customered}/${u.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td>${loop.index + 1}</td>
                                 <td><img class="rounded-circle me-2" width="30" height="30" src="${u.avatar}">${u.fullname}</td>
-                                <td>${u.userRole.id == 1 ? "Quản trị" : u.userRole.id == 2 ? "Quản lý" : "Người dùng"}</td>
-                                <td class="text-customer-email">${u.email}</td>
+                                <td>${u.userRole.id == 1 ? "<span class='text-danger'>Quản trị</span>" : u.userRole.id == 2 ? "<span class='text-success'>Quản lý</span>" : "Người dùng"}</td>
                                 <td>${u.phone}</td>
                                 <td>${u.gender == 1 ? "Nam" : u.gender == 2 ? "Nữ" : "Khác"}</td>
                                 <td>
@@ -65,7 +67,7 @@
                                         </c:if>
                                     </c:forEach>
                                 </td>
-                                <td id="customer-status${u.id}">
+                                <td class="text-order-name" id="customer-status${u.id}">
                                     <c:set var="cssClass" value=""/>
                                     <c:choose>
                                         <c:when test="${u.userstatus.id == 1}">
@@ -82,12 +84,27 @@
                                 </td>
                                 <td class="create-date">${u.createdDate}</td>
                                 <td>
-                                    <a class="m-2" href="javascript:;">
-                                        <i class="fas fa-edit text-primary"></i>
-                                    </a>
-                                    <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
-                                        <i class='fas fa-trash text-danger'></i>
-                                    </a>
+                                    <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}')"><i class="fas fa-edit text-primary"></i></a>
+                                        <se:authorize access="hasRole('ROLE_ADMIN')">
+                                        <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
+                                            <i class='fas fa-trash text-danger'></i>
+                                        </a>
+                                    </se:authorize>
+                                    <se:authorize access="!hasRole('ROLE_ADMIN')">
+                                        <c:choose>
+                                            <c:when test="${u.userRole.id == 3}">
+                                                <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
+                                                    <i class='fas fa-trash text-danger'></i>
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="m-2" href="javascript:;" onclick="permissionAccount()">
+                                                    <i class='fas fa-trash text-danger'></i>
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </se:authorize>
+
                                 </td>
                             </tr>
                         </c:forEach>
@@ -135,6 +152,40 @@
             </div>
         </div>
         <div class="footer-modal-black" id="modal-account-title">
+
+        </div>
+    </div>
+</div>
+
+<div class="js-modal-edit">
+    <div class="modal-container-black js-modal-container-edit">
+        <div class="js-modal-close-edit">x</div>
+        <header class="modal-header-black">
+            <span><i class="fas fa-user-edit"></i> Chỉnh sửa thông tin</span>
+        </header>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                    <div class="modal-img-black" id="modal-account-img-edit">
+
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6 col-12">
+                    <div class="modal-content" id="modal-account-about-edit">
+
+                    </div>
+                    <se:authorize access="hasRole('ROLE_ADMIN')">
+                        <div class="modal-content" id="modal-role-admin-edit">
+
+                        </div>
+                    </se:authorize>
+                </div>
+            </div>
+        </div>
+        <div class="m-3" id="change-profile-user">
+            
+        </div>
+        <div class="footer-modal-black" id="modal-account-title-edit">
 
         </div>
     </div>

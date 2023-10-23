@@ -27,7 +27,7 @@
             <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089474/WebApp/dochoi_i93xog.jpg" class="d-block" style="width:100%">
         </div>
         <div class="carousel-item">
-            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089476/WebApp/mypham_atwcrf.jpg" class="d-block" style="width:100%">
+            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1697729774/WebApp/cac-truong-hop-lam-gia-my-pham_dhpzjo.jpg" class="d-block" style="width:100%">
         </div>
         <div class="banner">
             <div class="clouds">
@@ -58,7 +58,7 @@
             <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3" data-aos="fade-left" data-aos-once="true">
                 <div class="card card-block">
                     <h4 class="card-title text-right"><i class="fa-solid fa-gear"></i></h4>
-                    <div class="price-discount" style="display: none;">-<span class="discount">${p.discount}</span>%</div>
+                    <div class="price-discount" style="display: none;">-<span class="discount">${p.discount.discount}</span>%</div>
                     <img style="width: 100%; max-height: 120px; min-height: 120px; padding: 5px 15%;" src="${p.image}" alt="image">
                     <div class="card-body" style="height: 160px;">
                         <h6 class="card-title text-center" style="min-height: 50px; margin-bottom: 5px; font-weight: 700;">${p.name}</h6>

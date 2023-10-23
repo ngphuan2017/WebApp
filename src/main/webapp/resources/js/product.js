@@ -4,20 +4,30 @@
  */
 
 function deleteProduct(endpoint, id) {
-    if (confirm("Bạn chắc chắn xóa? Nó sẽ xóa luôn các hóa đơn liên quan?") === true) {
-        let s = document.getElementById(`spinner${id}`);
-        s.style.display = "block";
+    Swal.fire({
+        title: 'Xóa',
+        text: 'Bạn chắc chắn xóa? Nó sẽ xóa luôn các hóa đơn liên quan?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let s = document.getElementById(`spinner${id}`);
+            s.style.display = "block";
 
-        fetch(endpoint, {
-            method: "delete"
-        }).then(res => {
-            s.style.display = "none";
-            if (res.status === 204) {
-                document.getElementById(`product${id}`).style.display = "none";
-            } else
-                alert("Hệ thống đang có lỗi, vui lòng quay lại sau!");
-        });
-    }
+            fetch(endpoint, {
+                method: "delete"
+            }).then(res => {
+                s.style.display = "none";
+                if (res.status === 204) {
+                    document.getElementById(`product${id}`).style.display = "none";
+                    Swal.fire('Xóa thành công!', 'Sản phẩm đã bị xóa khỏi giỏ hàng!', 'success');
+                } else
+                    Swal.fire('Xóa không thành công!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
+            });
+        }
+    });
 }
 
 let btns = document.querySelectorAll('.js-add-cart');
@@ -51,7 +61,7 @@ function productView(endpointview, endpoint) {
         `;
         let jss = document.getElementById("modal-product-buy");
         jss.innerHTML = `
-            <a href="javascript:;" onclick="addToCart('${endpoint}', ${json.product.id}, '${json.product.name}', ${json.product.discount} > 0 ? ${json.product.price} * (1 - ${json.product.discount} / 100) : ${json.product.price}, '${json.product.image}')" id="btn-buy-product">
+            <a href="javascript:;" onclick="addToCart('${endpoint}', ${json.product.id}, '${json.product.name}', ${json.product.discount.discount} > 0 ? ${json.product.price} * (1 - ${json.product.discount.discount} / 100) : ${json.product.price}, '${json.product.image}')" id="btn-buy-product">
                 <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng</a>
         `;
         for (const btn of btns) {

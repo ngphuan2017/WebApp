@@ -6,10 +6,10 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="se" uri="http://www.springframework.org/security/tags"  %>
 
-<c:url value="/api/admin/order-management" var="order" />
-<c:url value="/api/admin/order-management/deleted" var="deleted" />
+<c:url value="/admin/api/order-management" var="ordered" />
+<c:url value="/admin/api/order-management/updated" var="updated" />
+<c:url value="/admin/api/order-management/deleted" var="deleted" />
 
 <div class="container-fluid">
     <h3 class="text-dark mb-4">Quản lý đơn hàng</h3>
@@ -36,10 +36,11 @@
                     <thead>
                         <tr>
                             <th></th>
+                            <th>STT</th>
                             <th>Sản phẩm</th>
                             <th>Đơn giá</th>
                             <th>Số lượng</th>
-                            <th>Số tiền</th>
+                            <th>Thành tiền</th>
                             <th>Trạng thái thanh toán</th>
                             <th>Ngày mua</th>
                             <th>Trạng thái</th>
@@ -48,32 +49,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${orderDetail}" var="o">
+                        <c:forEach items="${orderDetail}" var="o" varStatus="loop">
                             <tr>
-                                <td><a class="js-add-cart" href="javascript:;" onclick="productView('${order}/${o.productId.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td><a class="js-add-cart" href="javascript:;" onclick="productOrderView('${ordered}/${o.productId.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td>${loop.index + 1}</td>
                                 <td class="text-order-name"><img class="rounded-circle me-2" width="30" height="30" src="${o.productId.image}">${o.productId.name}</td>
-                                <td>${o.price}</td>
+                                <td class="currency"><span class="money">${o.price}</span></td>
                                 <td>${o.number}</td>
-                                <td>${o.price * o.number}</td>
+                                <td class="currency"><span class="money">${o.price * o.number}</span></td>
                                 <td class="text-customer-email">${o.orderId.type.statusname}</td>
                                 <td class="create-date">${o.createdDate}</td>
-                                <td id="order-status${o.id}">
-                                    <span class="text-customer-${o.orderstatus.id == 9 ? "warning" : o.orderstatus.id == 10 ? "primary" : o.orderstatus.id == 11 ? "active" : "danger"}">${o.orderstatus.statusname}</span>
+                                <td class="text-order-name" id="order-status${o.id}">
+                                    <span id="order-status-old${o.id}" class="text-customer-${o.orderstatus.id == 9 ? "warning" : o.orderstatus.id == 10 ? "primary" : o.orderstatus.id == 11 ? "active" : "danger"}">${o.orderstatus.statusname}</span>
+                                    <select class="form-select d-none" id="order-status-new${o.id}" onchange="updateOrderStatus('${updated}/${o.id}', ${o.id})">
+                                        <c:forEach items="${orderDetailStatus}" var="s">
+                                            <option value="${s.id}" ${o.orderstatus.id == s.id ? "selected" : ""}>${s.statusname}</option>
+                                            </c:forEach>
+                                    </select>
                                 </td>
                                 <td>
-                                    <a class="m-2" href="javascript:;">
-                                        <i class="fas fa-edit text-primary"></i>
+                                    <a class="m-2" href="javascript:;" onclick="showStatus(${o.id})"><i class="fas fa-edit text-primary"></i></a>
+                                    <a class="m-2" href="javascript:;" onclick="deleteOrder('${deleted}/${o.id}', ${o.id})">
+                                        <i class='fas fa-trash text-danger'></i>
                                     </a>
-                                    <se:authorize access="hasRole('ROLE_ADMIN')">
-                                        <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
-                                            <i class='fas fa-trash text-danger'></i>
-                                        </a>
-                                    </se:authorize>
-                                    <se:authorize access="!hasRole('ROLE_ADMIN')">
-                                        <a class="m-2" href="javascript:;" onclick="permissionAccount()">
-                                            <i class='fas fa-trash text-danger'></i>
-                                        </a>
-                                    </se:authorize>
                                 </td>
                             </tr>
                         </c:forEach>

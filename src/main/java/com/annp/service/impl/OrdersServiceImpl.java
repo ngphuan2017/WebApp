@@ -19,11 +19,11 @@ import org.springframework.stereotype.Service;
  * @author phuan
  */
 @Service
-public class OrdersServiceImpl implements OrdersService{
+public class OrdersServiceImpl implements OrdersService {
 
     @Autowired
     private OrdersRepository ordersRepository;
-    
+
     @Override
     public List<Orders> getOrderByUserId(int id) {
         return this.ordersRepository.getOrderByUserId(id);
@@ -58,5 +58,10 @@ public class OrdersServiceImpl implements OrdersService{
     public List<OrderDetail> getOrderDetails(Map<String, String> params, int start, int limit) {
         return this.ordersRepository.getOrderDetails(params, start, limit);
     }
-    
+
+    @Override
+    public boolean updateOrderDetail(OrderDetail orderDetail) {
+        return this.ordersRepository.updateOrderDetail(orderDetail);
+    }
+
 }
