@@ -11,14 +11,14 @@
 
 <h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down"><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG</h1>
 
-<c:if test="${carts == null}">
+<c:if test="${carts == null || empty carts}">
     <div class="text-center m-2">
         <h3>"Hổng" có gì trong giỏ hết</h3>
         <p>Về trang cửa hàng để chọn mua sản phẩm bạn nhé!!!</p>
         <a class="btn btn-outline-danger" href="${action}">Mua sắm ngay</a>
     </div>
 </c:if>
-<c:if test="${carts != null}">
+<c:if test="${carts != null && not empty carts}">
     <div class="container">
         <table class="table" data-aos="fade-left">
             <thead>
@@ -68,6 +68,7 @@
             <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-counter">${cartStats.totalQuantity}</span> sản phẩm</h6>
             <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h5>
         </div>
+        <input type="text" class="form-control text-center" placeholder="Mã Voucher" />
         <label for="optionPay" class="form-labe">Phương thức thanh toán:</label>
         <select class="form-select text-center" name="optionPay" id="option-pay">
             <option value="1">Thanh toán khi nhận hàng</option>

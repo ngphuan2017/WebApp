@@ -81,6 +81,11 @@ public class HomeController {
     public String maintenance(Model model) {
         return "maintenance";
     }
+    
+    @GetMapping(path = "/wheel-of-forture")
+    public String wheelOfForture() {
+        return "wheel";
+    }
 
     @GetMapping(path = "/products/{productId}")
     public String details(Model model,

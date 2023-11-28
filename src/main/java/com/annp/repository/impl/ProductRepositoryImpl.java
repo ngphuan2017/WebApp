@@ -61,7 +61,7 @@ public class ProductRepositoryImpl implements ProductRepository {
                 q.where(predicates.toArray(Predicate[]::new));
             }
 
-            q.orderBy(b.desc(root.get("id")));
+            q.orderBy(b.desc(root.get("unitsSold")));
             Query query = s.createQuery(q);
             if (start > 0 && limit > 0) {
                 query.setFirstResult(start - 1); // Vị trí bắt đầu
@@ -167,6 +167,17 @@ public class ProductRepositoryImpl implements ProductRepository {
             return true;
         } catch (HibernateException ex) {
             ex.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateProduct(Product p) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            s.update(p);
+            return true;
+        } catch (HibernateException ex) {
             return false;
         }
     }

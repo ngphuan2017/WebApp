@@ -97,6 +97,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Phú An Shop"/>
         <put-attribute name="content" value="/WEB-INF/pages/about.jsp"/>
     </definition>
+    <definition name="wheel" extends="baseLayout">
+        <put-attribute name="title" value="Phú An Shop"/>
+        <put-attribute name="content" value="/WEB-INF/pages/wheel-of-forture.jsp"/>
+    </definition>
   
 
     <!--PAGE USER PAY-->

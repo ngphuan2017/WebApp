@@ -28,6 +28,7 @@
         <script src="<c:url value="/resources/js/moment.min.js" />"></script>
         <script src="<c:url value="/resources/js/moment-with-locales.min.js" />"></script>
         <script src="<c:url value="/resources/sweetalert2-10/sweetalert2-10.js" />"></script>
+        <script src="<c:url value="/resources/sweetalert2-10/clipboard.min.js" />"></script>
     </head>
     <body>
         <div id="main">

@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="text-md-end">
-                        <button type="button" class="btn btn-outline-success">Thêm khuyến mãi</button>
+                        <button type="button" class="btn btn-outline-success js-add-promotion">Thêm khuyến mãi</button>
                     </div>
                 </div>
             </div>
@@ -51,6 +51,8 @@
                             <th>Bắt đầu ngày</th>
                             <th>Kết thúc ngày</th>
                             <th>Loại áp dụng</th>
+                            <th>Số lượng</th>
+                            <th>Tỉ lệ</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -67,7 +69,7 @@
                                     <input class="form-control d-none" id="promotion-code-new${p.id}" type="text" value="${p.code}" />
                                 </td>
                                 <td class="text-order-name">
-                                    <span id="promotion-discount-old${p.id}">${p.discount}%</span>
+                                    <span id="promotion-discount-old${p.id}">${p.discount}${p.type.id == 21 ? "K" : "%"}</span>
                                     <input class="form-control d-none" id="promotion-discount-new${p.id}" type="number" value="${p.discount}" />
                                 </td>
                                 <td>
@@ -79,11 +81,20 @@
                                     <input class="form-control d-none" id="promotion-end-new${p.id}" type="date" value="${p.endDate}" />
                                 </td>
                                 <td>
-                                    <span id="promotion-type-old${p.id}">${p.type == 1 ? "Thanh toán" : p.type == 2 ? "Sản phẩm" : ""}</span>
+                                    <span id="promotion-type-old${p.id}">${p.type.statusname}</span>
                                     <select class="form-select d-none" id="promotion-type-new${p.id}">
-                                        <option value="1" ${p.type == 1 ? "selected" : ""}>Thanh toán</option>
-                                        <option value="2" ${p.type == 2 ? "selected" : ""}>Sản phẩm</option>
+                                        <option value="1" ${p.type.id == 19 ? "selected" : ""}>Thanh toán</option>
+                                        <option value="2" ${p.type.id == 20 ? "selected" : ""}>Sản phẩm</option>
+                                        <option value="2" ${p.type.id == 21 ? "selected" : ""}>Giải thưởng</option>
                                     </select>
+                                </td>
+                                <td>
+                                    <span id="promotion-quantity-old${p.id}">${p.quantity}</span>
+                                    <input class="form-control d-none" id="promotion-quantity-new${p.id}" type="number" value="${p.quantity}" />
+                                </td>
+                                <td>
+                                    <span id="promotion-percentpage-old${p.id}">${p.percentpage}</span>
+                                    <input class="form-control d-none" id="promotion-percentpage-new${p.id}" type="number" value="${p.percentpage}" />
                                 </td>
                                 <td class="d-flex">
                                     <a class="m-2" id="promotion-edit${p.id}" href="javascript:;" onclick="editPromotion(${p.id})"><i class="fas fa-edit text-primary"></i></a>
@@ -114,6 +125,35 @@
                     </nav>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="js-modal-edit">
+    <div class="modal-container-black js-modal-container-edit">
+        <div class="js-modal-close-edit">x</div>
+        <header class="modal-header-black">
+            <span><i class="fas fa-edit"></i> Thêm khuyến mãi</span>
+        </header>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                    <div class="modal-img-black" id="modal-account-img-edit">
+
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6 col-12">
+                    <div class="modal-content" id="modal-account-about-edit">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3" id="change-profile-user">
+
+        </div>
+        <div class="footer-modal-black" id="modal-account-title-edit">
+
         </div>
     </div>
 </div>

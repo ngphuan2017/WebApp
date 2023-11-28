@@ -205,7 +205,7 @@ function editProduct(endpoint, edited) {
         let discount = document.getElementById("edit-discount");
         let optionDiscount = "";
         for (let p of data.listPromotion) {
-            if (p.type === 2) {
+            if (p.type.id === 20) {
                 optionDiscount += `
                     <option value="${p.id}" ${data.product.discount.id === p.id ? "selected" : ""}>${p.note} - ${p.discount}%</option>
                 `;
@@ -749,6 +749,10 @@ function editPromotion(id) {
     promotionTypeOld.classList.add('d-none');
     let promotionTypeNew = document.getElementById(`promotion-type-new${id}`);
     promotionTypeNew.classList.remove('d-none');
+    let promotionQuantityOld = document.getElementById(`promotion-quantity-old${id}`);
+    promotionQuantityOld.classList.add('d-none');
+    let promotionQuantityNew = document.getElementById(`promotion-quantity-new${id}`);
+    promotionQuantityNew.classList.remove('d-none');
 
     let promotionEdit = document.getElementById(`promotion-edit${id}`);
     promotionEdit.classList.add('d-none');
@@ -781,6 +785,8 @@ function savePromotion(endpoint, id) {
             let promotionEndNew = document.getElementById(`promotion-end-new${id}`);
             let promotionTypeOld = document.getElementById(`promotion-type-old${id}`);
             let promotionTypeNew = document.getElementById(`promotion-type-new${id}`);
+            let promotionQuantityOld = document.getElementById(`promotion-quantity-old${id}`);
+            let promotionQuantityNew = document.getElementById(`promotion-quantity-new${id}`);
             fetch(endpoint, {
                 method: "Put",
                 body: JSON.stringify({
@@ -789,7 +795,8 @@ function savePromotion(endpoint, id) {
                     "discount": promotionDiscountNew.value,
                     "beginDate": promotionBeginNew.value,
                     "endDate": promotionEndNew.value,
-                    "type": promotionTypeNew.selectedOptions[0].value
+                    "type": promotionTypeNew.selectedOptions[0].value,
+                    "quantity": promotionQuantityNew.value
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -804,6 +811,7 @@ function savePromotion(endpoint, id) {
                     promotionBeginOld.textContent = moment(promotionBeginOld.textContent).format('DD-MM-YYYY');
                     promotionEndOld.textContent = moment(promotionEndOld.textContent).format('DD-MM-YYYY');
                     promotionTypeOld.textContent = promotionTypeNew.selectedOptions[0].textContent;
+                    promotionQuantityOld.textContent = promotionQuantityNew.value;
                     Swal.fire('Thành công!', 'Bạn đã cập nhật thành công!', 'success');
                 } else {
                     Swal.fire('Không thành công!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
@@ -839,6 +847,10 @@ function cancelPromotion(id) {
     promotionTypeOld.classList.remove('d-none');
     let promotionTypeNew = document.getElementById(`promotion-type-new${id}`);
     promotionTypeNew.classList.add('d-none');
+    let promotionQuantityOld = document.getElementById(`promotion-quantity-old${id}`);
+    promotionQuantityOld.classList.remove('d-none');
+    let promotionQuantityNew = document.getElementById(`promotion-quantity-new${id}`);
+    promotionQuantityNew.classList.add('d-none');
     let promotionEdit = document.getElementById(`promotion-edit${id}`);
     promotionEdit.classList.remove('d-none');
     let promotionSuccess = document.getElementById(`promotion-success${id}`);

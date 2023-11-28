@@ -88,7 +88,7 @@ public class AdminController {
 
     @GetMapping("/admin/customer-management")
     public String adminAccount(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
-        int limit = 10; //Số tài khoản 1 trang
+        int limit = 25; //Số tài khoản 1 trang
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int totalData = this.userService.getUsers(params, 0, 0).size();
         PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
@@ -167,7 +167,7 @@ public class AdminController {
         model.addAttribute("sidebar", "report");
         return "admin-report";
     }
-
+//    chua xu ly
     @RequestMapping("/admin/products")
     public String addProduct(Model model,
             @ModelAttribute(value = "product") @Valid Product p,

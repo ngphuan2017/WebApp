@@ -10,6 +10,7 @@ public interface ProductService {
     List<Product> getProducts(Map<String, String> params, int start, int limit);
     Product getProductById(int id);
     boolean addOrUpdateProduct(Product p);
+    boolean updateProduct(Product p);
     boolean deleteProduct(int id);
     boolean addReceipt(Map<String, Cart> cart);
     boolean addReceiptPaid(Map<String, Cart> cart);

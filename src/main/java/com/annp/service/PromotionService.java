@@ -5,6 +5,7 @@
 package com.annp.service;
 
 import com.annp.pojo.Promotion;
+import com.annp.pojo.Status;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import java.util.Map;
  */
 public interface PromotionService {
     List<Promotion> getPromotions();
+    List<Promotion> getPromotions(Status status);
     List<Promotion> getPromotion(Map<String, String> params, int start, int limit);
     Promotion getPromotionById(int id);
     boolean updatePromotion(Promotion promotion);

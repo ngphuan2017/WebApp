@@ -147,8 +147,16 @@ public class ApiAdminController {
     public ResponseEntity updateOrder(@PathVariable(value = "orderDetailId") int id, @RequestBody Map<String, String> params) {
         try {
             OrderDetail od = this.ordersService.getOrderDetailById(id);
+            Product p = this.productService.getProductById(od.getProductId().getId());
             od.setOrderstatus(new Status(Integer.valueOf(params.get("orderDetailStatus"))));
-            if (this.ordersService.updateOrderDetail(od)) {
+            if (Integer.parseInt(params.get("orderDetailStatus")) == 10) {
+                p.setQuantity(p.getQuantity() - od.getNumber());
+                p.setUnitsSold(p.getUnitsSold() + od.getNumber());
+            } else if (Integer.parseInt(params.get("orderDetailStatus")) == 13) {
+                p.setQuantity(p.getQuantity() + od.getNumber());
+                p.setUnitsSold(p.getUnitsSold() - od.getNumber());
+            }
+            if (this.ordersService.updateOrderDetail(od) && this.productService.updateProduct(p)) {
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -221,7 +229,8 @@ public class ApiAdminController {
             promotion.setDiscount(Integer.valueOf(params.get("discount")));
             promotion.setBeginDate(dateFormat.parse(params.get("beginDate")));
             promotion.setEndDate(dateFormat.parse(params.get("endDate")));
-            promotion.setType(Integer.valueOf(params.get("type")));
+            promotion.setType(new Status(Integer.valueOf(params.get("type"))));
+            promotion.setQuantity(Integer.valueOf(params.get("quantity")));
             if (this.promotionService.updatePromotion(promotion)) {
                 return new ResponseEntity(HttpStatus.OK);
             }

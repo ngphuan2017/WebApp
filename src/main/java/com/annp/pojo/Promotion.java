@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -36,8 +38,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Promotion.findByNote", query = "SELECT p FROM Promotion p WHERE p.note = :note")})
 public class Promotion implements Serializable {
 
-    @Column(name = "TYPE")
-    private Integer type;
+    @Size(max = 500)
+    @Column(name = "IMG")
+    private String img;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "PERCENTPAGE")
+    private Float percentpage;
+
+    @Column(name = "QUANTITY")
+    private Integer quantity;
+    @JoinColumn(name = "TYPE", referencedColumnName = "ID")
+    @ManyToOne
+    private Status type;
     @Size(max = 45)
     @Column(name = "CODE")
     private String code;
@@ -140,12 +152,36 @@ public class Promotion implements Serializable {
         this.code = code;
     }
 
-    public Integer getType() {
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public Status getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(Status type) {
         this.type = type;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public Float getPercentpage() {
+        return percentpage;
+    }
+
+    public void setPercentpage(Float percentpage) {
+        this.percentpage = percentpage;
     }
     
 }

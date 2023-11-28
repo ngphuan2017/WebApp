@@ -72,7 +72,7 @@
                     <div class="kengang"></div>
                 </div>
                 <div class="google-btn">
-                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile+email&redirect_uri=http://localhost:8080/WebApp/login/login-google&response_type=code&client_id=845125163352-7naesd2b78gchec9rg08ecg8s5euh31l.apps.googleusercontent.com&approval_prompt=force">
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile+email&redirect_uri=http://phuanshop.id.vn/login/login-google&response_type=code&client_id=845125163352-7naesd2b78gchec9rg08ecg8s5euh31l.apps.googleusercontent.com&approval_prompt=force">
                         <div class="google-icon-wrapper">
                             <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"/>
                         </div>
@@ -80,7 +80,7 @@
                     </a>
                 </div>
                 <div class="facebook-btn">
-                    <a href="https://www.facebook.com/dialog/oauth?client_id=1030898755004343&redirect_uri=http://localhost:8080/WebApp/login/login-facebook&scope=email,public_profile,user_gender,user_link,user_location">
+                    <a href="https://www.facebook.com/dialog/oauth?client_id=1030898755004343&redirect_uri=http://phuanshop.id.vn/login/login-facebook&scope=email,public_profile,user_gender,user_link,user_location">
                         <div class="facebook-icon-wrapper">
                             <i class="fa-brands fa-square-facebook"></i>
                         </div>

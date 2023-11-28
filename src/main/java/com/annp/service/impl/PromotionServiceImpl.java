@@ -5,6 +5,7 @@
 package com.annp.service.impl;
 
 import com.annp.pojo.Promotion;
+import com.annp.pojo.Status;
 import com.annp.repository.PromotionRepository;
 import com.annp.service.PromotionService;
 import java.util.List;
@@ -45,6 +46,11 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public List<Promotion> getPromotions() {
         return this.promotionRepository.getPromotions();
+    }
+
+    @Override
+    public List<Promotion> getPromotions(Status status) {
+        return this.promotionRepository.getPromotions(status);
     }
 
 }

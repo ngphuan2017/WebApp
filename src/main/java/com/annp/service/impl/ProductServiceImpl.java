@@ -82,4 +82,9 @@ public class ProductServiceImpl implements ProductService {
         return false;
     }
 
+    @Override
+    public boolean updateProduct(Product p) {
+        return this.productRepository.updateProduct(p);
+    }
+
 }

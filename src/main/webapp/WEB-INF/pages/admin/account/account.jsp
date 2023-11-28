@@ -9,6 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="se" uri="http://www.springframework.org/security/tags"  %>
 
+<c:url value="/register" var="register" />
 <c:url value="/admin/api/customer-management" var="customered" />
 <c:url value="/admin/api/customer-management/deleted" var="deleted" />
 <c:url value="/admin/api/customer-management/edited" var="edited" />
@@ -17,14 +18,23 @@
     <h3 class="text-dark mb-4">Quản lý tài khoản</h3>
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Thông tin người dùng</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="text-primary m-0 fw-bold">Thông tin người dùng</p>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-md-end">
+                        <a href="${register}" class="btn btn-outline-success">Thêm tài khoản</a>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="row">
                 <div class="col-md-6 text-nowrap">
                     <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-                                <option value="10" selected="">10</option>
-                                <option value="25">25</option>
+                                <option value="10">10</option>
+                                <option value="25" selected="">25</option>
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                             </select>&nbsp;</label></div>
@@ -183,7 +193,7 @@
             </div>
         </div>
         <div class="m-3" id="change-profile-user">
-            
+
         </div>
         <div class="footer-modal-black" id="modal-account-title-edit">
 

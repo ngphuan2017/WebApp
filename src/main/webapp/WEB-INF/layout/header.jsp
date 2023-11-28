@@ -11,6 +11,7 @@
 
 <c:url value="/" var="action" />
 <c:url value="/about" var="about" />
+<c:url value="/wheel-of-forture" var="wheel" />
 <c:url value="/me/profile" var="profile" />
 <c:url value="/forgot-password/change-password" var="changePassword" />
 <c:url value="/cart" var="cart" />
@@ -57,8 +58,11 @@
                                         <c:param name="categorysubId" value="${s.id}" />
                                     </c:url>
                                     <c:choose>
-                                        <c:when test="${s.categoryId.id == c.id}">
+                                        <c:when test="${s.categoryId.id == c.id && s.id != 14}">
                                             <li><a class="dropdown-item" href="${url}">${s.name}</a></li>
+                                            </c:when>
+                                            <c:when test="${s.categoryId.id == c.id && s.id == 14}">
+                                            <li><a class="dropdown-item" href="${wheel}">${s.name}</a></li>
                                             </c:when>
                                         </c:choose>
                                     </c:forEach>

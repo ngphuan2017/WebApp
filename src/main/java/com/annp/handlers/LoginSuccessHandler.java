@@ -40,8 +40,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         request.getSession().setAttribute("currentUser", u);
-
-        response.sendRedirect(request.getContextPath());
+        String redirectStr = request.getContextPath();
+        if (u.getUserRole().getId() == 1 || u.getUserRole().getId() == 2) {
+            redirectStr = "admin";
+        }
+        response.sendRedirect(redirectStr);
     }
 
     private boolean isSameDay(Date date1, Date date2) {

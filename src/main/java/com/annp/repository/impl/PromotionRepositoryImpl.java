@@ -5,6 +5,7 @@
 package com.annp.repository.impl;
 
 import com.annp.pojo.Promotion;
+import com.annp.pojo.Status;
 import com.annp.repository.PromotionRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,29 @@ public class PromotionRepositoryImpl implements PromotionRepository {
         Session s = factory.getObject().getCurrentSession();
         Query q = s.createQuery("From Promotion");
         return q.getResultList();
+    }
+
+    @Override
+    public List<Promotion> getPromotions(Status status) {
+        try {
+            Session session = this.factory.getObject().getCurrentSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Promotion> query = builder.createQuery(Promotion.class);
+            Root root = query.from(Promotion.class);
+            query = query.select(root);
+
+            Predicate p = builder.equal(root.get("type"), status);
+            query = query.where(p);
+            query = query.orderBy(builder.asc(root.get("percentpage")));
+
+            Query q = session.createQuery(query);
+
+            List<Promotion> orders = q.getResultList();
+            return orders != null && !orders.isEmpty() ? orders : new ArrayList<>();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
 }
