@@ -25,6 +25,18 @@ function addToCart(endpoint, id, name, price, image) {
 }
 
 function updateItem(endpoint, obj, id, price) {
+    var inputQuantity = document.getElementById(`product-quantity-${id}`);
+    var inputQuantityOld = document.getElementById(`product-quantity-${id}-old`);
+    if (obj.value < 1) {
+        inputQuantity.value = inputQuantityOld.textContent;
+        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị không âm!', 'error');
+        return;
+    } else if (obj.value > 9999) {
+        inputQuantity.value = inputQuantityOld.textContent;
+        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị nhỏ hơn!', 'error');
+        return;
+    }
+    inputQuantityOld.textContent = obj.value;
     fetch(endpoint, {
         method: "put",
         body: JSON.stringify({
@@ -58,13 +70,12 @@ function deleteItem(endpoint, id) {
         cancelButtonText: 'Hủy'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hành động khi người dùng xác nhận
+// Hành động khi người dùng xác nhận
             fetch(endpoint, {
                 method: "delete"
             }).then(res => res.json()).then(data => {
                 let el = document.getElementById(`cart${id}`);
                 el.style.display = "none";
-
                 let counters = document.getElementsByClassName("cart-counter");
                 for (let d of counters)
                     d.innerText = data.totalQuantity;
@@ -88,7 +99,7 @@ function pay(endpoint) {
         cancelButtonText: 'Hủy'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hành động khi người dùng xác nhận
+// Hành động khi người dùng xác nhận
             fetch(endpoint, {
                 method: "POST",
                 body: JSON.stringify({

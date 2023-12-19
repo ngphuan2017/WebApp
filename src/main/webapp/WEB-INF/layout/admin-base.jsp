@@ -30,7 +30,7 @@
             <div class="d-flex flex-column" id="content-wrapper">
                 <div id="content">
                     <tiles:insertAttribute name="topbar"/>
-                    <div class="container-fluid">
+                    <div class="container-fluid" style="margin-top: 94px;">
                         <tiles:insertAttribute name="content"/>
                     </div>
                 </div>

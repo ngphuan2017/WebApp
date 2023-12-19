@@ -50,8 +50,7 @@
                             <i class="fa-solid fa-minus"></i>
                         </button>
                     </span>
-                    <input type="number" id="quantity" name="quantity" class="form-control input-number text-center" value="1" min="1"
-                           max="1000">
+                    <input type="number" id="quantity" name="quantity" class="form-control input-number text-center" value="1" onblur="checkQuantity()" min="1" max="1000">
                     <span class="input-group-btn">
                         <button type="button" style="padding: 9px;" class="quantity-right-plus btn btn-outline-secondary btn-number" data-type="plus"
                                 data-field="">
@@ -59,6 +58,7 @@
                         </button>
                     </span>
                     <span class="m-2" style="color: #757575">( ${product.quantity} sản phẩm có sẵn )</span>
+                    <i class="d-none" id="product-quantity">${product.quantity}</i>
                 </div>
                 <div class="d-flex justify-content-center" style="margin-top: 20px;">
                     <button style="font-size: 16px; padding: 10px;" type="button" class="btn btn-outline-success" 

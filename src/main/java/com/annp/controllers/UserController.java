@@ -156,7 +156,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         HttpSession session = request.getSession();
         session.setAttribute("currentUser", u);
-        return "index";
+        return "redirect:/";
     }
 
     @RequestMapping("/login/login-facebook")
@@ -194,7 +194,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         HttpSession session = request.getSession();
         session.setAttribute("currentUser", u);
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping(value = "/register")

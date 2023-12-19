@@ -419,15 +419,28 @@ function editCustomer(endpoint, edited) {
         `;
         let adminedit = document.getElementById("modal-role-admin-edit");
         if (adminedit !== null) {
-            adminedit.innerHTML = `
-            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Loại tài khoản: </span>
-                <select id="edit-role" class="form-select">
-                    <option value="1" ${json.users.userRole.id === "1" ? "selected" : ""}>Quản trị</option>
-                    <option value="2" ${json.users.userRole.id === "2" ? "selected" : ""}>Quản lý</option>
-                    <option value="3" ${json.users.userRole.id === "3" ? "selected" : ""}>Người dùng</option>
-                </select>
-            </div>
-        `;
+            if (json.users.userRole.id !== "1") {
+                adminedit.innerHTML = `
+                    <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Loại tài khoản: </span>
+                        <select id="edit-role" class="form-select">
+                            <option value="1" ${json.users.userRole.id === "1" ? "selected" : ""}>Quản trị</option>
+                            <option value="2" ${json.users.userRole.id === "2" ? "selected" : ""}>Quản lý</option>
+                            <option value="3" ${json.users.userRole.id === "3" ? "selected" : ""}>Người dùng</option>
+                        </select>
+                    </div>
+                `;
+            }
+            else {
+                adminedit.innerHTML = `
+                    <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Loại tài khoản: </span>
+                        <select id="edit-role" class="form-select" disabled>
+                            <option value="1" ${json.users.userRole.id === "1" ? "selected" : ""}>Quản trị</option>
+                            <option value="2" ${json.users.userRole.id === "2" ? "selected" : ""}>Quản lý</option>
+                            <option value="3" ${json.users.userRole.id === "3" ? "selected" : ""}>Người dùng</option>
+                        </select>
+                    </div>
+                `;
+            }
         }
         let button = document.getElementById("change-profile-user");
         button.innerHTML = `
@@ -857,6 +870,94 @@ function cancelPromotion(id) {
     promotionSuccess.classList.add('d-none');
     let promotionDanger = document.getElementById(`promotion-danger${id}`);
     promotionDanger.classList.add('d-none');
+}
+
+function addPromotion(endpoint) {
+    let js = document.getElementById("modal-account-img-edit");
+    js.innerHTML = `
+            <div class="block-avatar">
+                <img id="img-preview" src="https://res.cloudinary.com/dkmug1913/image/upload/v1690819242/WebApp/Avatar/none_ibdmnr.png" alt="avatar">
+                <button type="button" onclick="AvatarBrowse()"><span class="icon-camera-avatar"><i class="fas fa-camera"></i></span></button>
+                <input type="file" id="avatarBrowse" onchange="showPreviewDiv(event);" accept="image/*" class="form-input d-none" />
+            </div>
+            <div class="level">
+                Banner
+            </div>
+        `;
+    let jss = document.getElementById("modal-account-about-edit");
+    jss.innerHTML = `
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Tiêu đề: </span><input id="add-name" type="text" class="form-control" value="" /></div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Loại áp dụng: </span>
+                <select id="add-type-promotion" class="form-select" onchange="selectTypePromotion()">
+                    <option value="19">Thanh toán</option>
+                    <option value="20">Sản phẩm</option>
+                    <option value="21">Giải thưởng</option>
+                </select>
+            </div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">CODE: </span><input id="add-code" type="text" class="form-control" value="" /></div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Giá trị khuyến mãi: </span><input id="add-discount" type="number" class="form-control" value="" /></div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Ngày bắt đầu: </span><input id="add-begin-date" type="date" class="form-control" value="" /></div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Ngày kết thúc: </span><input id="add-end-date" type="date" class="form-control" value="" /></div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Số lượng: </span><input id="add-quantity" type="number" class="form-control" value="" /></div>
+            <div class="input-group d-none" style="margin: 5px 0;" id="d-add-percentpage"><span class="input-group-text">Tỉ lệ (chỉ áp dụng giải thưởng): </span><input id="add-percentpage" type="number" class="form-control" value="" /></div>
+        `;
+    let button = document.getElementById("change-profile-user");
+    button.innerHTML = `
+            <button type="button" class="m-1 btn btn-outline-success" onclick="saveAddPromotion('${endpoint}')">Lưu</button>
+            <button type="button" class="m-1 btn btn-outline-danger" onclick="hideEditProfile()">Trở lại</button>
+        `;
+    let btns = document.querySelectorAll('.js-add-cart-edit');
+    let carts = document.querySelector('.js-modal-edit');
+    let modalCloses = document.querySelector('.js-modal-close-edit');
+    let modalContainer = document.querySelector('.js-modal-container-edit');
+    for (const btn of btns) {
+        btn.addEventListener('click', showEditProfile);
+    }
+    modalCloses.addEventListener('click', hideEditProfile);
+    carts.addEventListener('click', hideEditProfile);
+    modalContainer.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+}
+
+function selectTypePromotion() {
+    let selectTypePromotion = document.getElementById("add-type-promotion");
+    let percentpage = document.getElementById("d-add-percentpage");
+    if (selectTypePromotion.selectedOptions[0].value === "21") {
+        percentpage.classList.remove('d-none');
+    } else {
+        percentpage.classList.add('d-none');
+        document.getElementById("add-percentpage").value = "";
+    }
+}
+
+function saveAddPromotion(endpoint) {
+    const avatarInput = document.getElementById("avatarBrowse");
+    const formData = new FormData();
+    if (avatarInput.files.length > 0) {
+        formData.append("file", avatarInput.files[0]);
+    }
+    formData.append("note", document.getElementById("add-name").value);
+    formData.append("code", document.getElementById('add-code').value);
+    formData.append("discount", document.getElementById('add-discount').value);
+    formData.append("beginDate", document.getElementById('add-begin-date').value);
+    formData.append("endDate", document.getElementById('add-end-date').value);
+    formData.append("type", document.getElementById('add-type-promotion').selectedOptions[0].value);
+    formData.append("quantity", document.getElementById('add-quantity').value);
+    if (document.getElementById('add-percentpage').value !== "") {
+        formData.append("percentpage", document.getElementById('add-percentpage').value);
+    }
+    fetch(endpoint, {
+        method: "POST",
+        body: formData
+    }).then(res => {
+        if (res.status === 201) {
+            hideEditProfile();
+            Swal.fire('Thao tác thành công!', 'Đã thêm 1 khuyến mãi mới thành công!', 'success');
+        } else {
+            Swal.fire('Thao tác không thành công!', 'Vui lòng nhập đầy đủ thông tin và thử lại!', 'error');
+        }
+    });
 }
 
 function deletedItem(endpoint, id) {

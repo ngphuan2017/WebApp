@@ -218,6 +218,44 @@ public class ApiAdminController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
+    
+    @PostMapping("/promotion-management/added")
+    public ResponseEntity addPromotion(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam("note") String note,
+            @RequestParam("code") String code,
+            @RequestParam("discount") String discount,
+            @RequestParam("beginDate") String beginDate,
+            @RequestParam("endDate") String endDate,
+            @RequestParam("type") String type,
+            @RequestParam("quantity") String quantity,
+            @RequestParam(value = "percentpage", required = false) String percentpage) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Promotion p = new Promotion();
+            p.setId(0);
+            if (file != null) {
+                p.setFile(file);
+            }
+            p.setNote(note);
+            p.setCode(code);
+            p.setDiscount(Integer.valueOf(discount));
+            p.setBeginDate(dateFormat.parse(beginDate));
+            p.setEndDate(dateFormat.parse(endDate));
+            p.setType(new Status(Integer.valueOf(type)));
+            p.setQuantity(Integer.valueOf(quantity));
+            if (percentpage != null) {
+                p.setPercentpage(Float.valueOf(percentpage));
+            }
+            if (this.promotionService.addPromotion(p)) {
+                return new ResponseEntity(HttpStatus.CREATED);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @PutMapping("/promotion-management/edited/{promotionId}")
     public ResponseEntity updatePromotion(@PathVariable(value = "promotionId") int id, @RequestBody Map<String, String> params) {

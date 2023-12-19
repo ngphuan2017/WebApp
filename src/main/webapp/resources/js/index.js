@@ -20,9 +20,9 @@ $(document).ready(function () {
 });
 /////////////////////////
 AOS.init({
-  offset: 150,
-  delay: 0,
-  duration: 1000
+    offset: 150,
+    delay: 0,
+    duration: 1000
 });
 
 //////////////////////////
@@ -75,5 +75,19 @@ for (var i = 0; i < discountElements.length; i++) {
         discountElements[i].style.display = 'inline-block';
         newPriceElements[i].textContent = numberWithCommas(discountedPrice);
         ;
+    }
+}
+///////////////////
+function checkQuantity() {
+    var inputQuantity = document.getElementById('quantity');
+    var minQuantity = 1;
+    var maxQuantity = parseInt(document.getElementById('product-quantity').textContent);
+
+    if (inputQuantity.value < minQuantity) {
+        inputQuantity.value = minQuantity;
+        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị không âm!', 'error');
+    } else if (inputQuantity.value > maxQuantity) {
+        Swal.fire('Lỗi!', 'Số lượng sản phẩm shop có sẳn: ' + maxQuantity + ' - Xin lỗi vì sự bất tiện này!', 'error');
+        inputQuantity.value = minQuantity;
     }
 }

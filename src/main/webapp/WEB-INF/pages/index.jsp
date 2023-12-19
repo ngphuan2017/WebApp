@@ -87,28 +87,32 @@
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page - 1}">«</a></li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:when>
-                    <c:otherwise>
-                    <li class="page-item disabled"><span class="page-link">«</span></li>
-                    </c:otherwise>
-                </c:choose>
-                <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
-                    <c:set var="pageParam" value="page=${loop.index}" />
-                    <c:choose>
-                        <c:when test="${not empty param.categorysubId}">
-                            <c:set var="categorysubIdParam" value="categorysubId=${param.categorysubId}" />
-                            <c:if test="${not empty pageContext.request.queryString}">
-                                <c:set var="queryStringWithoutPage" value="" />
-                                <c:forEach var="paramName" items="${pageContext.request.parameterMap.keySet()}">
-                                    <c:if test="${not 'page' == paramName}">
-                                        <c:set var="queryStringWithoutPage" value="${queryStringWithoutPage}&amp;${paramName}=${param[paramName]}" />
-                                    </c:if>
-                                </c:forEach>
-                                <c:set var="pageParam" value="${pageParam}&amp;${queryStringWithoutPage}${categorysubIdParam}" />
-                            </c:if>
+                            <li class="page-item">
+                                <a class="page-link" href="${action}?page=${page.page - 1}">«</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item disabled">
+                        <span class="page-link">«</span>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+            <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
+                <c:set var="pageParam" value="page=${loop.index}" />
+                <c:choose>
+                    <c:when test="${not empty param.categorysubId}">
+                        <c:set var="categorysubIdParam" value="categorysubId=${param.categorysubId}" />
+                        <c:if test="${not empty pageContext.request.queryString}">
+                            <c:set var="queryStringWithoutPage" value="" />
+                            <c:forEach var="paramName" items="${pageContext.request.parameterMap.keySet()}">
+                                <c:if test="${not 'page' == paramName}">
+                                    <c:set var="queryStringWithoutPage" value="${queryStringWithoutPage}&amp;${paramName}=${param[paramName]}" />
+                                </c:if>
+                            </c:forEach>
+                            <c:set var="pageParam" value="${pageParam}&amp;${queryStringWithoutPage}${categorysubIdParam}" />
+                        </c:if>
                         <li class="page-item${loop.index == page.page ? ' active' : ''}">
                             <a class="page-link" href="${action}?${pageParam}">${loop.index}</a>
                         </li>
@@ -130,15 +134,19 @@
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link" href="${action}?page=${page.page + 1}">»</a></li>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:when>
-                    <c:otherwise>
-                    <li class="page-item disabled"><span class="page-link">»</span></li>
-                    </c:otherwise>
-                </c:choose>
-            </c:if>
+                            <li class="page-item">
+                                <a class="page-link" href="${action}?page=${page.page + 1}">»</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:when>
+                <c:otherwise>
+                    <li class="page-item disabled">
+                        <span class="page-link">»</span>
+                    </li>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
     </ul>
 </section>
 <div class="js-modal">
@@ -164,8 +172,7 @@
                                     <i class="fa-solid fa-minus"></i>
                                 </button>
                             </span>
-                            <input type="number" id="quantity" name="quantity" class="form-control input-number text-center" value="1" min="1"
-                                   max="1000">
+                            <input type="number" id="quantity" name="quantity" class="form-control input-number text-center" value="1" onblur="checkQuantity()" min="1" max="1000">
                             <span class="input-group-btn">
                                 <button type="button" style="padding: 9px;" class="quantity-right-plus btn btn-success btn-number" data-type="plus"
                                         data-field="">

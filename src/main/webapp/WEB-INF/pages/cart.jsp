@@ -47,7 +47,8 @@
                             <span class="money">${c.price} VNĐ</span>
                         </td>
                         <td>
-                            <input type="number" value="${c.quantity}"
+                            <i class="d-none" id="product-quantity-${c.id}-old">${c.quantity}</i>
+                            <input type="number" value="${c.quantity}" id="product-quantity-${c.id}"
                                    onblur="updateItem('${endpoint}', this, ${c.id}, ${c.price})"
                                    class="form-control" />
                         </td>
@@ -72,8 +73,8 @@
         <label for="optionPay" class="form-labe">Phương thức thanh toán:</label>
         <select class="form-select text-center" name="optionPay" id="option-pay">
             <option value="1">Thanh toán khi nhận hàng</option>
-            <option value="2">Chuyển khoản ngân hàng</option>
-            <option value="3">Ví điện tử Momo</option>
+            <option value="2" disabled>Chuyển khoản ngân hàng <span>(Đang bảo trì)</span></option>
+            <option value="3" disabled>Ví điện tử Momo <span>(Đang bảo trì)</span></option>
         </select>
         <div class="d-flex justify-content-center mt-4 mb-4">
             <c:choose>

@@ -58,6 +58,7 @@ function productView(endpointview, endpoint) {
         let js = document.getElementById("modal-product-img");
         js.innerHTML = `
             <img src="${json.product.image}" alt="image">
+            <i class="d-none" id="product-quantity">${json.product.quantity}</i>
         `;
         let jss = document.getElementById("modal-product-buy");
         jss.innerHTML = `
