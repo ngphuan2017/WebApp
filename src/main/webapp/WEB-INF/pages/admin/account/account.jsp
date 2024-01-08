@@ -10,6 +10,7 @@
 <%@taglib prefix="se" uri="http://www.springframework.org/security/tags"  %>
 
 <c:url value="/register" var="register" />
+<c:url value="/admin/customer-management" var="account" />
 <c:url value="/admin/api/customer-management" var="customered" />
 <c:url value="/admin/api/customer-management/deleted" var="deleted" />
 <c:url value="/admin/api/customer-management/edited" var="edited" />
@@ -94,8 +95,10 @@
                                 </td>
                                 <td class="create-date">${u.createdDate}</td>
                                 <td>
-                                    <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}')"><i class="fas fa-edit text-primary"></i></a>
-                                        <se:authorize access="hasRole('ROLE_ADMIN')">
+                                    <se:authorize access="hasRole('ROLE_ADMIN')">
+                                        <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}')">
+                                            <i class="fas fa-edit text-primary"></i>
+                                        </a>
                                         <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
                                             <i class='fas fa-trash text-danger'></i>
                                         </a>
@@ -103,11 +106,17 @@
                                     <se:authorize access="!hasRole('ROLE_ADMIN')">
                                         <c:choose>
                                             <c:when test="${u.userRole.id == 3}">
+                                                <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}')">
+                                                    <i class="fas fa-edit text-primary"></i>
+                                                </a>
                                                 <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
                                                     <i class='fas fa-trash text-danger'></i>
                                                 </a>
                                             </c:when>
                                             <c:otherwise>
+                                                <a class="m-2" href="javascript:;" onclick="permissionAccount()">
+                                                    <i class="fas fa-edit text-primary"></i>
+                                                </a>
                                                 <a class="m-2" href="javascript:;" onclick="permissionAccount()">
                                                     <i class='fas fa-trash text-danger'></i>
                                                 </a>
@@ -123,16 +132,43 @@
             </div>
             <div class="row">
                 <div class="col-md-6 align-self-center">
-                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite"></p>
                 </div>
                 <div class="col-md-6">
                     <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                         <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                            <c:if test="${page.totalPage > 1}">
+                                <c:choose>
+                                    <c:when test="${page.page > 1}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="${account}?page=${page.page - 1}">«</a>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">«</span>
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
+                                    <c:set var="pageParam" value="page=${loop.index}" />
+                                    <li class="page-item${loop.index == page.page ? ' active' : ''}">
+                                        <a class="page-link" href="${account}?${pageParam}">${loop.index}</a>
+                                    </li>
+                                </c:forEach>
+                                <c:choose>
+                                    <c:when test="${page.page < page.totalPage}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="${account}?page=${page.page + 1}">»</a>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">»</span>
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:if>
                         </ul>
                     </nav>
                 </div>

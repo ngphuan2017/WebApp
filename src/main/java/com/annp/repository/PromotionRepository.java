@@ -18,6 +18,7 @@ public interface PromotionRepository {
     List<Promotion> getPromotions(Status status);
     List<Promotion> getPromotion(Map<String, String> params, int start, int limit);
     Promotion getPromotionById(int id);
+    public boolean addPromotion(Promotion promotion);
     boolean updatePromotion(Promotion promotion);
     boolean deletePromotion(int id);
 }

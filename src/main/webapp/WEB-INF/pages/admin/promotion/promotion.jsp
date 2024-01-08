@@ -8,6 +8,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
+<c:url value="/admin/promotion-management" var="promotion" />
+<c:url value="/admin/api/promotion-management/added" var="added" />
 <c:url value="/admin/api/promotion-management/edited" var="edited" />
 <c:url value="/admin/api/promotion-management/deleted" var="deleted" />
 
@@ -21,7 +23,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="text-md-end">
-                        <button type="button" class="btn btn-outline-success js-add-promotion">Thêm khuyến mãi</button>
+                        <button type="button" class="btn btn-outline-success js-add-cart-edit" onclick="addPromotion('${added}')">Thêm khuyến mãi</button>
                     </div>
                 </div>
             </div>
@@ -83,9 +85,9 @@
                                 <td>
                                     <span id="promotion-type-old${p.id}">${p.type.statusname}</span>
                                     <select class="form-select d-none" id="promotion-type-new${p.id}">
-                                        <option value="1" ${p.type.id == 19 ? "selected" : ""}>Thanh toán</option>
-                                        <option value="2" ${p.type.id == 20 ? "selected" : ""}>Sản phẩm</option>
-                                        <option value="2" ${p.type.id == 21 ? "selected" : ""}>Giải thưởng</option>
+                                        <option value="19" ${p.type.id == 19 ? "selected" : ""}>Thanh toán</option>
+                                        <option value="20" ${p.type.id == 20 ? "selected" : ""}>Sản phẩm</option>
+                                        <option value="21" ${p.type.id == 21 ? "selected" : ""}>Giải thưởng</option>
                                     </select>
                                 </td>
                                 <td>
@@ -111,16 +113,43 @@
             </div>
             <div class="row">
                 <div class="col-md-6 align-self-center">
-                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite"></p>
                 </div>
                 <div class="col-md-6">
                     <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                         <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
+                            <c:if test="${page.totalPage > 1}">
+                                <c:choose>
+                                    <c:when test="${page.page > 1}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="${promotion}?page=${page.page - 1}">«</a>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">«</span>
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
+                                <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
+                                    <c:set var="pageParam" value="page=${loop.index}" />
+                                    <li class="page-item${loop.index == page.page ? ' active' : ''}">
+                                        <a class="page-link" href="${promotion}?${pageParam}">${loop.index}</a>
+                                    </li>
+                                </c:forEach>
+                                <c:choose>
+                                    <c:when test="${page.page < page.totalPage}">
+                                        <li class="page-item">
+                                            <a class="page-link" href="${promotion}?page=${page.page + 1}">»</a>
+                                        </li>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">»</span>
+                                        </li>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:if>
                         </ul>
                     </nav>
                 </div>
@@ -150,9 +179,6 @@
             </div>
         </div>
         <div class="m-3" id="change-profile-user">
-
-        </div>
-        <div class="footer-modal-black" id="modal-account-title-edit">
 
         </div>
     </div>

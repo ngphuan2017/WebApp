@@ -125,4 +125,16 @@ public class PromotionRepositoryImpl implements PromotionRepository {
         }
     }
 
+    @Override
+    public boolean addPromotion(Promotion promotion) {
+        Session session = this.factory.getObject().getCurrentSession();
+        try {
+            session.save(promotion);
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
 }

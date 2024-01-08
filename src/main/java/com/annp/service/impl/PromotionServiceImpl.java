@@ -8,8 +8,13 @@ import com.annp.pojo.Promotion;
 import com.annp.pojo.Status;
 import com.annp.repository.PromotionRepository;
 import com.annp.service.PromotionService;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PromotionServiceImpl implements PromotionService {
 
+    @Autowired
+    private Cloudinary cloudinary;
     @Autowired
     private PromotionRepository promotionRepository;
 
@@ -51,6 +58,20 @@ public class PromotionServiceImpl implements PromotionService {
     @Override
     public List<Promotion> getPromotions(Status status) {
         return this.promotionRepository.getPromotions(status);
+    }
+
+    @Override
+    public boolean addPromotion(Promotion promotion) {
+        if (promotion.getFile() != null && !promotion.getFile().isEmpty()) {
+            try {
+                Map res = this.cloudinary.uploader().upload(promotion.getFile().getBytes(),
+                        ObjectUtils.asMap("resource_type", "auto"));
+                promotion.setImg(res.get("secure_url").toString());
+            } catch (IOException ex) {
+                Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return this.promotionRepository.addPromotion(promotion);
     }
 
 }

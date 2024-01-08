@@ -36,12 +36,19 @@
             <tiles:insertAttribute name="content"/>
             <tiles:insertAttribute name="footer"/>
         </div>
+
+        <!-- Messenger Plugin chat Code -->
+        <div id="fb-root"></div>
+        <!-- Your Plugin chat code -->
+        <div id="fb-customer-chat" class="fb-customerchat"></div>
+        
         <a id="backtop" href="#main" class="gototop fa-solid fa-circle-chevron-up" style="display: none;"></a>
 
         <script src="<c:url value="/resources/js/product.js" />"></script>
         <script src="<c:url value="/resources/js/cart.js" />"></script>
         <script src="<c:url value="/resources/js/orders.js" />"></script>
         <script src="<c:url value="/resources/js/index.js" />"></script>
+        <script src="<c:url value="/resources/messenger/messenger.js" />"></script>
         <script src="<c:url value="/resources/popperjs-2.9.1/popper.min.js" />"></script>
     </body>
 </html>
