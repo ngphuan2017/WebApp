@@ -23,6 +23,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -194,6 +195,7 @@ public class Promotion implements Serializable {
     /**
      * @return the file
      */
+    @XmlTransient
     public MultipartFile getFile() {
         return file;
     }

@@ -99,27 +99,37 @@ function pay(endpoint) {
         cancelButtonText: 'Hủy'
     }).then((result) => {
         if (result.isConfirmed) {
+            var totalQuantity = document.getElementById("total-quantity").textContent;
+            if (totalQuantity !== "0") {
 // Hành động khi người dùng xác nhận
-            fetch(endpoint, {
-                method: "POST",
-                body: JSON.stringify({
-                    "optionPay": document.getElementById("option-pay").value
-                }),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(res => {
-                if (res.status === 200) {
-                    let counters = document.getElementsByClassName("cart-counter");
-                    document.querySelector('.table').innerHTML = ``;
-                    document.querySelector('.cart-amount').innerHTML = 0;
-                    for (let d of counters)
-                        d.innerText = 0;
-                    Swal.fire('Đặt hàng thành công!', 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
-                } else {
-                    Swal.fire('Đặt hàng không thành công!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
-                }
-            });
+                fetch(endpoint, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        "optionPay": document.getElementById("option-pay").value
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(res => {
+                    if (res.status === 200) {
+                        const locationHeader = res.headers.get('Location');
+                        if (locationHeader !== null) {
+                            window.location.href = locationHeader;
+                        } else {
+                            let counters = document.getElementsByClassName("cart-counter");
+                            document.querySelector('.table').innerHTML = ``;
+                            document.querySelector('.cart-amount').innerHTML = 0;
+                            for (let d of counters)
+                                d.innerText = 0;
+                            Swal.fire('Đặt hàng thành công!', 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
+                        }
+                    } else {
+                        Swal.fire('Đặt hàng không thành công!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
+                    }
+                });
+            } else {
+                Swal.fire('Đặt hàng không thành công!', 'Vui lòng thêm sản phẩm vào giỏ hàng!', 'warning');
+            }
         }
     });
 }
