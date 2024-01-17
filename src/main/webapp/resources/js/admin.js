@@ -276,6 +276,127 @@ function saveEditProduct(endpoint) {
     });
 }
 
+function addProduct(endpoint, added) {
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+            let js = document.getElementById("modal-account-img-add");
+            js.innerHTML = `
+            <div class="block-avatar">
+                <img id="img-preview" src="https://res.cloudinary.com/dkmug1913/image/upload/v1690819242/WebApp/Avatar/none_ibdmnr.png" alt="avatar">
+                <button type="button" onclick="AvatarBrowse()"><span class="icon-camera-avatar"><i class="fas fa-camera"></i></span></button>
+                <input type="file" id="avatarBrowse" onchange="showPreviewDiv(event);" accept="image/*" class="form-input d-none" />
+            </div>
+            <div class="input-group" style="margin: 5px 0;">
+                <span class="input-group-text">Giá: </span>
+                <input id="add-price" type="number" class="form-control" placeholder="Nhập giá sản phẩm..." />
+            </div>
+        `;
+            let jss = document.getElementById("modal-account-about-add");
+            jss.innerHTML = `
+            <span style="margin: 7px 0;"></span>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Sản phẩm: </span><input id="add-name" type="text" class="form-control" placeholder="Nhập tên sản phẩm..." /></div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Phân loại: </span>
+                <select id="add-categorySub" class="form-select">
+                </select>
+            </div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Sản phẩm có sẵn: </span><input id="add-quantity" type="number" class="form-control" placeholder="Nhập số lượng sản phẩm có sẳn..." /></div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Khuyến mãi: </span>
+                <select id="add-discount" class="form-select">
+                </select>
+            </div>
+            <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Trạng thái: </span>
+                <select id="add-productstatus" class="form-select">
+                </select>
+            </div>
+        `;
+            let cateSub = document.getElementById("add-categorySub");
+            let optionCateSub = "";
+            for (let c of data.listCategorySub) {
+                optionCateSub += `
+                <option value="${c.id}">${c.name}</option>
+            `;
+            }
+            cateSub.innerHTML = optionCateSub;
+            let discount = document.getElementById("add-discount");
+            let optionDiscount = "";
+            for (let p of data.listPromotion) {
+                if (p.type.id === 20) {
+                    optionDiscount += `
+                    <option value="${p.id}">${p.note} - ${p.discount}%</option>
+                `;
+                }
+            }
+            discount.innerHTML = optionDiscount;
+            let status = document.getElementById("add-productstatus");
+            let optionStatus = "";
+            for (let s of data.listStatus) {
+                optionStatus += `
+                <option value="${s.id}">${s.statusname}</option>
+            `;
+            }
+            status.innerHTML = optionStatus;
+            let button = document.getElementById("change-profile-add");
+            button.innerHTML = `
+            <button type="button" class="m-1 btn btn-outline-success" onclick="saveAddProduct('${added}')">Lưu</button>
+            <button type="button" class="m-1 btn btn-outline-danger" onclick="hideAddProfile()">Trở lại</button>
+        `;
+            let jsss = document.getElementById("modal-account-title-add");
+            jsss.innerHTML = `
+            <i class="fas fa-crown" style="color: yellow;"></i>
+            <span class="text-account-title">
+                #*****#
+            </span>
+            <i class="fas fa-crown" style="color: yellow;"></i>
+        `;
+            let btns = document.querySelectorAll('.js-add-cart-add');
+            let cartss = document.querySelector('.js-modal-add');
+            let modalClose = document.querySelector('.js-modal-close-add');
+            let modalContainer = document.querySelector('.js-modal-container-add');
+            for (const btn of btns) {
+                btn.addEventListener('click', showAddProfile);
+            }
+            modalClose.addEventListener('click', hideAddProfile);
+            cartss.addEventListener('click', hideAddProfile);
+            modalContainer.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
+        }
+    ).catch(error => {
+        console.info(error);
+    });
+}
+
+function saveAddProduct(endpoint) {
+    const avatarInput = document.getElementById("avatarBrowse");
+    const formData = new FormData();
+    if (avatarInput.files.length > 0) {
+        formData.append("file", avatarInput.files[0]);
+    }
+    formData.append("price", document.getElementById("add-price").value);
+    formData.append("name", document.getElementById("add-name").value);
+    formData.append("quantity", document.getElementById("add-quantity").value);
+    formData.append("categorysubId", document.getElementById("add-categorySub").selectedOptions[0].value);
+    formData.append("productstatus", document.getElementById("add-productstatus").selectedOptions[0].value);
+    formData.append("discount", document.getElementById("add-discount").selectedOptions[0].value);
+    fetch(endpoint, {
+        method: "POST",
+        body: formData
+    }).then(res => {
+        if (res.status === 200) {
+            hideAddProfile();
+            Swal.fire('Thêm sản phẩm thành công!', 'Dữ liệu sẽ mất chút thời gian để thay đổi!', 'success');
+        } else {
+            Swal.fire('Lỗi!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
+        }
+    });
+}
+
 let cart = document.querySelector('.js-modal');
 function showProfile() {
     // alert('Modal opened successfully');
@@ -287,11 +408,18 @@ function hideProfile() {
 
 let carts = document.querySelector('.js-modal-edit');
 function showEditProfile() {
-    // alert('Modal opened successfully');
     carts.classList.add('js-modal-open');
 }
 function hideEditProfile() {
     carts.classList.remove('js-modal-open');
+}
+
+let cartss = document.querySelector('.js-modal-add');
+function showAddProfile() {
+    cartss.classList.add('js-modal-open');
+}
+function hideAddProfile() {
+    cartss.classList.remove('js-modal-open');
 }
 
 function permissionAccount() {

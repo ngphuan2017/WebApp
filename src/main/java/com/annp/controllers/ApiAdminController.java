@@ -23,6 +23,7 @@ import com.annp.service.StatusService;
 import com.annp.service.UserService;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,6 +96,18 @@ public class ApiAdminController {
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
+    @GetMapping("/product-management/listed")
+    public ResponseEntity<Object> addProduct() {
+        List<CategorySub> categorySub = this.categorySubService.getCategorySub();
+        List<Promotion> promotion = this.promotionService.getPromotions();
+        List<Status> status = this.statusService.getStatus("PRODUCTSTATUS");
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("listCategorySub", categorySub);
+        responseMap.put("listPromotion", promotion);
+        responseMap.put("listStatus", status);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
     @PutMapping("/customer-management/deleted/{userId}")
     public ResponseEntity deleteCustomer(@PathVariable(value = "userId") int id) {
         try {
@@ -133,6 +146,7 @@ public class ApiAdminController {
             if (userRole != null) {
                 u.setUserRole(new Role(Integer.valueOf(userRole)));
             }
+            u.setUpdatedDate(new Date());
             if (this.userService.updateProfileUser(u)) {
                 return new ResponseEntity(HttpStatus.OK);
             }
@@ -200,6 +214,41 @@ public class ApiAdminController {
             @RequestParam("discount") String discount) {
         try {
             Product p = this.productService.getProductById(id);
+            if (file != null) {
+                p.setFile(file);
+            }
+            p.setName(name);
+            p.setPrice(Integer.valueOf(price));
+            p.setQuantity(Integer.valueOf(quantity));
+            p.setCategorysubId(new CategorySub(Integer.valueOf(categorysubId)));
+            p.setProductstatus(new Status(Integer.valueOf(productstatus)));
+            p.setDiscount(new Promotion(Integer.valueOf(discount)));
+            p.setUpdatedDate(new Date());
+            if (this.productService.addOrUpdateProduct(p)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/product-management/added")
+    public ResponseEntity addProduct(@RequestParam(value = "file", required = false) MultipartFile file,
+                                     @RequestParam("name") String name,
+                                     @RequestParam("price") String price,
+                                     @RequestParam("quantity") String quantity,
+                                     @RequestParam("categorysubId") String categorysubId,
+                                     @RequestParam("productstatus") String productstatus,
+                                     @RequestParam("discount") String discount) {
+        try {
+            Product p = new Product();
+            p.setId(0);
+            p.setReviewCount(0);
+            p.setAverageRating(BigDecimal.valueOf(0));
+            p.setUnitsSold(0);
+            p.setCreatedDate(new Date());
             if (file != null) {
                 p.setFile(file);
             }
@@ -296,6 +345,7 @@ public class ApiAdminController {
             CategorySub categorySub = this.categorySubService.getCategorySubById(id);
             categorySub.setName(params.get("name"));
             categorySub.setCategoryId(new Category(Integer.valueOf(params.get("categoryId"))));
+            categorySub.setUpdatedDate(new Date());
             if (this.categorySubService.updateCategorySub(categorySub)) {
                 return new ResponseEntity(HttpStatus.OK);
             }

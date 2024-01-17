@@ -10,6 +10,8 @@
 
 <c:url value="/admin/product-management" var="product" />
 <c:url value="/admin/api/product-management" var="producted" />
+<c:url value="/admin/api/product-management/listed" var="listed" />
+<c:url value="/admin/api/product-management/added" var="added" />
 <c:url value="/admin/api/product-management/edited" var="edited" />
 <c:url value="/admin/api/product-management/deleted" var="deleted" />
 
@@ -23,7 +25,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="text-md-end">
-                        <button type="button" class="btn btn-outline-success">Thêm sản phẩm</button>
+                        <button type="button" class="btn btn-outline-success js-add-cart-add" onclick="addProduct('${listed}', '${added}')">Thêm sản phẩm</button>
                     </div>
                 </div>
             </div>
@@ -182,6 +184,35 @@
 
         </div>
         <div class="footer-modal-black" id="modal-account-title-edit">
+
+        </div>
+    </div>
+</div>
+
+<div class="js-modal-add">
+    <div class="modal-container-black js-modal-container-add">
+        <div class="js-modal-close-add">x</div>
+        <header class="modal-header-black">
+            <span><i class="fas fa-edit"></i> Thêm sản phẩm mới</span>
+        </header>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                    <div class="modal-img-black" id="modal-account-img-add">
+
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6 col-12">
+                    <div class="modal-content" id="modal-account-about-add">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3" id="change-profile-add">
+
+        </div>
+        <div class="footer-modal-black" id="modal-account-title-add">
 
         </div>
     </div>

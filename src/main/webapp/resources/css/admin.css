@@ -81,7 +81,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-transform: uppercase;
 }
 
-.js-modal, .js-modal-edit{
+.js-modal, .js-modal-edit, .js-modal-add {
     display: none;
     position: fixed;
     height: 100%;
@@ -112,7 +112,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     animation: modalFadeIn ease 0.5s;
 }
 
-.js-modal-edit .modal-container-black {
+.js-modal-edit .modal-container-black, .js-modal-add .modal-container-black {
     position: fixed;
     bottom: 10%;
     width: 600px;
@@ -134,7 +134,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     padding: 5px;
     opacity: 0.8;
 }
-.js-modal-edit .js-modal-close-edit {
+.js-modal-edit .js-modal-close-edit, .js-modal-add .js-modal-close-add {
     position: absolute;
     color: #222;
     font-size: 25px;
@@ -143,18 +143,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     padding: 5px;
     opacity: 0.8;
 }
-.js-modal .js-modal-close:hover, .js-modal-edit .js-modal-close-edit:hover {
+.js-modal .js-modal-close:hover, .js-modal-edit .js-modal-close-edit:hover,
+.js-modal-add .js-modal-close-add:hover{
     cursor: default;
     color: red;
     opacity: 1;
 }
 
-.js-modal .modal-img-black, .js-modal-edit .modal-img-black {
+.modal-img-black {
     width: 100%;
     padding: 5px;
 }
 
-.js-modal .modal-img-black img, .js-modal-edit .modal-img-black img {
+.modal-img-black img {
     border-radius: 10px;
     padding: 2px;
     border: 1px solid #8d8d8d;
@@ -180,7 +181,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     font-weight: 700;
     box-shadow: 0 0 5px 3px;
 }
-.js-modal .text-account-title, .js-modal-edit .text-account-title {
+.text-account-title {
     color: #FF2400;
     text-shadow: 1px 0 1px rgba(255, 255, 255, 0.75);
 }
@@ -197,7 +198,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-transform: uppercase;
 }
 
-.js-modal-edit .modal-header-black {
+.js-modal-edit .modal-header-black, .js-modal-add .modal-header-black {
     color: red;
     display: block;
     border-bottom: 1px dashed #f98d8d;
@@ -209,18 +210,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     text-transform: uppercase;
 }
 
-.js-modal .modal-body, .js-modal-edit .modal-body {
+.modal-body {
     padding: 1px;
 }
 
-.js-modal .modal-content, .js-modal-edit .modal-content {
+.modal-content {
     font-family: Roboto, sans-serif;
     font-size: 14px;
     font-weight: 500;
     text-align: left;
 }
 
-.js-modal .footer-modal-black, .js-modal-edit .footer-modal-black {
+.footer-modal-black {
     border-top: 1px dashed #f98d8d;
     margin: 0 10px;
     padding: 10px 0;
