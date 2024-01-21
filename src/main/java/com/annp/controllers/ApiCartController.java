@@ -6,29 +6,30 @@ package com.annp.controllers;
 
 import com.annp.configs.VNPayConfig;
 import com.annp.pojo.Cart;
+import com.annp.pojo.Users;
 import com.annp.service.ProductService;
+import com.annp.service.UserService;
 import com.annp.utils.Utils;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +49,10 @@ public class ApiCartController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private Environment env;
 
     @PostMapping(value = "/cart")
     public ResponseEntity<Map<String, String>> addToCart(@RequestBody Cart c, HttpSession session) {
@@ -96,27 +101,30 @@ public class ApiCartController {
     }
 
     @PostMapping("/pay")
-    public ResponseEntity pay(HttpSession session, @RequestBody Map<String, String> params, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public ResponseEntity pay(HttpSession session, Authentication authentication, @RequestBody Map<String, String> params, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         int option = Integer.parseInt(params.get("optionPay"));
         Map<String, Cart> cart = (Map<String, Cart>) session.getAttribute("cart");
+        Integer amount = 0;
+        if (cart != null) {
+            for (Cart c : cart.values()) {
+                amount += c.getQuantity() * c.getPrice();
+            }
+        }
+        String baseUrl = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
+        Users user = this.userService.getUserByUsername(authentication.getName());
 
         switch (option) {
             case 1:
                 if (this.productService.addReceipt((Map<String, Cart>) session.getAttribute("cart"))) {
                     session.removeAttribute("cart");
+                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount);
                     return new ResponseEntity(HttpStatus.OK);
                 }
                 break;
             case 2:
                 if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"))) {
                     session.removeAttribute("cart");
-                    Integer amount = 0;
-                    if (cart != null) {
-                        for (Cart c : cart.values()) {
-                            amount += c.getQuantity() * c.getPrice();
-                        }
-                    }
                     HttpHeaders headers = new HttpHeaders();
                     String urlPayment = doPost(req, resp, amount);
                     headers.add("Location", urlPayment);
@@ -139,6 +147,61 @@ public class ApiCartController {
                 break;
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    public boolean sendOrderToEmail(String fullname, String email, String baseUrl, Map<String, Cart> cart, Integer amount) {
+        try {
+            Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"));
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+            formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
+            String date = formatter.format(cld.getTime());
+            DecimalFormat decimalFormat = new DecimalFormat("#,###");
+            String formattedAmount = decimalFormat.format(amount);
+            HtmlEmail htmlEmail = new HtmlEmail();
+            htmlEmail.setHostName(env.getProperty("spring.mail.host")); // SMTP server
+            htmlEmail.setSmtpPort(Integer.parseInt(env.getProperty("spring.mail.port"))); // Port
+            htmlEmail.setAuthenticator(new DefaultAuthenticator(env.getProperty("spring.mail.username"), env.getProperty("spring.mail.password"))); // Email và mật khẩu
+            htmlEmail.setStartTLSEnabled(true); // Bật TLS
+
+            htmlEmail.setFrom(env.getProperty("spring.mail.username"), "PhuAnShop");
+            htmlEmail.setCharset("UTF-8");
+            htmlEmail.setSubject("Thông tin đơn hàng đã mua tại Phú An Shop");
+            String htmlMessage = "<html><body style='margin-right: auto; margin-left: auto; padding-left: 15px; padding-right: 15px; width: 100%; font-size:16px;'>";
+            htmlMessage += "<p align='center'><a href='" + baseUrl + "'><img src='https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png' alt='Phú An Shop' /></a></p>";
+            htmlMessage += "<p>Xin chào <span style='color: #ee4d2d'>" + fullname + "</span>,</p>";
+            htmlMessage += "<table bgcolor='#fff' cellpadding='0' cellspacing='0' border='0' align='center'><thead><tr><th colspan='2'>THÔNG TIN ĐƠN HÀNG</th></tr></thead><tbody>";
+            if (cart != null) {
+                for (Cart c : cart.values()) {
+                    htmlMessage += "<tr><td>Sản phẩm: </td><td>"+ c.getName() +"</td></tr>";
+                    htmlMessage += "<tr><td>Đơn giá: </td><td>"+ c.getPrice() +" VNĐ</td></tr>";
+                    htmlMessage += "<tr><td>Số lượng: </td><td>"+ c.getQuantity() +"</td></tr>";
+                    htmlMessage += "<tr><td>Số tiền: </td><td>"+ c.getPrice()*c.getQuantity() +" VNĐ</td></tr>";
+                    htmlMessage += "<tr><td>Ngày đặt hàng: </td><td>"+ date +"</td></tr>";
+                    htmlMessage += "<tr><td colspan='2'><hr/></td></tr>";
+                }
+            }
+            htmlMessage += "<tr><td>Tổng tiền: </td><td color='orange'>"+ formattedAmount +" VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Voucher từ Shop: </td><td>0 VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Phí vận chuyển: </td><td>0 VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Tổng thanh toán: </td><td color='red'>"+ formattedAmount +" VNĐ</td></tr>";
+            htmlMessage += "</tbody></table>";
+            htmlMessage += "<p align='center'><a href='" + baseUrl + "' align='center' ";
+            htmlMessage += "style='padding: 8px 30px; border-radius: 3px; background-color: #ee4d2d; color:#fff; text-decoration: none;'>Đi đến Shop</a></p>";
+            htmlMessage += "<p>Bạn có thể gửi yêu cầu trả hàng cho email: phuanshop2023@gmail.com trong vòng 7 ngày kể từ khi nhận được email này.</p>";
+            htmlMessage += "<p>Chúc bạn luôn có những trải nghiệm tuyệt vời khi mua sắm tại PhuAnShop.</p>";
+            htmlMessage += "<p>Lưu ý: PhuAnShop sẽ từ chối hỗ trợ các khiếu nại về Trả hàng/Hoàn tiền sau 7 ngày kể từ khi nhận được email này.</p>";
+            htmlMessage += "<p>Trân trọng,</p>";
+            htmlMessage += "<p>PhuAnShop</p>";
+            htmlMessage += "</body></html>";
+            htmlEmail.setHtmlMsg(htmlMessage);
+            htmlEmail.addTo(email);
+
+            htmlEmail.send();
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
     }
 
     protected String doPost(HttpServletRequest req, HttpServletResponse resp, Integer amount) throws ServletException, IOException {
