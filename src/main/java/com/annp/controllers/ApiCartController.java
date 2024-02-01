@@ -5,9 +5,9 @@
 package com.annp.controllers;
 
 import com.annp.configs.VNPayConfig;
-import com.annp.pojo.Cart;
-import com.annp.pojo.Users;
+import com.annp.pojo.*;
 import com.annp.service.ProductService;
+import com.annp.service.PromotionService;
 import com.annp.service.UserService;
 import com.annp.utils.Utils;
 import java.io.IOException;
@@ -51,6 +51,8 @@ public class ApiCartController {
     private ProductService productService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PromotionService promotionService;
     @Autowired
     private Environment env;
 
@@ -100,6 +102,16 @@ public class ApiCartController {
         return new ResponseEntity<>(Utils.cartStats(cart), HttpStatus.OK);
     }
 
+    @GetMapping("/cart/voucher")
+    public ResponseEntity<Object> checkVoucherCode() {
+        List<Promotion> promotions = new ArrayList<>();
+        promotions.addAll(this.promotionService.getPromotions(new Status(19)));
+        promotions.addAll(this.promotionService.getPromotions(new Status(21)));
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("promotions", promotions);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
     @PostMapping("/pay")
     public ResponseEntity pay(HttpSession session, Authentication authentication, @RequestBody Map<String, String> params, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -125,6 +137,7 @@ public class ApiCartController {
             case 2:
                 if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"))) {
                     session.removeAttribute("cart");
+                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount);
                     HttpHeaders headers = new HttpHeaders();
                     String urlPayment = doPost(req, resp, amount);
                     headers.add("Location", urlPayment);
@@ -149,14 +162,13 @@ public class ApiCartController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
-    public boolean sendOrderToEmail(String fullname, String email, String baseUrl, Map<String, Cart> cart, Integer amount) {
+    private boolean sendOrderToEmail(String fullname, String email, String baseUrl, Map<String, Cart> cart, Integer amount) {
         try {
             Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"));
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
             formatter.setTimeZone(TimeZone.getTimeZone("GMT+7"));
             String date = formatter.format(cld.getTime());
             DecimalFormat decimalFormat = new DecimalFormat("#,###");
-            String formattedAmount = decimalFormat.format(amount);
             HtmlEmail htmlEmail = new HtmlEmail();
             htmlEmail.setHostName(env.getProperty("spring.mail.host")); // SMTP server
             htmlEmail.setSmtpPort(Integer.parseInt(env.getProperty("spring.mail.port"))); // Port
@@ -169,27 +181,27 @@ public class ApiCartController {
             String htmlMessage = "<html><body style='margin-right: auto; margin-left: auto; padding-left: 15px; padding-right: 15px; width: 100%; font-size:16px;'>";
             htmlMessage += "<p align='center'><a href='" + baseUrl + "'><img src='https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png' alt='Phú An Shop' /></a></p>";
             htmlMessage += "<p>Xin chào <span style='color: #ee4d2d'>" + fullname + "</span>,</p>";
-            htmlMessage += "<table bgcolor='#fff' cellpadding='0' cellspacing='0' border='0' align='center'><thead><tr><th colspan='2'>THÔNG TIN ĐƠN HÀNG</th></tr></thead><tbody>";
+            htmlMessage += "<table bgcolor='#fff' cellpadding='0' cellspacing='0' border='0' align='center'><thead><tr><th colspan='2' style='padding-bottom: 15px;'>THÔNG TIN ĐƠN HÀNG</th></tr></thead><tbody>";
             if (cart != null) {
                 for (Cart c : cart.values()) {
-                    htmlMessage += "<tr><td>Sản phẩm: </td><td>"+ c.getName() +"</td></tr>";
-                    htmlMessage += "<tr><td>Đơn giá: </td><td>"+ c.getPrice() +" VNĐ</td></tr>";
-                    htmlMessage += "<tr><td>Số lượng: </td><td>"+ c.getQuantity() +"</td></tr>";
-                    htmlMessage += "<tr><td>Số tiền: </td><td>"+ c.getPrice()*c.getQuantity() +" VNĐ</td></tr>";
-                    htmlMessage += "<tr><td>Ngày đặt hàng: </td><td>"+ date +"</td></tr>";
+                    htmlMessage += "<tr><td>Sản phẩm: </td><td style='color: gray;'>"+ c.getName() +"</td></tr>";
+                    htmlMessage += "<tr><td>Đơn giá: </td><td style='color: gray;'>"+ decimalFormat.format(c.getPrice()) +" VNĐ</td></tr>";
+                    htmlMessage += "<tr><td>Số lượng: </td><td style='color: gray;'>"+ c.getQuantity() +"</td></tr>";
+                    htmlMessage += "<tr><td>Số tiền: </td><td style='color: gray;'>"+ decimalFormat.format((long) c.getPrice() *c.getQuantity()) +" VNĐ</td></tr>";
+                    htmlMessage += "<tr><td>Ngày đặt hàng: </td><td style='color: gray;'>"+ date +"</td></tr>";
                     htmlMessage += "<tr><td colspan='2'><hr/></td></tr>";
                 }
             }
-            htmlMessage += "<tr><td>Tổng tiền: </td><td color='orange'>"+ formattedAmount +" VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Voucher từ Shop: </td><td>0 VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Phí vận chuyển: </td><td>0 VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Tổng thanh toán: </td><td color='red'>"+ formattedAmount +" VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Tổng tiền: </td><td style='color: #FA8072;'>"+ decimalFormat.format(amount) +" VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Voucher từ Shop: </td><td style='color: #FA8072;'>0 VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Phí vận chuyển: </td><td style='color: #FA8072;'>0 VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Tổng thanh toán: </td><td style='color: red;'>"+ decimalFormat.format(amount) +" VNĐ</td></tr>";
             htmlMessage += "</tbody></table>";
-            htmlMessage += "<p align='center'><a href='" + baseUrl + "' align='center' ";
+            htmlMessage += "<p align='center' style='padding: 10px;'><a href='" + baseUrl + "' align='center' ";
             htmlMessage += "style='padding: 8px 30px; border-radius: 3px; background-color: #ee4d2d; color:#fff; text-decoration: none;'>Đi đến Shop</a></p>";
             htmlMessage += "<p>Bạn có thể gửi yêu cầu trả hàng cho email: phuanshop2023@gmail.com trong vòng 7 ngày kể từ khi nhận được email này.</p>";
             htmlMessage += "<p>Chúc bạn luôn có những trải nghiệm tuyệt vời khi mua sắm tại PhuAnShop.</p>";
-            htmlMessage += "<p>Lưu ý: PhuAnShop sẽ từ chối hỗ trợ các khiếu nại về Trả hàng/Hoàn tiền sau 7 ngày kể từ khi nhận được email này.</p>";
+            htmlMessage += "<p>Lưu ý: Shop sẽ từ chối hỗ trợ các khiếu nại về Trả hàng/Hoàn tiền sau 7 ngày kể từ khi nhận được email này.</p>";
             htmlMessage += "<p>Trân trọng,</p>";
             htmlMessage += "<p>PhuAnShop</p>";
             htmlMessage += "</body></html>";

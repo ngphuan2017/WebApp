@@ -36,6 +36,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -158,19 +159,36 @@ public class ApiAdminController {
     }
 
     @PutMapping("/order-management/updated/{orderDetailId}")
-    public ResponseEntity updateOrder(@PathVariable(value = "orderDetailId") int id, @RequestBody Map<String, String> params) {
+    public ResponseEntity updateOrder(@PathVariable(value = "orderDetailId") int id, @RequestBody Map<String, String> params, Authentication authentication) {
         try {
             OrderDetail od = this.ordersService.getOrderDetailById(id);
             Product p = this.productService.getProductById(od.getProductId().getId());
+            Users u = this.userService.getUserByUsername(authentication.getName());
             od.setOrderstatus(new Status(Integer.valueOf(params.get("orderDetailStatus"))));
-            if (Integer.parseInt(params.get("orderDetailStatus")) == 10) {
-                p.setQuantity(p.getQuantity() - od.getNumber());
-                p.setUnitsSold(p.getUnitsSold() + od.getNumber());
-            } else if (Integer.parseInt(params.get("orderDetailStatus")) == 13) {
-                p.setQuantity(p.getQuantity() + od.getNumber());
-                p.setUnitsSold(p.getUnitsSold() - od.getNumber());
+            od.setUpdatedDate(new Date());
+            od.setUpdatedBy(u);
+            switch (Integer.parseInt(params.get("orderDetailStatus"))) {
+                case 10:
+                    p.setQuantity(p.getQuantity() - od.getNumber());
+                    p.setUnitsSold(p.getUnitsSold() + od.getNumber());
+                    break;
+                case 11:
+                    u.setExp(u.getExp() + 30);
+                    break;
+                case 13:
+                    p.setQuantity(p.getQuantity() + od.getNumber());
+                    p.setUnitsSold(p.getUnitsSold() - od.getNumber());
+                    break;
+                default:
+                    break;
             }
             if (this.ordersService.updateOrderDetail(od) && this.productService.updateProduct(p)) {
+                if (u.getNotification() == null || u.getNotification() == 0) {
+                    u.setNotification(1);
+                } else {
+                    u.setNotification(u.getNotification() + 1);
+                }
+                this.userService.updateUser(u);
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -236,12 +254,12 @@ public class ApiAdminController {
 
     @PostMapping("/product-management/added")
     public ResponseEntity addProduct(@RequestParam(value = "file", required = false) MultipartFile file,
-                                     @RequestParam("name") String name,
-                                     @RequestParam("price") String price,
-                                     @RequestParam("quantity") String quantity,
-                                     @RequestParam("categorysubId") String categorysubId,
-                                     @RequestParam("productstatus") String productstatus,
-                                     @RequestParam("discount") String discount) {
+            @RequestParam("name") String name,
+            @RequestParam("price") String price,
+            @RequestParam("quantity") String quantity,
+            @RequestParam("categorysubId") String categorysubId,
+            @RequestParam("productstatus") String productstatus,
+            @RequestParam("discount") String discount) {
         try {
             Product p = new Product();
             p.setId(0);
@@ -267,7 +285,7 @@ public class ApiAdminController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
-    
+
     @PostMapping("/promotion-management/added")
     public ResponseEntity addPromotion(
             @RequestParam(value = "file", required = false) MultipartFile file,

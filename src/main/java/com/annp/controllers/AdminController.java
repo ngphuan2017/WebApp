@@ -167,28 +167,5 @@ public class AdminController {
         model.addAttribute("sidebar", "report");
         return "admin-report";
     }
-//    chua xu ly
-    @RequestMapping("/admin/products")
-    public String addProduct(Model model,
-            @ModelAttribute(value = "product") @Valid Product p,
-            BindingResult rs) {
-        if (rs.hasErrors()) {
-            return "admin-products";
-        }
-
-        if (this.productService.addOrUpdateProduct(p) == true) {
-            return "redirect:/admin/products";
-        } else {
-            model.addAttribute("errMsg", "Something wrong!!!");
-        }
-
-        return "admin-products";
-    }
-
-    @GetMapping("/admin/products/{productId}")
-    public String updateProduct(Model model, @PathVariable(value = "productId") int id) {
-        model.addAttribute("product", this.productService.getProductById(id));
-        return "admin-products";
-    }
 
 }

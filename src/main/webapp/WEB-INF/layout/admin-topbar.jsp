@@ -9,6 +9,7 @@
 
 <c:url value="/" var="action" />
 <c:url value="/me/profile" var="profile" />
+<c:url value="/me/notification" var="notification" />
 <c:url value="/forgot-password/change-password" var="changePassword" />
 <c:url value="/logout" var="logout" />
 
@@ -103,6 +104,9 @@
                         <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
                             <a class="dropdown-item" href="${profile}">
                                 <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Tài khoản
+                            </a>
+                            <a class="dropdown-item" href="${notification}">
+                                <i class="fas fa-bell fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Thông báo
                             </a>
                             <a class="dropdown-item" href="${changePassword}">
                                 <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Đổi mật khẩu

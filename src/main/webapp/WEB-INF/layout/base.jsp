@@ -15,6 +15,7 @@
             <tiles:insertAttribute name="title"/>
         </title>
         <link href="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1687075781/WebApp/iconshop_uxsy3a.png" />" rel="shortcut icon"/>
+        <link href="<c:url value="/resources/css/loading.css" />" rel="stylesheet"/>
         <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet"/>
         <link href="<c:url value="/resources/css/user.css" />" rel="stylesheet"/>
         <link href="<c:url value="/resources/css/responsive.css" />" rel="stylesheet"/>
@@ -31,6 +32,20 @@
         <script src="<c:url value="/resources/sweetalert2-10/clipboard.min.js" />"></script>
     </head>
     <body>
+        <!--Loading Animation-->
+        <div id="loading-animation" class="loadingio-spinner-double-ring-nkp2c2ew929">
+            <div class="ldio-sy03huelm1">
+                <div></div>
+                <div></div>
+                <div>
+                    <div></div>
+                </div>
+                <div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+
         <div id="main">
             <tiles:insertAttribute name="header"/>
             <tiles:insertAttribute name="content"/>
@@ -41,9 +56,17 @@
         <div id="fb-root"></div>
         <!-- Your Plugin chat code -->
         <div id="fb-customer-chat" class="fb-customerchat"></div>
-        
+
         <a id="backtop" href="#main" class="gototop fa-solid fa-circle-chevron-up" style="display: none;"></a>
 
+        <script>
+            window.onload = () => {
+                let loading = document.getElementById('loading-animation');
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                }, 1000);
+            };
+        </script>
         <script src="<c:url value="/resources/js/product.js" />"></script>
         <script src="<c:url value="/resources/js/cart.js" />"></script>
         <script src="<c:url value="/resources/js/orders.js" />"></script>

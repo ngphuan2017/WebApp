@@ -13,6 +13,7 @@
 <c:url value="/about" var="about" />
 <c:url value="/wheel-of-forture" var="wheel" />
 <c:url value="/me/profile" var="profile" />
+<c:url value="/me/notification" var="notification" />
 <c:url value="/forgot-password/change-password" var="changePassword" />
 <c:url value="/cart" var="cart" />
 <c:url value="/login" var="login" />
@@ -88,6 +89,7 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="${profile}"><i class="fa-solid fa-user"></i> Tài khoản</a></li>
+                                    <li><a class="dropdown-item" href="${notification}"><i class="fa-solid fa-bell"></i> Thông báo <span class="badge bg-danger">${sessionScope.currentUser.notification}</span></a></li>
                                     <li><a class="dropdown-item" href="${changePassword}"><i class="fa-solid fa-unlock-keyhole"></i> Đổi mật khẩu</a></li>
                                     <li><a class="dropdown-item" href="${logout}"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
                                 </ul>

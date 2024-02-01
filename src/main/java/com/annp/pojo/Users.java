@@ -53,6 +53,9 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Users.findByUpdatedDate", query = "SELECT u FROM Users u WHERE u.updatedDate = :updatedDate")})
 public class Users implements Serializable {
 
+    @Column(name = "Notification")
+    private Integer notification;
+
     @Size(max = 45)
     @Column(name = "OTP")
     private String otp;
@@ -490,6 +493,14 @@ public class Users implements Serializable {
 
     public void setOtpGeneratedTime(Date otpGeneratedTime) {
         this.otpGeneratedTime = otpGeneratedTime;
+    }
+
+    public Integer getNotification() {
+        return notification;
+    }
+
+    public void setNotification(Integer notification) {
+        this.notification = notification;
     }
     
 }

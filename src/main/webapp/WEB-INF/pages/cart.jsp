@@ -8,6 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <c:url value="/" var="action" />
+<c:url value="/api/cart/voucher" var="voucher" />
 
 <h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down"><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG</h1>
 
@@ -66,12 +67,14 @@
         </table> 
 
         <div class="container alert alert-info text-center" data-aos="zoom-in">
+            <h7>Voucher giảm giá: <span style="color: #ee4d2d; font-size: 18px; font-weight: 600;" id="voucher-buy"></span>0 VNĐ</h7>
             <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-counter" id="total-quantity">${cartStats.totalQuantity}</span> sản phẩm</h6>
             <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h5>
         </div>
-        <input type="text" class="form-control text-center" placeholder="Mã Voucher" />
-        <label for="optionPay" class="form-labe">Phương thức thanh toán:</label>
-        <select class="form-select text-center" name="optionPay" id="option-pay">
+        <label for="voucher">Mã Voucher:</label><input type="text" class="form-control text-center" id="voucher" onchange="checkVoucherCode('${voucher}')" placeholder="Nhập Mã Voucher..." />
+        <div class="alert alert-secondary text-center text-danger container d-none" id="voucher-content"></div>
+        <label for="option-pay" class="form-labe">Phương thức thanh toán:</label>
+        <select class="form-select text-center" name="option-pay" id="option-pay">
             <option value="1">Thanh toán khi nhận hàng</option>
             <option value="2">Cổng thanh toán VNPay</option>
             <option value="3" disabled>Chuyển khoản ngân hàng <span>(Đang bảo trì)</span></option>

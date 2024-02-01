@@ -72,7 +72,7 @@
                     <div class="kengang"></div>
                 </div>
                 <div class="google-btn">
-                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile+email&redirect_uri=http://phuanshop.id.vn/login/login-google&response_type=code&client_id=845125163352-7naesd2b78gchec9rg08ecg8s5euh31l.apps.googleusercontent.com&approval_prompt=force">
+                    <a href="https://accounts.google.com/o/oauth2/auth?scope=profile+email&redirect_uri=http://phuanshop.id.vn/login/login-google&response_type=code&client_id=954599608854-46336kvovn5g8ggmsp11dslgh6chn71c.apps.googleusercontent.com&approval_prompt=force">
                         <div class="google-icon-wrapper">
                             <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg"/>
                         </div>

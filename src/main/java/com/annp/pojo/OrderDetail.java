@@ -39,6 +39,13 @@ import lombok.AllArgsConstructor;
     @NamedQuery(name = "OrderDetail.findByCreatedDate", query = "SELECT o FROM OrderDetail o WHERE o.createdDate = :createdDate")})
 public class OrderDetail implements Serializable {
 
+    @Column(name = "UPDATED_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedDate;
+    @JoinColumn(name = "UPDATED_BY", referencedColumnName = "ID")
+    @ManyToOne
+    private Users updatedBy;
+
     @JoinColumn(name = "ORDERSTATUS", referencedColumnName = "ID")
     @ManyToOne
     private Status orderstatus;
@@ -150,6 +157,22 @@ public class OrderDetail implements Serializable {
 
     public void setOrderstatus(Status orderstatus) {
         this.orderstatus = orderstatus;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Users getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Users updatedBy) {
+        this.updatedBy = updatedBy;
     }
     
 }
