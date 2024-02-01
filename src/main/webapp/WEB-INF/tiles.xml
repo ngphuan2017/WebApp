@@ -66,9 +66,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Đăng ký"/>
         <put-attribute name="content" value="/WEB-INF/pages/register.jsp"/>
     </definition>
-    <definition name="notification" extends="blankLayout">
+    <definition name="information" extends="blankLayout">
         <put-attribute name="title" value="Phú An Shop"/>
-        <put-attribute name="content" value="/WEB-INF/pages/notification.jsp"/>
+        <put-attribute name="content" value="/WEB-INF/pages/information.jsp"/>
     </definition>
     <definition name="change-password" extends="blankLayout">
         <put-attribute name="title" value="Đổi mật khẩu"/>
@@ -88,6 +88,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
     <definition name="maintenance" extends="blankLayout">
         <put-attribute name="title" value="Bảo trì"/>
         <put-attribute name="content" value="/WEB-INF/pages/maintenance.jsp"/>
+    </definition>
+    <definition name="notification" extends="baseLayout">
+        <put-attribute name="title" value="Phú An Shop" />
+        <put-attribute name="content" value="/WEB-INF/pages/notification.jsp" />
     </definition>
     <definition name="access-denied" extends="blankLayout">
         <put-attribute name="title" value="Truy cập bị từ chối"/>

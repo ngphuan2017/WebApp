@@ -12,6 +12,7 @@ import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Orders;
+import com.annp.pojo.Promotion;
 import com.annp.pojo.Role;
 import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
@@ -20,17 +21,20 @@ import com.annp.pojo.Ward;
 import com.annp.service.CityService;
 import com.annp.service.DistrictService;
 import com.annp.service.OrdersService;
+import com.annp.service.PromotionService;
 import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
 import com.annp.service.WardService;
 import com.annp.validator.UserValidator;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -73,6 +77,8 @@ public class UserController {
     private UserLevelsService userLevelsService;
     @Autowired
     private OrdersService ordersService;
+    @Autowired
+    private PromotionService promotionService;
     @Autowired
     private UserValidator userValidator;
     @Autowired
@@ -117,6 +123,22 @@ public class UserController {
         } else {
             return "maintenance";
         }
+    }
+
+    @GetMapping(path = "/me/notification")
+    public String userNotification(Model model, Authentication authentication) {
+        Users user = this.userService.getUserByUsername(authentication.getName());
+        user.setNotification(0);
+        this.userService.updateUser(user);
+        List<Orders> orders = this.ordersService.getOrderByUserId(user.getId());
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for(Orders od : orders){
+            orderDetails.addAll(this.ordersService.getOrderDetailByOrderId(od.getId()));
+        }
+        List<Promotion> promotions = this.promotionService.getPromotions(new Status(19));
+        model.addAttribute("orderDetails", orderDetails);
+        model.addAttribute("promotions", promotions);
+        return "notification";
     }
 
     @RequestMapping("/login")
@@ -243,17 +265,17 @@ public class UserController {
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         baseUrl += "/forgot-password/change-password";
         if (!userService.verifyRecaptcha(captchaResponse)) {
-            modelAndView.addObject("notification", "reCaptcha verification failed");
-            modelAndView.setViewName("notification");
+            modelAndView.addObject("information", "reCaptcha verification failed");
+            modelAndView.setViewName("information");
             return modelAndView;
         } else if (!this.userService.sendCodeToEmail(userId, email, baseUrl)) {
-            modelAndView.addObject("notification", "Hệ thống đang có lỗi, vui lòng quay lại sau!");
-            modelAndView.setViewName("notification");
+            modelAndView.addObject("information", "Hệ thống đang có lỗi, vui lòng quay lại sau!");
+            modelAndView.setViewName("information");
             return modelAndView;
         }
-        modelAndView.addObject("notification", "Xác nhận đã được gửi đến " + email + ".<br/>Vui lòng kiểm tra hộp thư để tiếp tục bước tiếp theo!");
+        modelAndView.addObject("information", "Xác nhận đã được gửi đến " + email + ".<br/>Vui lòng kiểm tra hộp thư để tiếp tục bước tiếp theo!");
         modelAndView.addObject("isHtml", true);
-        modelAndView.setViewName("notification");
+        modelAndView.setViewName("information");
         return modelAndView;
     }
 
@@ -291,8 +313,8 @@ public class UserController {
                 }
             }
         }
-        model.addAttribute("notification", "Lỗi: Yêu cầu của bạn đã quá hạn!");
-        return "notification";
+        model.addAttribute("information", "Lỗi: Yêu cầu của bạn đã quá hạn!");
+        return "information";
     }
 
     @GetMapping("/me/orders/{orderId}")

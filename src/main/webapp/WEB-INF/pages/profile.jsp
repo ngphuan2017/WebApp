@@ -303,8 +303,8 @@
                     <div class="col-sm-5 mb-3">
                         <div class="card-profile h-100">
                             <div class="card-body-profile">
-                                <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-bell" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Thông Báo</h6>
-                                <span>Chưa có thông báo nào</span>
+                                <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-calendar-days" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Sự kiện</h6>
+                                <span>Chưa có sự kiện nào từ Shop</span>
                             </div>
                         </div>
                     </div>

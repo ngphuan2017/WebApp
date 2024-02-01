@@ -133,3 +133,29 @@ function pay(endpoint) {
         }
     });
 }
+
+function checkVoucherCode(endpoint) {
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+        var voucher = document.getElementById("voucher");
+        var voucherContent = document.getElementById("voucher-content");
+        let flag = 0;
+        for(let check of data.promotions){
+            if (check.code.toLowerCase() === voucher.value.toLowerCase()){
+                voucherContent.textContent = check.note.toString();
+                voucherContent.classList.remove('d-none');
+                flag = 1;
+            }
+        }
+        if(flag !== 1) {
+            voucherContent.textContent = "Không tìm thấy Voucher";
+            voucherContent.classList.remove('d-none');
+        }
+    });
+}
