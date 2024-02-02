@@ -1,96 +1,122 @@
 @keyframes ldio-sy03huelm1 {
-  0% { transform: rotate(0) }
-  100% { transform: rotate(360deg) }
+    0% {
+        transform: rotate(0)
+    }
+    100% {
+        transform: rotate(360deg)
+    }
 }
-.ldio-sy03huelm1 div { box-sizing: border-box!important }
+
+.ldio-sy03huelm1 div {
+    box-sizing: border-box !important
+}
+
 .ldio-sy03huelm1 > div {
-  position: absolute;
-  width: 144px;
-  height: 144px;
-  top: 28px;
-  left: 28px;
-  border-radius: 50%;
-  border: 16px solid #000;
-  border-color: #e15b64 transparent #e15b64 transparent;
-  animation: ldio-sy03huelm1 1s linear infinite;
+    position: absolute;
+    width: 144px;
+    height: 144px;
+    top: 28px;
+    left: 28px;
+    border-radius: 50%;
+    border: 16px solid #000;
+    border-color: #e15b64 transparent #e15b64 transparent;
+    animation: ldio-sy03huelm1 1s linear infinite;
 }
 
 .ldio-sy03huelm1 > div:nth-child(2), .ldio-sy03huelm1 > div:nth-child(4) {
-  width: 108px;
-  height: 108px;
-  top: 46px;
-  left: 46px;
-  animation: ldio-sy03huelm1 1s linear infinite reverse;
-}
-.ldio-sy03huelm1 > div:nth-child(2) {
-  border-color: transparent #6ab6f8 transparent #6ab6f8;
-}
-.ldio-sy03huelm1 > div:nth-child(3) { border-color: transparent }
-.ldio-sy03huelm1 > div:nth-child(3) div {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform: rotate(45deg);
-}
-.ldio-sy03huelm1 > div:nth-child(3) div:before, .ldio-sy03huelm1 > div:nth-child(3) div:after { 
-  content: "";
-  display: block;
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  top: -16px;
-  left: 48px;
-  background: #e15b64;
-  border-radius: 50%;
-  box-shadow: 0 128px 0 0 #e15b64;
-}
-.ldio-sy03huelm1 > div:nth-child(3) div:after {
-  left: -16px;
-  top: 48px;
-  box-shadow: 128px 0 0 0 #e15b64;
+    width: 108px;
+    height: 108px;
+    top: 46px;
+    left: 46px;
+    animation: ldio-sy03huelm1 1s linear infinite reverse;
 }
 
-.ldio-sy03huelm1 > div:nth-child(4) { border-color: transparent; }
+.ldio-sy03huelm1 > div:nth-child(2) {
+    border-color: transparent #6ab6f8 transparent #6ab6f8;
+}
+
+.ldio-sy03huelm1 > div:nth-child(3) {
+    border-color: transparent
+}
+
+.ldio-sy03huelm1 > div:nth-child(3) div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(45deg);
+}
+
+.ldio-sy03huelm1 > div:nth-child(3) div:before, .ldio-sy03huelm1 > div:nth-child(3) div:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: -16px;
+    left: 48px;
+    background: #e15b64;
+    border-radius: 50%;
+    box-shadow: 0 128px 0 0 #e15b64;
+}
+
+.ldio-sy03huelm1 > div:nth-child(3) div:after {
+    left: -16px;
+    top: 48px;
+    box-shadow: 128px 0 0 0 #e15b64;
+}
+
+.ldio-sy03huelm1 > div:nth-child(4) {
+    border-color: transparent;
+}
+
 .ldio-sy03huelm1 > div:nth-child(4) div {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform: rotate(45deg);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform: rotate(45deg);
 }
+
 .ldio-sy03huelm1 > div:nth-child(4) div:before, .ldio-sy03huelm1 > div:nth-child(4) div:after {
-  content: "";
-  display: block;
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  top: -16px;
-  left: 30px;
-  background: #6ab6f8;
-  border-radius: 50%;
-  box-shadow: 0 92px 0 0 #6ab6f8;
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: -16px;
+    left: 30px;
+    background: #6ab6f8;
+    border-radius: 50%;
+    box-shadow: 0 92px 0 0 #6ab6f8;
 }
+
 .ldio-sy03huelm1 > div:nth-child(4) div:after {
-  left: -16px;
-  top: 30px;
-  box-shadow: 92px 0 0 0 #6ab6f8;
+    left: -16px;
+    top: 30px;
+    box-shadow: 92px 0 0 0 #6ab6f8;
 }
+
 .loadingio-spinner-double-ring-nkp2c2ew929 {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: #ffffff;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: #ffffff;
+    z-index: 999;
 }
+
 .ldio-sy03huelm1 {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  top: 35%;
-  left: 45%;
-  transform: translate(-50%, -50%);
-  transform: translateZ(0) scale(1);
-  backface-visibility: hidden;
-  transform-origin: 0 0; /* see note above */
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 35%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    transform: translateZ(0) scale(1);
+    backface-visibility: hidden;
+    transform-origin: 0 0; /* see note above */
 }
-.ldio-sy03huelm1 div { box-sizing: content-box; }
+
+.ldio-sy03huelm1 div {
+    box-sizing: content-box;
+}
