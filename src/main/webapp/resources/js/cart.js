@@ -2,6 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/javascript.js to edit this template
  */
+
 /* global Double */
 
 function addToCart(endpoint, id, name, price, image) {
@@ -121,6 +122,7 @@ function pay(endpoint) {
                             document.querySelector('.cart-amount').innerHTML = 0;
                             for (let d of counters)
                                 d.innerText = 0;
+                            setNotification(1, totalQuantity);
                             Swal.fire('Đặt hàng thành công!', 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
                         }
                     } else {
@@ -146,16 +148,15 @@ function checkVoucherCode(endpoint) {
         var voucher = document.getElementById("voucher");
         var voucherContent = document.getElementById("voucher-content");
         let flag = 0;
-        for(let check of data.promotions){
-            if (check.code.toLowerCase() === voucher.value.toLowerCase()){
+        for (let check of data.promotions) {
+            if (check.code.toLowerCase() === voucher.value.toLowerCase()) {
                 voucherContent.textContent = check.note.toString();
-                voucherContent.classList.remove('d-none');
                 flag = 1;
             }
         }
-        if(flag !== 1) {
+        if (flag !== 1) {
             voucherContent.textContent = "Không tìm thấy Voucher";
-            voucherContent.classList.remove('d-none');
         }
+        voucherContent.classList.remove('d-none');
     });
 }

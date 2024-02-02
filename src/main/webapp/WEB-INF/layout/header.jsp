@@ -4,32 +4,34 @@
     Author     : phuan
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="se" uri="http://www.springframework.org/security/tags"  %>
+<%@taglib prefix="se" uri="http://www.springframework.org/security/tags" %>
 
 
-<c:url value="/" var="action" />
-<c:url value="/about" var="about" />
-<c:url value="/wheel-of-forture" var="wheel" />
-<c:url value="/me/profile" var="profile" />
-<c:url value="/me/notification" var="notification" />
-<c:url value="/forgot-password/change-password" var="changePassword" />
-<c:url value="/cart" var="cart" />
-<c:url value="/login" var="login" />
-<c:url value="/logout" var="logout" />
-<c:url value="/admin" var="admin" />
+<c:url value="/" var="action"/>
+<c:url value="/about" var="about"/>
+<c:url value="/wheel-of-forture" var="wheel"/>
+<c:url value="/me/profile" var="profile"/>
+<c:url value="/me/notification" var="notification"/>
+<c:url value="/forgot-password/change-password" var="changePassword"/>
+<c:url value="/cart" var="cart"/>
+<c:url value="/login" var="login"/>
+<c:url value="/logout" var="logout"/>
+<c:url value="/admin" var="admin"/>
 <header>
     <div class="shop">
         <div class="inline-block logo">
             <a href="${action}" title="Phú An Shop" rel="home">
-                <img src="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png" />" alt="Phú An Shop" />
+                <img src="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png" />"
+                     alt="Phú An Shop"/>
             </a>
         </div>
         <div class="inline-block search">
             <form class="form-inline" action="${action}">
                 <div class="inline-block text-search">
-                    <input id="text-search" name="kw" type="search" placeholder="Nhập sản phẩm bạn muốn tìm kiếm" value=""/>
+                    <input id="text-search" name="kw" type="search" placeholder="Nhập sản phẩm bạn muốn tìm kiếm"
+                           value=""/>
                 </div>
                 <div class="inline-block btn-search">
                     <button id="btn-search" type="submit" value="Tìm kiếm">
@@ -51,47 +53,60 @@
                         <a class="nav-link" href="${about}">Giới thiệu</a>
                     </li>
                     <c:forEach items="${categories}" var="c">
-                        <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)" onmouseout="hideDropdownMenu(this)">
-                            <a class="nav-link dropdown-toggle" href="javascript:;" data-bs-toggle="dropdown">${c.name}</a>
+                        <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)"
+                            onmouseout="hideDropdownMenu(this)">
+                            <a class="nav-link dropdown-toggle" href="javascript:;"
+                               data-bs-toggle="dropdown">${c.name}</a>
                             <ul class="dropdown-menu">
                                 <c:forEach items="${categorySub}" var="s">
                                     <c:url value="/" var="url">
-                                        <c:param name="categorysubId" value="${s.id}" />
+                                        <c:param name="categorysubId" value="${s.id}"/>
                                     </c:url>
                                     <c:choose>
                                         <c:when test="${s.categoryId.id == c.id && s.id != 14}">
                                             <li><a class="dropdown-item" href="${url}">${s.name}</a></li>
-                                            </c:when>
-                                            <c:when test="${s.categoryId.id == c.id && s.id == 14}">
+                                        </c:when>
+                                        <c:when test="${s.categoryId.id == c.id && s.id == 14}">
                                             <li><a class="dropdown-item" href="${wheel}">${s.name}</a></li>
-                                            </c:when>
-                                        </c:choose>
-                                    </c:forEach>
+                                        </c:when>
+                                    </c:choose>
+                                </c:forEach>
                             </ul>
                         </li>
                     </c:forEach>
-                    <se:authorize access="!hasRole('ROLE_ADMIN')">
-                        <li class="nav-item">
-                            <a class="nav-link" href="${cart}"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng <span class="badge bg-danger cart-counter">${cartStats.totalQuantity}</span></a>
-                        </li>
-                    </se:authorize>
+                    <li class="nav-item">
+                        <a class="nav-link" href="${cart}"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng <span
+                                class="badge bg-danger cart-counter">${cartStats.totalQuantity}</span></a>
+                    </li>
                     <c:choose>
                         <c:when test="${pageContext.request.userPrincipal.name == null}">
                             <li class="nav-item">
-                                <a class="nav-link text-primary" href="${login}"><i class="fa-solid fa-user"></i> Đăng nhập</a>
+                                <a class="nav-link text-primary" href="${login}"><i class="fa-solid fa-user"></i> Đăng
+                                    nhập</a>
                             </li>
                         </c:when>
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
-                            <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)" onmouseout="hideDropdownMenu(this)">
+                            <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)"
+                                onmouseout="hideDropdownMenu(this)">
                                 <a class="nav-link text-success" href="javascript:;" data-bs-toggle="dropdown">
-                                    <img class="rounded-circle" width="27px" height="27px" src="${sessionScope.currentUser.avatar}" />
+                                    <img class="rounded-circle" width="27px" height="27px"
+                                         src="${sessionScope.currentUser.avatar}"/>
                                     <span>&nbsp;${sessionScope.currentUser.fullname}</span>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="${profile}"><i class="fa-solid fa-user"></i> Tài khoản</a></li>
-                                    <li><a class="dropdown-item" href="${notification}"><i class="fa-solid fa-bell"></i> Thông báo <span class="badge bg-danger">${sessionScope.currentUser.notification}</span></a></li>
-                                    <li><a class="dropdown-item" href="${changePassword}"><i class="fa-solid fa-unlock-keyhole"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" href="${logout}"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+                                    <li><a class="dropdown-item" href="${profile}"><i class="fa-solid fa-user"></i> Tài
+                                        khoản</a></li>
+                                    <li><a class="dropdown-item" href="${notification}"
+                                           onclick="setNotification(0, '0')"><i
+                                            class="fa-solid fa-bell"></i>
+                                        Thông báo <span
+                                                class="badge bg-danger"
+                                                id="session-notification">${sessionScope.currentUser.notification}</span></a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="${changePassword}"><i
+                                            class="fa-solid fa-unlock-keyhole"></i> Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item" href="${logout}"><i
+                                            class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
                                 </ul>
                             </li>
                         </c:when>
@@ -104,8 +119,10 @@
                 </ul>
                 <form class="d-flex" action="${action}">
                     <div class="input-group">
-                        <button class="btn btn-outline-none" type="button" id="searchToggle"><i class="fa-solid fa-magnifying-glass" style="color: white;"></i></button>
-                        <input class="form-control" name="kw" type="search" placeholder="Search" id="searchInput" style="display: none;">
+                        <button class="btn btn-outline-none" type="button" id="searchToggle"><i
+                                class="fa-solid fa-magnifying-glass" style="color: white;"></i></button>
+                        <input class="form-control" name="kw" type="search" placeholder="Search" id="searchInput"
+                               style="display: none;">
                     </div>
                 </form>
             </div>

@@ -33,6 +33,7 @@ function showDropdownMenu(elem) {
 function hideDropdownMenu(elem) {
     elem.querySelector('.dropdown-menu').classList.remove('show');
 }
+
 //            icon search        
 document.getElementById('searchToggle').addEventListener('click', function () {
     const searchInput = document.getElementById('searchInput');
@@ -43,6 +44,7 @@ document.getElementById('searchToggle').addEventListener('click', function () {
         searchInput.style.display = 'none';
     }
 });
+
 //format price  ////////////////
 function numberWithCommas(x) {
     return parseFloat(x).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",").toString();
@@ -77,6 +79,7 @@ for (var i = 0; i < discountElements.length; i++) {
         ;
     }
 }
+
 ///////////////////
 function checkQuantity() {
     var inputQuantity = document.getElementById('quantity');
@@ -89,5 +92,15 @@ function checkQuantity() {
     } else if (inputQuantity.value > maxQuantity) {
         Swal.fire('Lỗi!', 'Số lượng sản phẩm shop có sẳn: ' + maxQuantity + ' - Xin lỗi vì sự bất tiện này!', 'error');
         inputQuantity.value = minQuantity;
+    }
+}
+
+function setNotification(flag, setValue) {
+    let notification = document.getElementById('session-notification');
+    let setValueNumber = parseInt(setValue);
+    if (flag === 0) {
+        notification.textContent = setValueNumber;
+    } else {
+        notification.textContent = parseInt(notification.textContent) + setValueNumber;
     }
 }
