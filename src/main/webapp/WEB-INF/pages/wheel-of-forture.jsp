@@ -4,11 +4,11 @@
     Author     : phuan
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@taglib prefix="se" uri="http://www.springframework.org/security/tags"  %>
+<%@taglib prefix="se" uri="http://www.springframework.org/security/tags" %>
 
-<c:url value="/api/wheel-of-forture" var="wheel" />
+<c:url value="/api/wheel-of-forture" var="wheel"/>
 
 <div class="bg">
     <a id="api-wheel-of-forture" href="${wheel}" class="d-none"></a>
@@ -17,7 +17,8 @@
         <section id="luckywheel" class="hc-luckywheel">
             <div class="hc-luckywheel-container">
                 <canvas class="hc-luckywheel-canvas" width="500px" height="500px"
-                        >Vòng Xoay May Mắn</canvas
+                >Vòng Xoay May Mắn
+                </canvas
                 >
             </div>
             <se:authorize access="isAuthenticated()">
@@ -33,8 +34,8 @@
             </div>
         </se:authorize>
         <se:authorize access="isAnonymous()">
-            <div class="alert alert-danger" style="position: fixed; right: 1%; bottom: 1%; z-index: 106;">
-                <strong>Thông Báo!</strong> Vui lòng đăng nhập để thực hiện thao tác.
+            <div class="alert alert-danger quantity-luckywheel">
+                <strong>Thông Báo!</strong> Vui lòng đăng nhập để nhận lượt quay.
             </div>
         </se:authorize>
     </div>
