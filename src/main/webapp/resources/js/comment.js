@@ -18,22 +18,22 @@ function accountView(endpoint) {
     }).then(res =>
         res.text()
     ).then(data => {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(data, 'application/xml');
-        const json = xmlToJson(xml);
-        let js = document.getElementById("modal-account-img");
-        js.innerHTML = `
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(data, 'application/xml');
+            const json = xmlToJson(xml);
+            let js = document.getElementById("modal-account-img");
+            js.innerHTML = `
             <img src="${json.users.avatar}" alt="avatar">
             <div class="level">
                 Lv.${json.users.exp <= 10 ? "0" : json.users.exp <= 20 ? "1" : json.users.exp <= 40 ? "2" :
                 json.users.exp <= 80 ? "3" : json.users.exp <= 160 ? "4" : json.users.exp <= 320 ? "5" :
-                json.users.exp <= 640 ? "6" : json.users.exp <= 1280 ? "7" : json.users.exp <= 2560 ? "8" :
-                json.users.exp <= 5120 ? "9" : json.users.exp <= 10240 ? "10" : "11"}
+                    json.users.exp <= 640 ? "6" : json.users.exp <= 1280 ? "7" : json.users.exp <= 2560 ? "8" :
+                        json.users.exp <= 5120 ? "9" : json.users.exp <= 10240 ? "10" : "11"}
             </div>
         `;
-        let jss = document.getElementById("modal-account-about");
-        let requiredExp = json.users.exp <= 10 ? 10 : json.users.exp <= 20 ? 20 : json.users.exp <= 40 ? 40 : json.users.exp <= 80 ? 80 : json.users.exp <= 160 ? 160 : json.users.exp <= 320 ? 320 : json.users.exp <= 640 ? 640 : json.users.exp <= 1280 ? 1280 : json.users.exp <= 2560 ? 2560 : json.users.exp <= 5120 ? 5120 : json.users.exp <= 10240 ? 10240 : 99999;
-        jss.innerHTML = `
+            let jss = document.getElementById("modal-account-about");
+            let requiredExp = json.users.exp <= 10 ? 10 : json.users.exp <= 20 ? 20 : json.users.exp <= 40 ? 40 : json.users.exp <= 80 ? 80 : json.users.exp <= 160 ? 160 : json.users.exp <= 320 ? 320 : json.users.exp <= 640 ? 640 : json.users.exp <= 1280 ? 1280 : json.users.exp <= 2560 ? 2560 : json.users.exp <= 5120 ? 5120 : json.users.exp <= 10240 ? 10240 : 99999;
+            jss.innerHTML = `
             <span style="margin: 7px 0;">ID: #${json.users.id}</span>
             <span style="margin: 7px 0;">Họ và tên: <span class="text-info">${json.users.fullname}</span></span>
             <span style="margin: 7px 0;">Giới tính: ${json.users.gender === "1" ? `Nam` : json.users.gender === "2" ? `Nữ` : `Khác`}</span>
@@ -42,35 +42,35 @@ function accountView(endpoint) {
             <span class="profile-exp"><span class="profile-exp-bar" style="width: ${json.users.exp * 100 / requiredExp}%;">${json.users.exp * 100 / requiredExp}% (${json.users.exp}/${requiredExp})</span></span>
             <span style="margin: 14px 0;">Ngày tham gia: <span class="create-date">${json.users.createdDate}</span></span>
         `;
-        let jsss = document.getElementById("modal-account-title");
-        jsss.innerHTML = `
+            let jsss = document.getElementById("modal-account-title");
+            jsss.innerHTML = `
             <i class="fa-solid fa-crown" style="color: yellow;"></i>
             <span class="text-account-title">
                 ${json.users.exp <= 10 ? "Sắt" : json.users.exp <= 20 ? "Đồng" : json.users.exp <= 40 ? "Bạc" :
                 json.users.exp <= 80 ? "Vàng" : json.users.exp <= 160 ? "Bạch Kim" : json.users.exp <= 320 ? "Kim cương" :
-                json.users.exp <= 640 ? "Tinh anh" : json.users.exp <= 1280 ? "Cao thủ" : json.users.exp <= 2560 ? "Chiến tướng" :
-                json.users.exp <= 5120 ? "Thách đấu" : json.users.exp <= 10240 ? "Phi thăng" : json.users.exp <= 99999 ? "Á thần" : "Siêu thần"}
+                    json.users.exp <= 640 ? "Tinh anh" : json.users.exp <= 1280 ? "Cao thủ" : json.users.exp <= 2560 ? "Chiến tướng" :
+                        json.users.exp <= 5120 ? "Thách đấu" : json.users.exp <= 10240 ? "Phi thăng" : json.users.exp <= 99999 ? "Á thần" : "Siêu thần"}
             </span>
             <i class="fa-solid fa-crown" style="color: yellow;"></i>
         `;
-        let btns = document.querySelectorAll('.js-add-cart');
-        let cart = document.querySelector('.js-modal');
-        let modalClose = document.querySelector('.js-modal-close');
-        let modalContainer = document.querySelector('.js-modal-container');
-        let createDated = document.querySelectorAll(".modal-content .create-date");
-        createDated.forEach((element) => {
-            const dateValue = moment(element.textContent);
-            element.textContent = dateValue.format('DD-MM-YYYY');
-        });
-        for (const btn of btns) {
-            btn.addEventListener('click', showCart);
+            let btns = document.querySelectorAll('.js-add-cart');
+            let cart = document.querySelector('.js-modal');
+            let modalClose = document.querySelector('.js-modal-close');
+            let modalContainer = document.querySelector('.js-modal-container');
+            let createDated = document.querySelectorAll(".modal-content .create-date");
+            createDated.forEach((element) => {
+                const dateValue = moment(element.textContent);
+                element.textContent = dateValue.format('DD-MM-YYYY');
+            });
+            for (const btn of btns) {
+                btn.addEventListener('click', showCart);
+            }
+            modalClose.addEventListener('click', hideCart);
+            cart.addEventListener('click', hideCart);
+            modalContainer.addEventListener('click', function (event) {
+                event.stopPropagation();
+            });
         }
-        modalClose.addEventListener('click', hideCart);
-        cart.addEventListener('click', hideCart);
-        modalContainer.addEventListener('click', function (event) {
-            event.stopPropagation();
-        });
-    }
     ).catch(error => {
         console.info(error);
     });
@@ -100,7 +100,7 @@ function loadComments(endpointed, voted, report, deleted, changed, callback) {
                                 <a href="javascript:;" title="Báo cáo vi phạm" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis"></i></a>
                                 <ul class="dropdown-menu">
                                     ${d.userid.id === userId ?
-                    `<li><a class="dropdown-item" href="javascript:;" onclick="changeCmt(${d.id})">Chỉnh sửa bình luận</a></li>
+                `<li><a class="dropdown-item" href="javascript:;" onclick="changeCmt(${d.id})">Chỉnh sửa bình luận</a></li>
                                     <li><a class="dropdown-item" href="javascript:;" onclick="deleteCmt('${deleted}/${d.id}', ${d.id})">Xóa bình luận</a></li>
                                     ` : ``}
                                     ${!isNaN(userId) ? `<li><a class="dropdown-item" href="javascript:;" onclick="reportCmt('${report}/${d.id}')">Báo cáo vi phạm</a></li>` : `<li><span class="dropdown-item">Vui lòng đăng nhập</span></li>`}
@@ -208,10 +208,10 @@ function hasUserCmtToday(userId, cmtId) {
         const lastLikingDate = new Date(Number(lastLikingTimestamp));
         const today = new Date();
         return (
-                lastLikingDate.getDate() === today.getDate() &&
-                lastLikingDate.getMonth() === today.getMonth() &&
-                lastLikingDate.getFullYear() === today.getFullYear()
-                );
+            lastLikingDate.getDate() === today.getDate() &&
+            lastLikingDate.getMonth() === today.getMonth() &&
+            lastLikingDate.getFullYear() === today.getFullYear()
+        );
     }
     return false;
 }

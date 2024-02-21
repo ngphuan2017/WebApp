@@ -4,7 +4,7 @@
     Author     : phuan
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <html>
@@ -14,7 +14,8 @@
         <title>
             <tiles:insertAttribute name="title"/>
         </title>
-        <link href="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1687075781/WebApp/iconshop_uxsy3a.png" />" rel="shortcut icon"/>
+        <link href="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1687075781/WebApp/iconshop_uxsy3a.png" />"
+              rel="shortcut icon"/>
         <link href="<c:url value="/resources/css/loading.css" />" rel="stylesheet"/>
         <link href="<c:url value="/resources/css/style.css" />" rel="stylesheet"/>
         <link href="<c:url value="/resources/css/user.css" />" rel="stylesheet"/>
@@ -46,6 +47,15 @@
             </div>
         </div>
 
+        <script>
+            window.addEventListener('load', () => {
+                let loading = document.getElementById('loading-animation');
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                }, 1000);
+            });
+        </script>
+
         <div id="main">
             <tiles:insertAttribute name="header"/>
             <tiles:insertAttribute name="content"/>
@@ -59,19 +69,12 @@
 
         <a id="backtop" href="#main" class="gototop fa-solid fa-circle-chevron-up" style="display: none;"></a>
 
-        <script>
-            window.onload = () => {
-                let loading = document.getElementById('loading-animation');
-                setTimeout(() => {
-                    loading.style.display = 'none';
-                }, 1000);
-            };
-        </script>
         <script src="<c:url value="/resources/js/product.js" />"></script>
         <script src="<c:url value="/resources/js/cart.js" />"></script>
         <script src="<c:url value="/resources/js/orders.js" />"></script>
         <script src="<c:url value="/resources/js/index.js" />"></script>
         <script src="<c:url value="/resources/messenger/messenger.js" />"></script>
+        <script src="<c:url value="/resources/js/notification.js" />"></script>
         <script src="<c:url value="/resources/popperjs-2.9.1/popper.min.js" />"></script>
     </body>
 </html>

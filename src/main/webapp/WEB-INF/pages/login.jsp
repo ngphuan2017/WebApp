@@ -86,7 +86,7 @@
                     </a>
                 </div>
                 <div class="facebook-btn">
-                    <a href="https://www.facebook.com/dialog/oauth?client_id=1030898755004343&redirect_uri=https://phuanshop.id.vn/login/login-facebook&scope=email,public_profile,user_gender,user_link,user_location">
+                    <a href="https://www.facebook.com/dialog/oauth?client_id=1795411487539115&redirect_uri=https://phuanshop.id.vn/login/login-facebook&scope=public_profile">
                         <div class="facebook-icon-wrapper">
                             <i class="fa-brands fa-square-facebook"></i>
                         </div>

@@ -170,12 +170,12 @@
 <script src="<c:url value="/resources/js/comment.js" />"></script>
 <script src="<c:url value="/resources/js/product-detail.js" />"></script>
 <script>
-                        window.onload = function () {
+                        window.addEventListener('load', () => {
                             loadComments('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', function () {
                                 var levelsCmt = document.querySelectorAll(".card-body .level-name");
                                 levelCmt(levelsCmt);
                             });
-                        };
+                        });
                         function levelCmt(levels) {
     <c:forEach items="${listCmtUserLevels}" var="exp" varStatus="status">
                             levels.forEach((element) => {
