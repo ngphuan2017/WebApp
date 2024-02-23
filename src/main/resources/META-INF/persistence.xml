@@ -17,6 +17,7 @@
     <class>com.annp.pojo.UserLevels</class>
     <class>com.annp.pojo.Report</class>
     <class>com.annp.pojo.Promotion</class>
+    <class>com.annp.pojo.ProductImages</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value=""/>

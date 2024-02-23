@@ -54,7 +54,7 @@
         </div>
     </div>
 </div>
-<section class="container">
+<section class="container overflow-hidden">
     <div class="content-title" data-aos="fade-left">
         <h2 class="section-heading"><span class="colored-letter">Khuyến mãi hôm nay</span></h2>
     </div>

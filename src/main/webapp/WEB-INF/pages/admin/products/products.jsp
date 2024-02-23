@@ -14,6 +14,7 @@
 <c:url value="/admin/api/product-management/added" var="added" />
 <c:url value="/admin/api/product-management/edited" var="edited" />
 <c:url value="/admin/api/product-management/deleted" var="deleted" />
+<c:url value="/admin/api/product-management/product-images/updated" var="images" />
 
 <div class="container-fluid">
     <h3 class="text-dark mb-4">Quản lý sản phẩm</h3>
@@ -77,6 +78,7 @@
                                     <span class="text-customer-${p.productstatus.id == 5 ? "active" : p.productstatus.id == 6 ? "warning" : p.productstatus.id == 7 ? "danger" : "primary"}">${p.productstatus.statusname}</span>
                                 </td>
                                 <td>
+                                    <a class="m-2 js-add-cart-images" href="javascript:;" onclick="productImages('${producted}/${p.id}', '${images}/${p.id}')"><i class="fas fa-camera text-info"></i></a>
                                     <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editProduct('${producted}/${p.id}', '${edited}/${p.id}')"><i class="fas fa-edit text-primary"></i></a>
                                     <a class="m-2" href="javascript:;" onclick="deleteProduct('${deleted}/${p.id}', ${p.id})">
                                         <i class='fas fa-trash text-danger'></i>
@@ -213,6 +215,36 @@
 
         </div>
         <div class="footer-modal-black" id="modal-account-title-add">
+
+        </div>
+    </div>
+</div>
+                    
+<div class="js-modal-images">
+    <div class="modal-container-black js-modal-container-images">
+        <div class="js-modal-close-images">x</div>
+        <header class="modal-header-black">
+            <span><i class="fas fa-camera"></i> Hình ảnh bổ sung</span>
+        </header>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12 m-2">
+                    <span class="font-14 text-bold">Hình đại diện cho sản phẩm</span>
+                    <div class="modal-img-black font-14 text-bold" id="modal-account-img-images">
+
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8 col-sm-6 col-12">
+                    <div class="modal-content text-center text-secondary" id="modal-account-about-images">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="m-3" id="change-product-images">
+
+        </div>
+        <div class="footer-modal-black" id="modal-account-title-images">
 
         </div>
     </div>

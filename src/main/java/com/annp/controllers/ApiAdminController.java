@@ -8,6 +8,7 @@ import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
+import com.annp.pojo.ProductImages;
 import com.annp.pojo.Promotion;
 import com.annp.pojo.Report;
 import com.annp.pojo.Role;
@@ -87,11 +88,13 @@ public class ApiAdminController {
             List<CategorySub> categorySub = this.categorySubService.getCategorySub();
             List<Promotion> promotion = this.promotionService.getPromotions();
             List<Status> status = this.statusService.getStatus("PRODUCTSTATUS");
+            ProductImages img = this.productService.getImagesByProductId(product);
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("product", product);
             responseMap.put("listCategorySub", categorySub);
             responseMap.put("listPromotion", promotion);
             responseMap.put("listStatus", status);
+            responseMap.put("img", img);
             return new ResponseEntity<>(responseMap, HttpStatus.OK);
         }
         return new ResponseEntity<>(product, HttpStatus.OK);
@@ -277,6 +280,51 @@ public class ApiAdminController {
             p.setProductstatus(new Status(Integer.valueOf(productstatus)));
             p.setDiscount(new Promotion(Integer.valueOf(discount)));
             if (this.productService.addOrUpdateProduct(p)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/product-management/product-images/updated/{productId}")
+    public ResponseEntity updateProductImages(@PathVariable(value = "productId") int id,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "file1", required = false) MultipartFile file1,
+            @RequestParam(value = "file2", required = false) MultipartFile file2,
+            @RequestParam(value = "file3", required = false) MultipartFile file3,
+            Authentication authentication) {
+        try {
+            Users u = this.userService.getUserByUsername(authentication.getName());
+            Product p = this.productService.getProductById(id);
+            ProductImages img = new ProductImages();
+            if (this.productService.getImagesByProductId(p) == null) {
+                img.setId(0);
+                img.setCreatedDate(new Date());
+                img.setProductId(p);
+            } else {
+                img = this.productService.getImagesByProductId(p);
+                img.setUpdatedDate(new Date());
+            }
+            if (file != null) {
+                p.setFile(file);
+                p.setUpdatedDate(new Date());
+            }
+            if (file1 != null) {
+                img.setFile1(file1);
+            }
+            if (file2 != null) {
+                img.setFile2(file2);
+            }
+            if (file3 != null) {
+                img.setFile3(file3);
+            }
+            
+            img.setUpdatedBy(u);
+            
+            if (this.productService.addOrUpdateProduct(p) && this.productService.addOrUpdateProductImages(img)) {
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

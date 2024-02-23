@@ -81,3 +81,18 @@ function ratingStar(endpoint, obj, userId, productId) {
         }, 5000);
     });
 }
+
+function reviewProduct(event){
+    var selectedImage = event.target;
+    // Lấy tất cả các ảnh thumbnails
+    var thumbnails = document.querySelectorAll(".img-thumbnail");
+    // Loại bỏ viền màu đỏ cho tất cả các ảnh thumbnails
+    thumbnails.forEach(function(thumbnail) {
+        thumbnail.style.border = "none";
+    });
+    // Đặt đường dẫn cho thẻ img
+    var review = document.getElementById("review-product");
+    review.src = selectedImage.src;
+    // Thêm viền màu đỏ cho ảnh đang được chọn
+    selectedImage.style.border = "2px solid red";
+}
