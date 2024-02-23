@@ -123,7 +123,7 @@ function pay(endpoint) {
                             for (let d of counters)
                                 d.innerText = 0;
                             setNotification(1, totalQuantity);
-                            Swal.fire('Đặt hàng thành công!', 'Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
+                            Swal.fire('Đặt hàng thành công!', 'Thông tin đơn hàng của bạn đã được gửi về Email. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
                         }
                     } else {
                         Swal.fire('Đặt hàng không thành công!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');

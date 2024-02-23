@@ -4,6 +4,7 @@ import com.annp.pojo.Cart;
 import com.annp.pojo.Orders;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
+import com.annp.pojo.ProductImages;
 import com.annp.pojo.Status;
 import com.annp.repository.ProductRepository;
 import com.annp.repository.UserRepository;
@@ -182,4 +183,40 @@ public class ProductRepositoryImpl implements ProductRepository {
         }
     }
 
+    @Override
+    public ProductImages getImagesByProductId(Product product) {
+        Session session = this.factory.getObject().getCurrentSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<ProductImages> query = builder.createQuery(ProductImages.class);
+        Root root = query.from(ProductImages.class);
+        query = query.select(root);
+        query = query.where(builder.equal(root.get("productId"), product));
+
+        Query q = session.createQuery(query);
+
+        try {
+            ProductImages p = (ProductImages) q.getSingleResult();
+            return p;
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+
+    @Override
+    public boolean addOrUpdateProductImages(ProductImages img) {
+        Session s = this.factory.getObject().getCurrentSession();
+        try {
+            if (img.getId() > 0) {
+                s.update(img);
+            } else {
+                s.save(img);
+            }
+
+            return true;
+        } catch (HibernateException ex) {
+            return false;
+        }
+    }
+    
 }

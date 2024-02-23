@@ -2,6 +2,7 @@ package com.annp.service.impl;
 
 import com.annp.pojo.Cart;
 import com.annp.pojo.Product;
+import com.annp.pojo.ProductImages;
 import com.annp.repository.ProductRepository;
 import com.annp.service.ProductService;
 import com.cloudinary.Cloudinary;
@@ -85,6 +86,47 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public boolean updateProduct(Product p) {
         return this.productRepository.updateProduct(p);
+    }
+
+    @Override
+    public ProductImages getImagesByProductId(Product p) {
+        return this.productRepository.getImagesByProductId(p);
+    }
+
+    @Override
+    public boolean addOrUpdateProductImages(ProductImages img) {
+        try {
+            if (img.getFile1() != null && !img.getFile1().isEmpty()) {
+                try {
+                    Map res = this.cloudinary.uploader().upload(img.getFile1().getBytes(),
+                            ObjectUtils.asMap("resource_type", "auto"));
+                    img.setImg1(res.get("secure_url").toString());
+                } catch (IOException ex) {
+                    Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (img.getFile2() != null && !img.getFile2().isEmpty()) {
+                try {
+                    Map res = this.cloudinary.uploader().upload(img.getFile2().getBytes(),
+                            ObjectUtils.asMap("resource_type", "auto"));
+                    img.setImg2(res.get("secure_url").toString());
+                } catch (IOException ex) {
+                    Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            if (img.getFile3() != null && !img.getFile3().isEmpty()) {
+                try {
+                    Map res = this.cloudinary.uploader().upload(img.getFile3().getBytes(),
+                            ObjectUtils.asMap("resource_type", "auto"));
+                    img.setImg3(res.get("secure_url").toString());
+                } catch (IOException ex) {
+                    Logger.getLogger(ProductServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            return this.productRepository.addOrUpdateProductImages(img);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

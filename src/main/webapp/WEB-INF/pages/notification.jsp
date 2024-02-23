@@ -23,7 +23,7 @@
                         <div class="col-lg-10 col-md-10 col-sm-10 col-8">
                             <h4>Đơn hàng của bạn đã được ghi nhận</h4>
                             <div>
-                                <p>Kiện hàng <b>${o.productId.name}</b> của bạn sẽ được Shop xác nhận trong thời gian
+                                <p>Thông tin đơn hàng của bạn đã được gửi về Email: <b>${currentUser.email}</b>. Kiện hàng <b>${o.productId.name}</b> của bạn sẽ được Shop xác nhận trong thời gian
                                     ngắn nhất. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!😊</p>
                                 <p class="create-date">${o.createdDate}</p>
                             </div>

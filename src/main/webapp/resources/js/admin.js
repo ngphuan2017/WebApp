@@ -155,6 +155,115 @@ function productView(endpoint) {
     });
 }
 
+function productImages(endpoint, images) {
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+        let js = document.getElementById("modal-account-img-images");
+        js.innerHTML = `
+            <div class="block-avatar">
+                <a href="javascript:;" onclick="ProductImagesBrowse('product-images')"><img src="${data.product.image}" id="review-images" class="img-thumbnail" alt="avatar"></a>
+                <span class="edit-text"><i class="fas fa-image"></i> Chỉnh sửa</span>
+                <input type="file" id="product-images" onchange="showPreviewProductImages(event, 'review-images')" accept="image/*" class="form-input d-none" />
+            </div>
+        `;
+        let jss = document.getElementById("modal-account-about-images");
+        jss.innerHTML = `
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                    <span class="font-14 text-bold">Hình bổ sung 1</span>
+                    <a href="javascript:;" class="block-avatar" onclick="ProductImagesBrowse('product-images1')">
+                        <img src="${data.img !== null && data.img.img1 !== null ? data.img.img1 : 'https://res.cloudinary.com/dkmug1913/image/upload/v1708661567/WebApp/Product/Product_Image/404_sns2ep.png'}" id="review-images1" class="img-thumbnail" alt="avatar">
+                        <span class="edit-text"><i class="fas fa-image"></i> Chỉnh sửa</span>
+                    </a>
+                    <input type="file" id="product-images1" onchange="showPreviewProductImages(event, 'review-images1')" accept="image/*" class="form-input d-none" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                    <span class="font-14 text-bold">Hình bổ sung 2</span>
+                    <a href="javascript:;" class="block-avatar" onclick="ProductImagesBrowse('product-images2')">
+                        <img src="${data.img !== null && data.img.img2 !== null ? data.img.img2 : 'https://res.cloudinary.com/dkmug1913/image/upload/v1708661567/WebApp/Product/Product_Image/404_sns2ep.png'}" id="review-images2" class="img-thumbnail" alt="avatar">
+                        <span class="edit-text"><i class="fas fa-image"></i> Chỉnh sửa</span>
+                    </a>
+                    <input type="file" id="product-images2" onchange="showPreviewProductImages(event, 'review-images2')" accept="image/*" class="form-input d-none" />
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6 col-6">
+                    <span class="font-14 text-bold">Hình bổ sung 3</span>
+                    <a href="javascript:;" class="block-avatar" onclick="ProductImagesBrowse('product-images3')">
+                        <img src="${data.img !== null && data.img.img3 !== null ? data.img.img3 : 'https://res.cloudinary.com/dkmug1913/image/upload/v1708661567/WebApp/Product/Product_Image/404_sns2ep.png'}" id="review-images3" class="img-thumbnail" alt="avatar">
+                        <span class="edit-text"><i class="fas fa-image"></i> Chỉnh sửa</span>
+                    </a>
+                    <input type="file" id="product-images3" onchange="showPreviewProductImages(event, 'review-images3')" accept="image/*" class="form-input d-none" />
+                </div>
+            </div>
+        `;
+        let button = document.getElementById("change-product-images");
+        button.innerHTML = `
+            <button type="button" class="m-1 btn btn-outline-success" onclick="saveProductImages('${images}')">Lưu</button>
+            <button type="button" class="m-1 btn btn-outline-danger" onclick="hideProductImages()">Trở lại</button>
+        `;
+        let jsss = document.getElementById("modal-account-title-images");
+        jsss.innerHTML = `
+            <i class="fas fa-crown" style="color: yellow;"></i>
+            <span class="text-account-title">
+                #${data.product.id}
+            </span>
+            <i class="fas fa-crown" style="color: yellow;"></i>
+        `;
+        
+        let btns = document.querySelectorAll('.js-add-cart-images');
+        let carts = document.querySelector('.js-modal-images');
+        let modalCloses = document.querySelector('.js-modal-close-images');
+        let modalContainers = document.querySelector('.js-modal-container-images');
+        for (const btn of btns) {
+            btn.addEventListener('click', showProductImages);
+        }
+        modalCloses.addEventListener('click', hideProductImages);
+        carts.addEventListener('click', hideProductImages);
+        modalContainers.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    }
+    ).catch(error => {
+        console.info(error);
+    });
+}
+
+function saveProductImages(endpoint) {
+    const avatarInput = document.getElementById("product-images");
+    const avatarInput1 = document.getElementById("product-images1");
+    const avatarInput2 = document.getElementById("product-images2");
+    const avatarInput3 = document.getElementById("product-images3");
+    const formData = new FormData();
+    if (avatarInput.files.length > 0) {
+        formData.append("file", avatarInput.files[0]);
+    }
+    if (avatarInput1.files.length > 0) {
+        formData.append("file1", avatarInput1.files[0]);
+    }
+    if (avatarInput2.files.length > 0) {
+        formData.append("file2", avatarInput2.files[0]);
+    }
+    if (avatarInput3.files.length > 0) {
+        formData.append("file3", avatarInput3.files[0]);
+    }
+    fetch(endpoint, {
+        method: "POST",
+        body: formData
+    }).then(res => {
+        if (res.status === 200) {
+            hideProductImages();
+            Swal.fire('Cập nhật thành công!', 'Dữ liệu sẽ mất chút thời gian để thay đổi!', 'success');
+        } else {
+            Swal.fire('Lỗi!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
+        }
+    });
+}
+
 function editProduct(endpoint, edited) {
     fetch(endpoint, {
         method: 'GET',
@@ -285,8 +394,8 @@ function addProduct(endpoint, added) {
     }).then(res =>
         res.json()
     ).then(data => {
-            let js = document.getElementById("modal-account-img-add");
-            js.innerHTML = `
+        let js = document.getElementById("modal-account-img-add");
+        js.innerHTML = `
             <div class="block-avatar">
                 <img id="img-preview" src="https://res.cloudinary.com/dkmug1913/image/upload/v1690819242/WebApp/Avatar/none_ibdmnr.png" alt="avatar">
                 <button type="button" onclick="AvatarBrowse()"><span class="icon-camera-avatar"><i class="fas fa-camera"></i></span></button>
@@ -297,8 +406,8 @@ function addProduct(endpoint, added) {
                 <input id="add-price" type="number" class="form-control" placeholder="Nhập giá sản phẩm..." />
             </div>
         `;
-            let jss = document.getElementById("modal-account-about-add");
-            jss.innerHTML = `
+        let jss = document.getElementById("modal-account-about-add");
+        jss.innerHTML = `
             <span style="margin: 7px 0;"></span>
             <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Sản phẩm: </span><input id="add-name" type="text" class="form-control" placeholder="Nhập tên sản phẩm..." /></div>
             <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Phân loại: </span>
@@ -315,58 +424,58 @@ function addProduct(endpoint, added) {
                 </select>
             </div>
         `;
-            let cateSub = document.getElementById("add-categorySub");
-            let optionCateSub = "";
-            for (let c of data.listCategorySub) {
-                optionCateSub += `
+        let cateSub = document.getElementById("add-categorySub");
+        let optionCateSub = "";
+        for (let c of data.listCategorySub) {
+            optionCateSub += `
                 <option value="${c.id}">${c.name}</option>
             `;
-            }
-            cateSub.innerHTML = optionCateSub;
-            let discount = document.getElementById("add-discount");
-            let optionDiscount = "";
-            for (let p of data.listPromotion) {
-                if (p.type.id === 20) {
-                    optionDiscount += `
+        }
+        cateSub.innerHTML = optionCateSub;
+        let discount = document.getElementById("add-discount");
+        let optionDiscount = "";
+        for (let p of data.listPromotion) {
+            if (p.type.id === 20) {
+                optionDiscount += `
                     <option value="${p.id}">${p.note} - ${p.discount}%</option>
                 `;
-                }
             }
-            discount.innerHTML = optionDiscount;
-            let status = document.getElementById("add-productstatus");
-            let optionStatus = "";
-            for (let s of data.listStatus) {
-                optionStatus += `
+        }
+        discount.innerHTML = optionDiscount;
+        let status = document.getElementById("add-productstatus");
+        let optionStatus = "";
+        for (let s of data.listStatus) {
+            optionStatus += `
                 <option value="${s.id}">${s.statusname}</option>
             `;
-            }
-            status.innerHTML = optionStatus;
-            let button = document.getElementById("change-profile-add");
-            button.innerHTML = `
+        }
+        status.innerHTML = optionStatus;
+        let button = document.getElementById("change-profile-add");
+        button.innerHTML = `
             <button type="button" class="m-1 btn btn-outline-success" onclick="saveAddProduct('${added}')">Lưu</button>
             <button type="button" class="m-1 btn btn-outline-danger" onclick="hideAddProfile()">Trở lại</button>
         `;
-            let jsss = document.getElementById("modal-account-title-add");
-            jsss.innerHTML = `
+        let jsss = document.getElementById("modal-account-title-add");
+        jsss.innerHTML = `
             <i class="fas fa-crown" style="color: yellow;"></i>
             <span class="text-account-title">
                 #*****#
             </span>
             <i class="fas fa-crown" style="color: yellow;"></i>
         `;
-            let btns = document.querySelectorAll('.js-add-cart-add');
-            let cartss = document.querySelector('.js-modal-add');
-            let modalClose = document.querySelector('.js-modal-close-add');
-            let modalContainer = document.querySelector('.js-modal-container-add');
-            for (const btn of btns) {
-                btn.addEventListener('click', showAddProfile);
-            }
-            modalClose.addEventListener('click', hideAddProfile);
-            cartss.addEventListener('click', hideAddProfile);
-            modalContainer.addEventListener('click', function (event) {
-                event.stopPropagation();
-            });
+        let btns = document.querySelectorAll('.js-add-cart-add');
+        let cartss = document.querySelector('.js-modal-add');
+        let modalClose = document.querySelector('.js-modal-close-add');
+        let modalContainer = document.querySelector('.js-modal-container-add');
+        for (const btn of btns) {
+            btn.addEventListener('click', showAddProfile);
         }
+        modalClose.addEventListener('click', hideAddProfile);
+        cartss.addEventListener('click', hideAddProfile);
+        modalContainer.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
+    }
     ).catch(error => {
         console.info(error);
     });
@@ -420,6 +529,14 @@ function showAddProfile() {
 }
 function hideAddProfile() {
     cartss.classList.remove('js-modal-open');
+}
+
+let cartsss = document.querySelector('.js-modal-images');
+function showProductImages() {
+    cartsss.classList.add('js-modal-open');
+}
+function hideProductImages() {
+    cartsss.classList.remove('js-modal-open');
 }
 
 function permissionAccount() {
@@ -557,8 +674,7 @@ function editCustomer(endpoint, edited) {
                         </select>
                     </div>
                 `;
-            }
-            else {
+            } else {
                 adminedit.innerHTML = `
                     <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Loại tài khoản: </span>
                         <select id="edit-role" class="form-select" disabled>
@@ -1177,6 +1293,18 @@ function AvatarBrowse() {
 
 function showPreviewDiv(event) {
     let preview = document.getElementById("img-preview");
+    if (event.target.files.length > 0) {
+        let src = URL.createObjectURL(event.target.files[0]);
+        preview.src = src;
+    }
+}
+
+function ProductImagesBrowse(id) {
+    document.getElementById(id).click();
+}
+
+function showPreviewProductImages(event, id) {
+    let preview = document.getElementById(id);
     if (event.target.files.length > 0) {
         let src = URL.createObjectURL(event.target.files[0]);
         preview.src = src;

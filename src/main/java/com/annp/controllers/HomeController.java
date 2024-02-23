@@ -9,6 +9,7 @@ import com.annp.pojo.Cart;
 import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
 import com.annp.pojo.Product;
+import com.annp.pojo.ProductImages;
 import com.annp.pojo.UserLevels;
 import com.annp.service.CategoryService;
 import com.annp.service.CategorySubService;
@@ -16,6 +17,7 @@ import com.annp.service.PaginatesService;
 import com.annp.service.ProductService;
 import com.annp.service.UserLevelsService;
 import com.annp.utils.Utils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -71,17 +73,17 @@ public class HomeController {
 
         return "index";
     }
-    
+
     @GetMapping(path = "/about")
     public String about() {
         return "about";
     }
-    
+
     @GetMapping(path = "/maintenance")
     public String maintenance(Model model) {
         return "maintenance";
     }
-    
+
     @GetMapping(path = "/wheel-of-forture")
     public String wheelOfForture() {
         return "wheel";
@@ -90,7 +92,22 @@ public class HomeController {
     @GetMapping(path = "/products/{productId}")
     public String details(Model model,
             @PathVariable(value = "productId") int id) {
-        model.addAttribute("product", this.productService.getProductById(id));
+        Product p = this.productService.getProductById(id);
+        ProductImages i = this.productService.getImagesByProductId(p);
+        List<String> imageList = new ArrayList<>();
+        if (i != null) {
+            if (i.getImg1() != null) {
+                imageList.add(i.getImg1());
+            }
+            if (i.getImg2() != null) {
+                imageList.add(i.getImg2());
+            }
+            if (i.getImg3() != null) {
+                imageList.add(i.getImg3());
+            }
+        }
+        model.addAttribute("product", p);
+        model.addAttribute("imageList", imageList);
         return "product-detail";
     }
 
