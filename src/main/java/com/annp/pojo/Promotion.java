@@ -42,6 +42,10 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Promotion.findByNote", query = "SELECT p FROM Promotion p WHERE p.note = :note")})
 public class Promotion implements Serializable {
 
+    @Column(name = "CREATED_DATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdDate;
+
     @JoinColumn(name = "LEVEL_VIP", referencedColumnName = "id")
     @ManyToOne
     private UserLevels levelVip;
@@ -217,6 +221,14 @@ public class Promotion implements Serializable {
 
     public void setLevelVip(UserLevels levelVip) {
         this.levelVip = levelVip;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
 }

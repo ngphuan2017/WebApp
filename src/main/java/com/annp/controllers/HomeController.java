@@ -10,7 +10,6 @@ import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
 import com.annp.pojo.Product;
 import com.annp.pojo.ProductImages;
-import com.annp.pojo.UserLevels;
 import com.annp.service.CategoryService;
 import com.annp.service.CategorySubService;
 import com.annp.service.PaginatesService;
@@ -45,8 +44,6 @@ public class HomeController {
     private CategoryService categoryService;
     @Autowired
     private CategorySubService categorySubService;
-    @Autowired
-    private UserLevelsService userLevelsService;
     @Autowired
     private PaginatesService paginatesService;
 

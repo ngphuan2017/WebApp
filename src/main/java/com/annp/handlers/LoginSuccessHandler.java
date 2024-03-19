@@ -4,7 +4,9 @@
  */
 package com.annp.handlers;
 
+import com.annp.pojo.Notification;
 import com.annp.pojo.Users;
+import com.annp.service.NotificationService;
 import com.annp.service.UserService;
 
 import java.io.IOException;
@@ -27,16 +29,21 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication a) throws IOException, ServletException {
         Users u = this.userService.getUserByUsername(a.getName());
         Date currentDate = new Date(); // Lấy ngày hiện tại
-
         if (!isSameDay(u.getUpdatedDate(), currentDate)) {
+            Notification n = new Notification();
+            n.setUserId(u);
             u.setExp(u.getExp() + 5);
             u.setUpdatedDate(currentDate);
+            u.setNotification(u.getNotification() + 1);
             this.userService.updateUser(u);
+            this.notificationService.addNotification(n);
         }
 
         request.getSession().setAttribute("currentUser", u);
