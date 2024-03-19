@@ -9,6 +9,7 @@ import com.annp.handlers.GoogleHandler;
 import com.annp.pojo.City;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
+import com.annp.pojo.Notification;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Orders;
 import com.annp.pojo.Promotion;
@@ -17,13 +18,16 @@ import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
 import com.annp.service.CityService;
+import com.annp.service.NotificationService;
 import com.annp.service.OrdersService;
 import com.annp.service.PromotionService;
 import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
 import com.annp.validator.UserValidator;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -71,6 +75,8 @@ public class UserController {
     private OrdersService ordersService;
     @Autowired
     private PromotionService promotionService;
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     private UserValidator userValidator;
     @Autowired
@@ -120,12 +126,22 @@ public class UserController {
         this.userService.updateUser(user);
         List<Orders> orders = this.ordersService.getOrderByUserId(user.getId());
         List<OrderDetail> orderDetails = new ArrayList<>();
-        for(Orders od : orders){
+        for (Orders od : orders) {
             orderDetails.addAll(this.ordersService.getOrderDetailByOrderId(od.getId()));
         }
         List<Promotion> promotions = this.promotionService.getPromotions(new Status(19));
-        model.addAttribute("orderDetails", orderDetails);
-        model.addAttribute("promotions", promotions);
+        List<Notification> notifications = this.notificationService.getNotificationsByUserId(user);
+        List<Object> combinedList = new ArrayList<>();
+        combinedList.addAll(orderDetails);
+        combinedList.addAll(promotions);
+        combinedList.addAll(notifications);
+        Collections.sort(combinedList, (obj1, obj2) -> {
+            Date date1 = getDateFromObject(obj1);
+            Date date2 = getDateFromObject(obj2);
+            return date2.compareTo(date1);
+        });
+
+        model.addAttribute("responseList", combinedList);
         return "notification";
     }
 
@@ -317,4 +333,16 @@ public class UserController {
             return "access-denied";
         }
     }
+
+    private Date getDateFromObject(Object obj) {
+        if (obj instanceof OrderDetail) {
+            return ((OrderDetail) obj).getCreatedDate();
+        } else if (obj instanceof Promotion) {
+            return ((Promotion) obj).getCreatedDate();
+        } else if (obj instanceof Notification) {
+            return ((Notification) obj).getCreatedDate();
+        }
+        return null;
+    }
+
 }

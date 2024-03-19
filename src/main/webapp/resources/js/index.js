@@ -98,9 +98,12 @@ function checkQuantity() {
 }
 
 function setNotification(flag, setValue) {
+    let badgePosition = document.getElementById('badge-position');
     let notification = document.getElementById('session-notification');
     let setValueNumber = parseInt(setValue);
+    badgePosition.classList.remove('d-none');
     if (flag === 0) {
+        badgePosition.classList.add('d-none');
         notification.textContent = setValueNumber;
     } else {
         notification.textContent = parseInt(notification.textContent) + setValueNumber;

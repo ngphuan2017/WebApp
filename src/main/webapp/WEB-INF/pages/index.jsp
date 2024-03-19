@@ -60,7 +60,7 @@
 <c:if test="${products == null || empty products}">
     <div class="text-center m-2">
         <img class="rounded"
-             src="https://res.cloudinary.com/dkmug1913/image/upload/v1709795100/WebApp/tl_bzvong.webp"
+             src="https://res.cloudinary.com/dkmug1913/image/upload/v1710819437/WebApp/tl_apxwmw.webp"
              alt="not-found"/>
         <h3 class="text-center text-secondary m-2"><i class="fa-solid fa-magnifying-glass"></i> Không tìm thấy sản phẩm</h3>
     </div>
@@ -114,10 +114,23 @@
                 <c:choose>
                     <c:when test="${page.page > 1}">
                         <c:choose>
+                            <c:when test="${not empty param.categorysubId && not empty param.kw}">
+                                <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}"/>
+                                <c:set var="kwParam" value="kw=${param.kw}"/>
+                                <li class="page-item">
+                                    <a class="page-link" href="${action}?${cateIdParam}&${kwParam}&page=${page.page - 1}">«</a>
+                                </li>
+                            </c:when>
                             <c:when test="${not empty param.categorysubId}">
                                 <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}"/>
                                 <li class="page-item">
                                     <a class="page-link" href="${action}?${cateIdParam}&page=${page.page - 1}">«</a>
+                                </li>
+                            </c:when>
+                            <c:when test="${not empty param.kw}">
+                                <c:set var="kwParam" value="kw=${param.kw}"/>
+                                <li class="page-item">
+                                    <a class="page-link" href="${action}?${kwParam}&page=${page.page - 1}">«</a>
                                 </li>
                             </c:when>
                             <c:otherwise>
@@ -136,6 +149,24 @@
                 <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
                     <c:set var="pageParam" value="page=${loop.index}"/>
                     <c:choose>
+                        <c:when test="${not empty param.categorysubId && param.kw}">
+                            <c:set var="categorysubIdParam" value="categorysubId=${param.categorysubId}"/>
+                            <c:set var="kwParam" value="kw=${param.kw}"/>
+                            <c:if test="${not empty pageContext.request.queryString}">
+                                <c:set var="queryStringWithoutPage" value=""/>
+                                <c:forEach var="paramName" items="${pageContext.request.parameterMap.keySet()}">
+                                    <c:if test="${not 'page' == paramName}">
+                                        <c:set var="queryStringWithoutPage"
+                                               value="${queryStringWithoutPage}&amp;${paramName}=${param[paramName]}"/>
+                                    </c:if>
+                                </c:forEach>
+                                <c:set var="pageParam"
+                                       value="${pageParam}&amp;${queryStringWithoutPage}${categorysubIdParam}${kwParam}"/>
+                            </c:if>
+                            <li class="page-item${loop.index == page.page ? ' active' : ''}">
+                                <a class="page-link" href="${action}?${pageParam}">${loop.index}</a>
+                            </li>
+                        </c:when>
                         <c:when test="${not empty param.categorysubId}">
                             <c:set var="categorysubIdParam" value="categorysubId=${param.categorysubId}"/>
                             <c:if test="${not empty pageContext.request.queryString}">
@@ -153,6 +184,23 @@
                                 <a class="page-link" href="${action}?${pageParam}">${loop.index}</a>
                             </li>
                         </c:when>
+                        <c:when test="${not empty param.kw}">
+                            <c:set var="kwParam" value="kw=${param.kw}"/>
+                            <c:if test="${not empty pageContext.request.queryString}">
+                                <c:set var="queryStringWithoutPage" value=""/>
+                                <c:forEach var="paramName" items="${pageContext.request.parameterMap.keySet()}">
+                                    <c:if test="${not 'page' == paramName}">
+                                        <c:set var="queryStringWithoutPage"
+                                               value="${queryStringWithoutPage}&amp;${paramName}=${param[paramName]}"/>
+                                    </c:if>
+                                </c:forEach>
+                                <c:set var="pageParam"
+                                       value="${pageParam}&amp;${queryStringWithoutPage}${kwParam}"/>
+                            </c:if>
+                            <li class="page-item${loop.index == page.page ? ' active' : ''}">
+                                <a class="page-link" href="${action}?${pageParam}">${loop.index}</a>
+                            </li>
+                        </c:when>
                         <c:otherwise>
                             <li class="page-item${loop.index == page.page ? ' active' : ''}">
                                 <a class="page-link" href="${action}?${pageParam}">${loop.index}</a>
@@ -163,10 +211,23 @@
                 <c:choose>
                     <c:when test="${page.page < page.totalPage}">
                         <c:choose>
+                            <c:when test="${not empty param.categorysubId && not empty param.kw}">
+                                <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}"/>
+                                <c:set var="kwParam" value="kw=${param.kw}"/>
+                                <li class="page-item">
+                                    <a class="page-link" href="${action}?${cateIdParam}&${kwParam}&page=${page.page + 1}">»</a>
+                                </li>
+                            </c:when>
                             <c:when test="${not empty param.categorysubId}">
                                 <c:set var="cateIdParam" value="categorysubId=${param.categorysubId}"/>
                                 <li class="page-item">
                                     <a class="page-link" href="${action}?${cateIdParam}&page=${page.page + 1}">»</a>
+                                </li>
+                            </c:when>
+                            <c:when test="${not empty param.kw}">
+                                <c:set var="kwParam" value="kw=${param.kw}"/>
+                                <li class="page-item">
+                                    <a class="page-link" href="${action}?${kwParam}&page=${page.page + 1}">»</a>
                                 </li>
                             </c:when>
                             <c:otherwise>

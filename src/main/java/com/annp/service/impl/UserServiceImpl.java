@@ -2,11 +2,13 @@ package com.annp.service.impl;
 
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
+import com.annp.pojo.Notification;
 import com.annp.pojo.Recaptcha;
 import com.annp.pojo.Role;
 import com.annp.pojo.Status;
 import com.annp.pojo.Users;
 import com.annp.repository.UserRepository;
+import com.annp.service.NotificationService;
 import com.annp.service.UserService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -33,16 +35,18 @@ import org.springframework.web.client.RestTemplate;
 
 @Service("userDetailsService")
 public class UserServiceImpl implements UserService {
-    
+
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private NotificationService notificationService;
     @Autowired
     private Cloudinary cloudinary;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private Environment env;
-    
+
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -50,18 +54,18 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new UsernameNotFoundException("Không tồn tại!");
         }
-        
+
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(user.getUserRole().getPermission()));
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(), user.getPassword(), authorities);
     }
-    
+
     @Override
     public Users getUserByUsername(String username) {
         return this.userRepository.getUserByUsername(username);
     }
-    
+
     @Override
     public boolean addOrUpdateUser(Users user) {
         try {
@@ -69,7 +73,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(this.bCryptPasswordEncoder.encode(pass));
             user.setAddress(user.getWard() + " - " + user.getDistrict() + " - " + user.getCity());
             String avatar = user.getAvatar();
-            
+
             if (!user.getFile().isEmpty()) {
                 Map res = null;
                 try {
@@ -85,38 +89,42 @@ public class UserServiceImpl implements UserService {
                     user.setAvatar(avatar);
                 }
             }
-            
+
             if (user.getId() == 0) {
+                user.setNotification(1);
                 user.setCreatedDate(new Date());
                 user.setUpdatedDate(new Date());
+                Notification n = new Notification();
+                n.setUserId(user);
+                this.notificationService.addNotification(n);
             }
-            
+
             return this.userRepository.addOrUpdateUser(user);
         } catch (Exception e) {
             return false;
         }
     }
-    
+
     @Override
     public boolean getByUsername(String username) {
         return this.userRepository.getByUsername(username);
     }
-    
+
     @Override
     public boolean updateUser(Users user) {
         return this.userRepository.updateUser(user);
     }
-    
+
     @Override
     public Users getUserById(int id) {
         return this.userRepository.getUserById(id);
     }
-    
+
     @Override
     public boolean updateProfileUser(Users user) {
         try {
             Users u = getUserById(user.getId());
-            
+
             if (user.getFile() != null && !user.getFile().isEmpty()) {
                 String avatar = u.getAvatar();
                 Map res = null;
@@ -133,7 +141,7 @@ public class UserServiceImpl implements UserService {
                     u.setAvatar(avatar);
                 }
             }
-            
+
             if (user.getFacebook() != null && !user.getFacebook().isEmpty()) {
                 u.setFacebook(user.getFacebook());
             }
@@ -146,7 +154,7 @@ public class UserServiceImpl implements UserService {
             if (user.getTiktok() != null && !user.getTiktok().isEmpty()) {
                 u.setTiktok(user.getTiktok());
             }
-            
+
             if (user.getFullname() != null && !user.getFullname().isEmpty()) {
                 u.setFullname(user.getFullname());
             }
@@ -168,13 +176,13 @@ public class UserServiceImpl implements UserService {
             if (user.getUserRole() != null) {
                 u.setUserRole(user.getUserRole());
             }
-            
+
             return this.userRepository.updateUser(u);
         } catch (Exception e) {
             return false;
         }
     }
-    
+
     @Override
     public boolean addUserGoogle(Google google) {
         try {
@@ -191,12 +199,18 @@ public class UserServiceImpl implements UserService {
             user.setExp(5);
             user.setGoogleID(google.getId());
             user.setTokenGoogle("");
+            user.setNotification(1);
+
+            Notification n = new Notification();
+            n.setUserId(user);
+            this.notificationService.addNotification(n);
+
             return this.userRepository.addOrUpdateUser(user);
         } catch (Exception ex) {
             return false;
         }
     }
-    
+
     @Override
     public boolean addUserFacebook(Facebook facebook) {
         try {
@@ -214,22 +228,28 @@ public class UserServiceImpl implements UserService {
             user.setExp(5);
             user.setFacebookID(facebook.getId());
             user.setTokenFacbook("");
+            user.setNotification(1);
+
+            Notification n = new Notification();
+            n.setUserId(user);
+            this.notificationService.addNotification(n);
+
             return this.userRepository.addOrUpdateUser(user);
         } catch (Exception ex) {
             return false;
         }
     }
-    
+
     @Override
     public Users getUserByGoogleId(String googleId) {
         return this.userRepository.getUserByGoogleId(googleId);
     }
-    
+
     @Override
     public Users getUserByFacebookId(String facebookId) {
         return this.userRepository.getUserByFacebookId(facebookId);
     }
-    
+
     @Override
     public boolean verifyRecaptcha(String captchaResponse) {
         RestTemplate restTemplate = new RestTemplate();
@@ -237,15 +257,15 @@ public class UserServiceImpl implements UserService {
                 + "?secret=" + env.getProperty("recaptcha.secret.key")
                 + "&response=" + captchaResponse;
         Recaptcha recaptcha = restTemplate.postForObject(requestUrl, null, Recaptcha.class);
-        
+
         return recaptcha != null && recaptcha.isSuccess();
     }
-    
+
     @Override
     public List<Users> getUserByEmail(String email) {
         return this.userRepository.getUserByEmail(email);
     }
-    
+
     @Override
     public boolean sendCodeToEmail(int userId, String email, String baseUrl) {
         try {
@@ -275,7 +295,7 @@ public class UserServiceImpl implements UserService {
             htmlMessage += "</body></html>";
             htmlEmail.setHtmlMsg(htmlMessage);
             htmlEmail.addTo(email);
-            
+
             htmlEmail.send();
             return true;
         } catch (Exception ex) {
@@ -283,32 +303,32 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
-    
+
     @Override
     public boolean changePassword(String password, Users user) {
         String pass = password.trim();
         user.setPassword(this.bCryptPasswordEncoder.encode(pass));
         return this.userRepository.updateUser(user);
     }
-    
+
     @Override
     public Users getUserByTicket(String ticket) {
         return this.userRepository.getUserByTicket(ticket);
     }
-    
+
     @Override
     public Users getUserAccountById(int id) {
         return this.userRepository.getUserAccountById(id);
     }
-    
+
     @Override
     public List<Users> getUsers(Map<String, String> params, int start, int limit) {
         return this.userRepository.getUsers(params, start, limit);
     }
-    
+
     @Override
     public boolean deleteCustomer(int id) {
         return this.userRepository.deleteCustomer(id);
     }
-    
+
 }

@@ -65,12 +65,12 @@
                                     <c:choose>
                                         <c:when test="${s.categoryId.id == c.id && s.id != 14}">
                                             <li><a class="dropdown-item" href="${url}">${s.name}</a></li>
-                                        </c:when>
-                                        <c:when test="${s.categoryId.id == c.id && s.id == 14}">
+                                            </c:when>
+                                            <c:when test="${s.categoryId.id == c.id && s.id == 14}">
                                             <li><a class="dropdown-item" href="${wheel}">${s.name}</a></li>
-                                        </c:when>
-                                    </c:choose>
-                                </c:forEach>
+                                            </c:when>
+                                        </c:choose>
+                                    </c:forEach>
                             </ul>
                         </li>
                     </c:forEach>
@@ -88,25 +88,26 @@
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
                             <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)"
                                 onmouseout="hideDropdownMenu(this)">
-                                <a class="nav-link text-success" href="javascript:;" data-bs-toggle="dropdown">
+                                <a class="nav-link text-success position-relative" href="javascript:;" data-bs-toggle="dropdown">
+                                    <span id="badge-position" class="${sessionScope.currentUser.notification > 0 ? '' : 'd-none'} position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
                                     <img class="rounded-circle" width="27px" height="27px"
                                          src="${sessionScope.currentUser.avatar}"/>
                                     <span>&nbsp;${sessionScope.currentUser.fullname}</span>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="${profile}"><i class="fa-solid fa-user"></i> Tài
-                                        khoản</a></li>
+                                            khoản</a></li>
                                     <li><a class="dropdown-item" href="${notification}"
                                            onclick="setNotification(0, '0')"><i
-                                            class="fa-solid fa-bell"></i>
-                                        Thông báo <span
+                                                class="fa-solid fa-bell"></i>
+                                            Thông báo <span
                                                 class="badge bg-danger"
                                                 id="session-notification">${sessionScope.currentUser.notification}</span></a>
                                     </li>
                                     <li><a class="dropdown-item" href="${changePassword}"><i
-                                            class="fa-solid fa-unlock-keyhole"></i> Đổi mật khẩu</a></li>
+                                                class="fa-solid fa-unlock-keyhole"></i> Đổi mật khẩu</a></li>
                                     <li><a class="dropdown-item" href="${logout}"><i
-                                            class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+                                                class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
                                 </ul>
                             </li>
                         </c:when>
