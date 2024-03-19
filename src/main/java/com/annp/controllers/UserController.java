@@ -7,7 +7,6 @@ package com.annp.controllers;
 import com.annp.handlers.FacebookHandler;
 import com.annp.handlers.GoogleHandler;
 import com.annp.pojo.City;
-import com.annp.pojo.District;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
 import com.annp.pojo.OrderDetail;
@@ -17,14 +16,11 @@ import com.annp.pojo.Role;
 import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
-import com.annp.pojo.Ward;
 import com.annp.service.CityService;
-import com.annp.service.DistrictService;
 import com.annp.service.OrdersService;
 import com.annp.service.PromotionService;
 import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
-import com.annp.service.WardService;
 import com.annp.validator.UserValidator;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -70,10 +66,6 @@ public class UserController {
     @Autowired
     private CityService cityService;
     @Autowired
-    private DistrictService districtService;
-    @Autowired
-    private WardService wardService;
-    @Autowired
     private UserLevelsService userLevelsService;
     @Autowired
     private OrdersService ordersService;
@@ -96,10 +88,6 @@ public class UserController {
         }
         List<City> listCitys = this.cityService.getCity();
         model.addAttribute("listCitys", listCitys);
-        List<District> listDistricts = this.districtService.getDistrict();
-        model.addAttribute("listDistricts", listDistricts);
-        List<Ward> listWards = this.wardService.getWard();
-        model.addAttribute("listWards", listWards);
     }
 
     @GetMapping(path = "/me/profile")

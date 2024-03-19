@@ -79,38 +79,69 @@ function productView(endpointview, endpoint) {
     });
 }
 
-function xmlToJson(xml) {
-    var obj = {};
-    if (xml.nodeType == 1) {
-        if (xml.attributes.length > 0) {
-            obj["@attributes"] = {};
-            for (var j = 0; j < xml.attributes.length; j++) {
-                var attribute = xml.attributes.item(j);
-                obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
-            }
+function productDetailView(endpoint) {
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
         }
-    } else if (xml.nodeType == 3) {
-        obj = xml.nodeValue.trim();
-    }
-    if (xml.hasChildNodes()) {
-        for (var i = 0; i < xml.childNodes.length; i++) {
-            var item = xml.childNodes.item(i);
-            var nodeName = item.nodeName;
-            if (nodeName == "#text") {
-                obj = item.nodeValue.trim();
-                continue;
-            }
-            if (typeof (obj[nodeName]) == "undefined") {
-                obj[nodeName] = xmlToJson(item);
-            } else {
-                if (typeof (obj[nodeName].push) == "undefined") {
-                    var old = obj[nodeName];
-                    obj[nodeName] = [];
-                    obj[nodeName].push(old);
-                }
-                obj[nodeName].push(xmlToJson(item));
-            }
+    }).then(res =>
+        res.text()
+    ).then(data => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data, 'application/xml');
+        const json = xmlToJson(xml);
+        let js = document.getElementById("modal-account-img");
+        js.innerHTML = `
+            <img src="${json.product.image}" alt="avatar">
+            <div class="js-currency level">
+                <span class="money">${json.product.price}</span>
+            </div>
+        `;
+        let jss = document.getElementById("modal-account-about");
+        jss.innerHTML = `
+            <span style="margin: 7px 0;">ID: #${json.product.id}</span>
+            <span style="margin: 7px 0;">Sản phẩm: <span class="text-info">${json.product.name}</span></span>
+            <span style="margin: 7px 0;">Phân loại: ${json.product.categorysubId.name}</span>
+            <span style="margin: 7px 0;">Sản phẩm có sẵn: ${json.product.quantity}</span>
+            <span style="margin: 7px 0;">Khuyến mãi: <span class="text-danger">${json.product.discount.discount}%</span></span>
+            <span style="margin: 7px 0;">Điểm đánh giá: ${json.product.averageRating}</span>
+            <span style="margin: 7px 0;">Số lượng đánh giá: ${json.product.reviewCount}</span>
+            <span style="margin: 7px 0;">Sản phẩm đã bán: ${json.product.unitsSold}</span>
+            <span style="margin: 7px 0 14px;">Trạng thái: <span class="${json.product.productstatus.id === "5" ? `text-customer-active` : json.product.productstatus.id === "6" ? `text-customer-warning` : json.product.productstatus.id === "7" ? `text-customer-danger` : `text-customer-primary`}">${json.product.productstatus.statusname}</span></span>
+        `;
+        let jsss = document.getElementById("modal-account-title");
+        jsss.innerHTML = `
+            <i class="fas fa-crown" style="color: yellow;"></i>
+            <span class="text-account-title">
+                #${json.product.id}
+            </span>
+            <i class="fas fa-crown" style="color: yellow;"></i>
+        `;
+        let btns = document.querySelectorAll('.js-add-cart');
+        let cart = document.querySelector('.js-modal');
+        let modalClose = document.querySelector('.js-modal-close');
+        let modalContainer = document.querySelector('.js-modal-container');
+        let createDated = document.querySelectorAll(".modal-content .create-date");
+        let currencyElement = document.querySelectorAll(".js-currency .money");
+        currencyElement.forEach((element) => {
+            const amountValue = parseFloat(element.textContent);
+            element.textContent = numberWithCommas(amountValue);
+        });
+        createDated.forEach((element) => {
+            const dateValue = moment(element.textContent);
+            element.textContent = dateValue.format('DD-MM-YYYY');
+        });
+        for (const btn of btns) {
+            btn.addEventListener('click', showCart);
         }
+        modalClose.addEventListener('click', hideCart);
+        cart.addEventListener('click', hideCart);
+        modalContainer.addEventListener('click', function (event) {
+            event.stopPropagation();
+        });
     }
-    return obj;
+    ).catch(error => {
+        console.info(error);
+    });
 }

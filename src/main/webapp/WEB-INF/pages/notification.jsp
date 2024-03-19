@@ -99,27 +99,37 @@
     </c:if>
     <c:if test="${promotions != null}">
         <c:forEach items="${promotions}" var="p" varStatus="loop">
-            <div class="row m-2 p-2">
-                <div class="col-lg-2 col-md-2 col-sm-2 col-4">
-                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1706352647/WebApp/sg-11134004-7qver-lkhlv46clxt227_tn_jw82a9.png"
-                         alt="picture" style="width: 100%; max-height: 140px; min-height: 140px;"/>
-                </div>
-                <div class="col-lg-10 col-md-10 col-sm-10 col-8">
-                    <h4>${p.note}</h4>
-                    <div>
-                        <div style="background-image: url('${p.img}'); background-size: contain; background-repeat: no-repeat; width: 400px; height: 200px;">
+            <c:if test="${p.levelVip.requiredExp <= currentUser.exp}">
+                <div class="row m-2 p-2">
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-4">
+                        <c:choose>
+                            <c:when test="${currentUser.exp >= 1280}">
+                                <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1709010010/WebApp/tl_8_ukxzyv.webp"
+                                     alt="picture" style="width: 100%; max-height: 140px; min-height: 140px;"/>
+                            </c:when>
+                            <c:otherwise>
+                                <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1709020500/WebApp/tl_1_ih2d9m.webp"
+                                     alt="picture" style="width: 100%; max-height: 140px; min-height: 140px;"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                    <div class="col-lg-10 col-md-10 col-sm-10 col-8">
+                        <h4>${p.note}</h4>
+                        <div>
+                            <div style="background-image: url('${p.img}'); background-size: contain; background-repeat: no-repeat; width: 400px; height: 200px;">
+                            </div>
+                            <p style="margin: 14px 0;"><span class="discountCode"
+                                                             style="background-color: yellow; color: red; font-weight: bolder; text-transform: uppercase;">${p.code}</span>
+                                <a class="copy-button m-2" onclick="copyCode(${loop.index})"><i
+                                        class="fa-regular fa-copy"></i></a>
+                            </p>
+                            <p>Mã hết hạn vào <span class="create-date">${p.endDate}</span>! Mã đã có sẵn trong ví! Hàng
+                                loạt sản phẩm giá tốt đang chờ. Dùng
+                                ngay thôi!</p>
                         </div>
-                        <p style="margin: 14px 0;"><span class="discountCode"
-                                                         style="background-color: yellow; color: red; font-weight: bolder; text-transform: uppercase;">${p.code}</span>
-                            <a class="copy-button m-2" onclick="copyCode(${loop.index})"><i
-                                    class="fa-regular fa-copy"></i></a>
-                        </p>
-                        <p>Mã hết hạn vào <span class="create-date">${p.endDate}</span>! Mã đã có sẵn trong ví! Hàng
-                            loạt sản phẩm giá tốt đang chờ. Dùng
-                            ngay thôi!</p>
                     </div>
                 </div>
-            </div>
+            </c:if>
         </c:forEach>
     </c:if>
 </div>

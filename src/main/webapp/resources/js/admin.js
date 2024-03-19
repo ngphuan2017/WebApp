@@ -20,7 +20,7 @@ createDate.forEach((element) => {
     element.textContent = dateValue.format('DD-MM-YYYY');
 });
 
-function accountView(endpoint) {
+function accountView(endpoint, leveled) {
     fetch(endpoint, {
         method: 'GET',
         headers: {
@@ -35,15 +35,12 @@ function accountView(endpoint) {
         let js = document.getElementById("modal-account-img");
         js.innerHTML = `
             <img src="${json.users.avatar}" alt="avatar">
-            <div class="level">
-                Lv.${json.users.exp <= 10 ? "0" : json.users.exp <= 20 ? "1" : json.users.exp <= 40 ? "2" :
-                json.users.exp <= 80 ? "3" : json.users.exp <= 160 ? "4" : json.users.exp <= 320 ? "5" :
-                json.users.exp <= 640 ? "6" : json.users.exp <= 1280 ? "7" : json.users.exp <= 2560 ? "8" :
-                json.users.exp <= 5120 ? "9" : json.users.exp <= 10240 ? "10" : "11"}
+            <div class="level level-${json.users.id}">
             </div>
         `;
+        let required = document.querySelector(`.required-exp-${json.users.id}`);
         let jss = document.getElementById("modal-account-about");
-        let requiredExp = json.users.exp <= 10 ? 10 : json.users.exp <= 20 ? 20 : json.users.exp <= 40 ? 40 : json.users.exp <= 80 ? 80 : json.users.exp <= 160 ? 160 : json.users.exp <= 320 ? 320 : json.users.exp <= 640 ? 640 : json.users.exp <= 1280 ? 1280 : json.users.exp <= 2560 ? 2560 : json.users.exp <= 5120 ? 5120 : json.users.exp <= 10240 ? 10240 : 99999;
+        let requiredExp = json.users.exp >= 12800 ? 99999 : parseInt(required.textContent) !== 0 ? parseInt(required.textContent) : 50;
         jss.innerHTML = `
             <span style="margin: 7px 0;">ID: #${json.users.id}</span>
             <span style="margin: 7px 0;">Họ và tên: <span class="text-info">${json.users.fullname}</span></span>
@@ -51,23 +48,24 @@ function accountView(endpoint) {
             <span style="margin: 7px 0;">Email: ${json.users.email}</span>
             <span style="margin: 7px 0;">Số điện thoại: ${json.users.phone}</span>
             <span style="margin: 7px 0;">Địa chỉ: ${json.users.address}</span>
-            <span style="margin: 7px 0;">Loại tài khoản: ${json.users.userRole.id == 1 ? "Quản trị" : json.users.userRole.id == 2 ? "Quản lý" : "Người dùng"}</span>
+            <span style="margin: 7px 0;">Loại tài khoản: ${json.users.userRole.id === "1" ? "Quản trị" : json.users.userRole.id === "2" ? "Quản lý" : "Người dùng"}</span>
             <span style="margin: 7px 0;">Trạng thái: <span class="${json.users.userstatus.id === "1" ? `text-customer-active` : json.users.userstatus.id === "2" ? `text-customer-warning` : `text-customer-danger`}">${json.users.userstatus.statusname}</span></span>
+            <span style="margin: 7px 0;">Danh hiệu: ${json.users.userRole.id === "1" ? `<span class="badge bg-danger m-1 level-name-${json.users.id}" style="font-size: 11px;">Trùm cuối</span><span class="badge bg-success m-1 level-name-${json.users.id}" style="font-size: 11px;">Quản trị viên</span><span class="badge bg-primary m-1 level-name-${json.users.id}" style="font-size: 11px;">${json.users.exp}</span>`
+                : json.users.userRole.id === "2" ? `<span class="badge bg-success m-1 level-name-${json.users.id}" style="font-size: 11px;">Quản trị viên</span><span class="badge bg-primary m-1 level-name-${json.users.id}" style="font-size: 11px;">${json.users.exp}</span>`
+                : `<span class="badge bg-primary level-name-${json.users.id}" style="font-size: 11px;">${json.users.exp}</span>`}</span>
             <span style="margin: 7px 0;">Cấp độ: </span>
             <span class="profile-exp"><span class="profile-exp-bar" style="width: ${json.users.exp * 100 / requiredExp}%;">${json.users.exp * 100 / requiredExp}% (${json.users.exp}/${requiredExp})</span></span>
             <span style="margin: 14px 0;">Ngày tham gia: <span class="create-date">${json.users.createdDate}</span></span>
         `;
         let jsss = document.getElementById("modal-account-title");
         jsss.innerHTML = `
-            <i class="fas fa-crown" style="color: yellow;"></i>
-            <span class="text-account-title">
-                ${json.users.exp <= 10 ? "Sắt" : json.users.exp <= 20 ? "Đồng" : json.users.exp <= 40 ? "Bạc" :
-                json.users.exp <= 80 ? "Vàng" : json.users.exp <= 160 ? "Bạch Kim" : json.users.exp <= 320 ? "Kim cương" :
-                json.users.exp <= 640 ? "Tinh anh" : json.users.exp <= 1280 ? "Cao thủ" : json.users.exp <= 2560 ? "Chiến tướng" :
-                json.users.exp <= 5120 ? "Thách đấu" : json.users.exp <= 10240 ? "Phi thăng" : json.users.exp <= 99999 ? "Á thần" : "Siêu thần"}
-            </span>
-            <i class="fas fa-crown" style="color: yellow;"></i>
+            <div class="text-account-title">
+                <i class="fas fa-crown" style="color: yellow;"></i>
+                <img class="rounded account-rank-img-${json.users.id}" src="https://res.cloudinary.com/dkmug1913/image/upload/v1709201059/WebApp/Rank/iron_abwewo.png" style="width: 60px; height: 60px;" alt="rank" />
+                <i class="fas fa-crown" style="color: yellow;"></i>
+            </div>
         `;
+        levelCmt(leveled, json.users.id);
         let btns = document.querySelectorAll('.js-add-cart');
         let cart = document.querySelector('.js-modal');
         let modalClose = document.querySelector('.js-modal-close');
@@ -214,7 +212,7 @@ function productImages(endpoint, images) {
             </span>
             <i class="fas fa-crown" style="color: yellow;"></i>
         `;
-        
+
         let btns = document.querySelectorAll('.js-add-cart-images');
         let carts = document.querySelector('.js-modal-images');
         let modalCloses = document.querySelector('.js-modal-close-images');
@@ -611,7 +609,7 @@ function requestReport(endpoint, id, statusId) {
     });
 }
 
-function editCustomer(endpoint, edited) {
+function editCustomer(endpoint, edited, leveled) {
     fetch(endpoint, {
         method: 'GET',
         headers: {
@@ -630,15 +628,12 @@ function editCustomer(endpoint, edited) {
                 <button type="button" onclick="AvatarBrowse()"><span class="icon-camera-avatar"><i class="fas fa-camera"></i></span></button>
                 <input type="file" id="avatarBrowse" onchange="showPreviewDiv(event);" accept="image/*" class="form-input d-none" />
             </div>
-            <div class="level">
-                Lv.${json.users.exp <= 10 ? "0" : json.users.exp <= 20 ? "1" : json.users.exp <= 40 ? "2" :
-                json.users.exp <= 80 ? "3" : json.users.exp <= 160 ? "4" : json.users.exp <= 320 ? "5" :
-                json.users.exp <= 640 ? "6" : json.users.exp <= 1280 ? "7" : json.users.exp <= 2560 ? "8" :
-                json.users.exp <= 5120 ? "9" : json.users.exp <= 10240 ? "10" : "11"}
+            <div class="level level-${json.users.id}">
             </div>
         `;
+        let required = document.querySelector(`.required-exp-${json.users.id}`);
         let jss = document.getElementById("modal-account-about-edit");
-        let requiredExp = json.users.exp <= 10 ? 10 : json.users.exp <= 20 ? 20 : json.users.exp <= 40 ? 40 : json.users.exp <= 80 ? 80 : json.users.exp <= 160 ? 160 : json.users.exp <= 320 ? 320 : json.users.exp <= 640 ? 640 : json.users.exp <= 1280 ? 1280 : json.users.exp <= 2560 ? 2560 : json.users.exp <= 5120 ? 5120 : json.users.exp <= 10240 ? 10240 : 99999;
+        let requiredExp = json.users.exp >= 12800 ? 99999 : parseInt(required.textContent) !== 0 ? parseInt(required.textContent) : 50;
         jss.innerHTML = `
             <span style="margin: 5px 0;">ID: #${json.users.id}</span>
             <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Họ và tên: </span><input id="edit-fullname" type="text" class="form-control" value="${json.users.fullname}" /></div>
@@ -693,15 +688,13 @@ function editCustomer(endpoint, edited) {
         `;
         let jsss = document.getElementById("modal-account-title-edit");
         jsss.innerHTML = `
-            <i class="fas fa-crown" style="color: yellow;"></i>
-            <span class="text-account-title">
-                ${json.users.exp <= 10 ? "Sắt" : json.users.exp <= 20 ? "Đồng" : json.users.exp <= 40 ? "Bạc" :
-                json.users.exp <= 80 ? "Vàng" : json.users.exp <= 160 ? "Bạch Kim" : json.users.exp <= 320 ? "Kim cương" :
-                json.users.exp <= 640 ? "Tinh anh" : json.users.exp <= 1280 ? "Cao thủ" : json.users.exp <= 2560 ? "Chiến tướng" :
-                json.users.exp <= 5120 ? "Thách đấu" : json.users.exp <= 10240 ? "Phi thăng" : json.users.exp <= 99999 ? "Á thần" : "Siêu thần"}
-            </span>
-            <i class="fas fa-crown" style="color: yellow;"></i>
+            <div class="text-account-title">
+                <i class="fas fa-crown" style="color: yellow;"></i>
+                <img class="rounded account-rank-img-${json.users.id}" src="https://res.cloudinary.com/dkmug1913/image/upload/v1709201059/WebApp/Rank/iron_abwewo.png" style="width: 60px; height: 60px;" alt="rank" />
+                <i class="fas fa-crown" style="color: yellow;"></i>
+            </div>
         `;
+        levelCmt(leveled, json.users.id);
         let btns = document.querySelectorAll('.js-add-cart-edit');
         let carts = document.querySelector('.js-modal-edit');
         let modalCloses = document.querySelector('.js-modal-close-edit');
@@ -782,6 +775,37 @@ function deleteCustomer(endpoint, id) {
     });
 }
 
+function levelCmt(endpoint, id) {
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+        var levels = document.querySelectorAll(`.level-${id}`);
+        var titleRanks = document.querySelectorAll(`.account-rank-img-${id}`);
+        var requiredExps = document.querySelectorAll(`.required-exp-${id}`);
+        var levelsCmt = document.querySelectorAll(`.level-name-${id}`);
+        levelsCmt.forEach(levelCmt => {
+            if (levelCmt.textContent !== "Trùm cuối" && levelCmt.textContent !== "Quản trị viên") {
+                levelCmt.textContent = data.level.userRank;
+            }
+        });
+        titleRanks.forEach(titleRank => {
+            titleRank.src = data.level.rankImg;
+        });
+        levels.forEach(level => {
+            level.style.color = data.level.rankColor;
+            level.textContent = data.level.levelName;
+        });
+        requiredExps.forEach(requiredExp => {
+            requiredExp.textContent = data.level.requiredExp * 2;
+        });
+    });
+}
+
 function productOrderView(endpoint) {
     fetch(endpoint, {
         method: 'GET',
@@ -859,7 +883,7 @@ function deleteOrder(endpoint, id) {
         cancelButtonText: 'Không'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hành động khi người dùng xác nhận
+// Hành động khi người dùng xác nhận
             fetch(endpoint, {
                 method: "PUT",
                 headers: {
@@ -889,7 +913,7 @@ function deleteProduct(endpoint, id) {
         cancelButtonText: 'Không'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hành động khi người dùng xác nhận
+// Hành động khi người dùng xác nhận
             fetch(endpoint, {
                 method: "PUT",
                 headers: {
@@ -917,7 +941,6 @@ function editCategorySub(id) {
     categoryNameOld.classList.add('d-none');
     let categoryNameNew = document.getElementById(`category-name-new${id}`);
     categoryNameNew.classList.remove('d-none');
-
     let categoryEdit = document.getElementById(`categorysub-edit${id}`);
     categoryEdit.classList.add('d-none');
     let categorySuccess = document.getElementById(`categorysub-success${id}`);
@@ -936,7 +959,7 @@ function saveCategorySub(endpoint, id) {
         cancelButtonText: 'Không'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hành động khi người dùng xác nhận
+// Hành động khi người dùng xác nhận
             let categorySubNameOld = document.getElementById(`categorysub-name-old${id}`);
             let categorySubNameNew = document.getElementById(`categorysub-name-new${id}`);
             let categoryNameOld = document.getElementById(`category-name-old${id}`);
@@ -1010,7 +1033,6 @@ function editPromotion(id) {
     promotionQuantityOld.classList.add('d-none');
     let promotionQuantityNew = document.getElementById(`promotion-quantity-new${id}`);
     promotionQuantityNew.classList.remove('d-none');
-
     let promotionEdit = document.getElementById(`promotion-edit${id}`);
     promotionEdit.classList.add('d-none');
     let promotionSuccess = document.getElementById(`promotion-success${id}`);
@@ -1029,7 +1051,7 @@ function savePromotion(endpoint, id) {
         cancelButtonText: 'Không'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Hành động khi người dùng xác nhận
+// Hành động khi người dùng xác nhận
             let promotionNameOld = document.getElementById(`promotion-name-old${id}`);
             let promotionNameNew = document.getElementById(`promotion-name-new${id}`);
             let promotionCodeOld = document.getElementById(`promotion-code-old${id}`);
@@ -1259,7 +1281,7 @@ function updateOrderStatus(endpoint, id) {
         let orderStatusOld = document.getElementById(`order-status-old${id}`);
         let orderStatusNew = document.getElementById(`order-status-new${id}`);
         if (result.isConfirmed) {
-            // Hành động khi người dùng xác nhận
+// Hành động khi người dùng xác nhận
             fetch(endpoint, {
                 method: "Put",
                 body: JSON.stringify({

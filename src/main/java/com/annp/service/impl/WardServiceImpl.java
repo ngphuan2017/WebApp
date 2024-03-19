@@ -25,5 +25,10 @@ public class WardServiceImpl implements WardService{
     public List<Ward> getWard() {
         return this.wardRepository.getWard();
     }
+
+    @Override
+    public List<Ward> getWardsByDistrictId(int id) {
+        return this.wardRepository.getWardsByDistrictId(id);
+    }
     
 }

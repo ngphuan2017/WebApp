@@ -7,6 +7,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<c:url value="/api/orders/deleted" var="endpoint" />
+<c:url value="/products" var="producted" />
+
 <h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down"><i class="fa-solid fa-bag-shopping"></i> CHI TIẾT ĐƠN HÀNG</h1>
 
 <c:if test="${orders != null}">
@@ -27,10 +30,9 @@
             <tbody>
                 <c:set var="totalQuantity" value="0" />
                 <c:forEach items="${orders}" var="o">
-                    <c:url value="/api/orders/deleted/${o.id}" var="endpoint" />
                     <tr id="order${o.id}">
                         <td>
-                            <a href="<c:url value="/products/${o.productId.id}"/>"><i class="fa-solid fa-eye"></i></a>
+                            <a href="${producted}/${o.productId.id}"><i class="fa-solid fa-eye"></i></a>
                         </td>
                         <td>
                             <img src="${o.productId.image}" width="33px" height="33px" />
@@ -49,7 +51,7 @@
                         <td id="order-button${o.id}">
                             <c:choose>
                                 <c:when test="${o.orderstatus.id == 9}">
-                                    <button class="btn btn-outline-danger" onclick="deleteItemOrder('${endpoint}', ${o.id}, ${o.number}, ${o.price*o.number})">Hủy đơn</button>
+                                    <button class="btn btn-outline-danger" onclick="deleteItemOrder('${endpoint}/${o.id}', ${o.id}, ${o.number}, ${o.price*o.number})">Hủy đơn</button>
                                 </c:when>
                                 <c:otherwise>
                                     <button class="btn btn-outline-secondary" disabled>Hủy đơn</button>

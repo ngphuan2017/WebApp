@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface UserLevelsRepository {
     List<UserLevels> getUserLevels();
+    UserLevels getUserLevelByExp(int exp);
 }

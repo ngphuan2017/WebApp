@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface WardRepository {
     List<Ward> getWard();
+    List<Ward> getWardsByDistrictId(int id);
 }

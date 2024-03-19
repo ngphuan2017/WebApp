@@ -12,7 +12,10 @@
 <c:url value="/" var="action" />
 <c:url value="/login" var="login" />
 <c:url value="/register" var="register"/>
+<c:url value="/api/users/register/city" var="city"/>
+<c:url value="/api/users/register/district" var="district"/>
 <c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png" var="logoBackground" />
+
 <div class="main">
     <div class="content">
         <div class="wrapper">
@@ -110,7 +113,7 @@
                         <div class="r-form-input">
                             <form:hidden id="pathCity" path="city"/>
                             <i class="fa-solid fa-city"></i>
-                            <select class="form-input" onchange="changeCity()" id="citySelect">
+                            <select class="form-input" onchange="changeCity('${city}')" id="citySelect">
                                 <option value="" label="Tỉnh/Thành Phố" style="color: black;" selected="true" />
                                 <c:forEach items="${listCitys}" var="c">
                                     <option value="${c.id}" label="${c.city}" style="color: black;" />
@@ -124,7 +127,7 @@
                         <div class="r-form-input">
                             <form:hidden id="pathDistrict" path="district"/>
                             <i class="fa-solid fa-building-circle-arrow-right"></i>
-                            <select class="form-input" onchange="changeDistrict()" id="districtSelect">
+                            <select class="form-input" onchange="changeDistrict('${district}')" id="districtSelect">
                                 <option value="" label="Quận/Huyện" style="color: black;" selected="true" />
                             </select>
                         </div>
@@ -183,91 +186,6 @@
     </div>
 </div>
 <script>
-    function changeCity() {
-        var jsonDistricts = [];
-        var citySelect = document.getElementById("citySelect");
-        var selectedCityId = citySelect.value;
-        var selectedCityLabel = citySelect.options[citySelect.selectedIndex].label;
-        var pathCity = document.getElementById("pathCity");
-        pathCity.value = selectedCityLabel;
-        var districtSelect = document.getElementById("districtSelect");
-
-        districtSelect.innerHTML = ''; // Clear existing options
-        // Filter the districts based on the selected cityId
-    <c:forEach items="${listDistricts}" var="d">
-        var data = {
-            id: ${d.id},
-            district: '${d.district}',
-            cityId: ${d.cityId.id}
-        };
-        jsonDistricts.push(data);
-    </c:forEach>
-        // Create new options for the districtSelect
-        for (var i = 0; i < jsonDistricts.length; i++) {
-            var district = jsonDistricts[i];
-            if (district.cityId == selectedCityId) {
-                var option = document.createElement("option");
-                option.value = district.id;
-                option.label = district.district;
-                option.style.color = "black";
-                districtSelect.appendChild(option);
-            }
-            if (i + 1 == jsonDistricts.length) {
-                var option = document.createElement("option");
-                option.value = "";
-                option.label = "Quận/Huyện";
-                option.style.color = "black";
-                option.selected = true;
-                districtSelect.appendChild(option);
-            }
-        }
-    }
-    function changeDistrict() {
-        var jsonWards = [];
-        var districtSelect = document.getElementById("districtSelect");
-        var selectedDistrictId = districtSelect.value;
-        var selectedDistrictLabel = districtSelect.options[districtSelect.selectedIndex].label;
-        var pathDistrict = document.getElementById("pathDistrict");
-        pathDistrict.value = selectedDistrictLabel;
-        var wardSelect = document.getElementById("wardSelect");
-
-        wardSelect.innerHTML = ''; // Clear existing options
-        // Filter the districts based on the selected cityId
-    <c:forEach items="${listWards}" var="w">
-        var data = {
-            id: ${w.id},
-            ward: '${w.ward}',
-            districtId: ${w.districtId.id}
-        };
-        jsonWards.push(data);
-    </c:forEach>
-        // Create new options for the districtSelect
-        for (var i = 0; i < jsonWards.length; i++) {
-            var ward = jsonWards[i];
-            if (ward.districtId == selectedDistrictId) {
-                var option = document.createElement("option");
-                option.value = ward.id;
-                option.label = ward.ward;
-                option.style.color = "black";
-                wardSelect.appendChild(option);
-            }
-            if (i + 1 == jsonWards.length) {
-                var option = document.createElement("option");
-                option.value = "";
-                option.label = "Phường/Xã";
-                option.style.color = "black";
-                option.selected = true;
-                wardSelect.appendChild(option);
-            }
-        }
-    }
-    function changeWard() {
-        var wardSelect = document.getElementById("wardSelect");
-        var selectedWardId = wardSelect.value;
-        var selectedWardLabel = wardSelect.options[wardSelect.selectedIndex].label;
-        var pathWard = document.getElementById("pathWard");
-        pathWard.value = selectedWardLabel;
-    }
     // Tham chiếu đến thẻ form và nút <a>
     const myForm = document.getElementById('form-register');
     const submitButton = document.getElementById('submitButton');

@@ -30,6 +30,13 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "UserLevels.findByRequiredExp", query = "SELECT u FROM UserLevels u WHERE u.requiredExp = :requiredExp")})
 public class UserLevels implements Serializable {
 
+    @Size(max = 500)
+    @Column(name = "rank_img")
+    private String rankImg;
+    @Size(max = 7)
+    @Column(name = "rank_color")
+    private String rankColor;
+
     @Size(max = 50)
     @Column(name = "user_rank")
     private String userRank;
@@ -118,6 +125,22 @@ public class UserLevels implements Serializable {
 
     public void setUserRank(String userRank) {
         this.userRank = userRank;
+    }
+
+    public String getRankImg() {
+        return rankImg;
+    }
+
+    public void setRankImg(String rankImg) {
+        this.rankImg = rankImg;
+    }
+
+    public String getRankColor() {
+        return rankColor;
+    }
+
+    public void setRankColor(String rankColor) {
+        this.rankColor = rankColor;
     }
     
 }

@@ -31,5 +31,11 @@ public class CityRepositoryImpl implements CityRepository{
         Query q = s.createQuery("From City");
         return q.getResultList();
     }
+
+    @Override
+    public City getCityById(int id) {
+        Session session = this.factory.getObject().getCurrentSession();
+        return session.get(City.class, id);
+    }
     
 }

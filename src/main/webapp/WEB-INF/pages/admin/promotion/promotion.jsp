@@ -55,6 +55,7 @@
                             <th>Loại áp dụng</th>
                             <th>Số lượng</th>
                             <th>Tỉ lệ</th>
+                            <th>Level</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -71,7 +72,7 @@
                                     <input class="form-control d-none" id="promotion-code-new${p.id}" type="text" value="${p.code}" />
                                 </td>
                                 <td class="text-order-name">
-                                    <span id="promotion-discount-old${p.id}">${p.discount}${p.type.id == 21 ? "K" : "%"}</span>
+                                    <span id="promotion-discount-old${p.id}">${p.discount}${p.type.id == 20 ? "%" : "K"}</span>
                                     <input class="form-control d-none" id="promotion-discount-new${p.id}" type="number" value="${p.discount}" />
                                 </td>
                                 <td>
@@ -97,6 +98,10 @@
                                 <td>
                                     <span id="promotion-percentpage-old${p.id}">${p.percentpage}</span>
                                     <input class="form-control d-none" id="promotion-percentpage-new${p.id}" type="number" value="${p.percentpage}" />
+                                </td>
+                                <td>
+                                    <span id="promotion-vip-old${p.id}">${p.levelVip.levelName}</span>
+                                    <input class="form-control d-none" id="promotion-vip-new${p.id}" type="number" value="${p.levelVip.id}" />
                                 </td>
                                 <td class="d-flex">
                                     <a class="m-2" id="promotion-edit${p.id}" href="javascript:;" onclick="editPromotion(${p.id})"><i class="fas fa-edit text-primary"></i></a>

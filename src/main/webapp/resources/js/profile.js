@@ -116,22 +116,20 @@ function editProfile() {
     }
     var pathDistrict = document.getElementById("editDistrict");
     var editDistrict = document.getElementById("editAddress").textContent.split(' - ')[1];
-    for (var i = 0; i < pathDistrict.options.length; i++) {
-        var option = pathDistrict.options[i];
-        if (option.label === editDistrict) {
-            option.selected = true;
-            break;
-        }
-    }
+    var option = document.createElement("option");
+    option.value = "";
+    option.label = editDistrict;
+    option.selected = true;
+    option.disabled = true;
+    pathDistrict.appendChild(option);
     var pathWard = document.getElementById("editWard");
     var editWard = document.getElementById("editAddress").textContent.split(' - ')[0];
-    for (var i = 0; i < pathWard.options.length; i++) {
-        var option = pathWard.options[i];
-        if (option.label === editWard) {
-            option.selected = true;
-            break;
-        }
-    }
+    var option = document.createElement("option");
+    option.value = "";
+    option.label = editWard;
+    option.selected = true;
+    option.disabled = true;
+    pathWard.appendChild(option);
 }
 
 function cancelEditProfile() {
@@ -151,29 +149,87 @@ function cancelEditProfile() {
     document.getElementById("editAddress").style.display = 'block';
 }
 
+function selectCity(city) {
+    var address = document.getElementById("address");
+    var editCity = document.getElementById("editCity");
+    var editDistrict = document.getElementById("editDistrict");
+    var editWard = document.getElementById("editWard");
+    var editCityLabel = editCity.options[editCity.selectedIndex].label;
+    var endpoint = city + "/" + editCity.value;
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+        editDistrict.innerHTML = '';
+        var option = document.createElement("option");
+        option.value = "";
+        option.label = "Quận/Huyện";
+        option.selected = true;
+        editDistrict.appendChild(option);
+        data.forEach(district => {
+            var option = document.createElement("option");
+            option.value = district.id;
+            option.label = district.district;
+            editDistrict.appendChild(option);
+        });
+        editWard.innerHTML = '';
+        var option = document.createElement("option");
+        option.value = "";
+        option.label = "Phường/Xã";
+        option.selected = true;
+        editWard.appendChild(option);
+    }).catch(error => {
+        console.info(error);
+    });
+    var addressParts = address.value.split(" - ");
+    addressParts[2] = editCityLabel;
+    address.value = addressParts.join(" - ");
+}
+
+
+function selectDistrict(district) {
+    var address = document.getElementById("address");
+    var editDistrict = document.getElementById("editDistrict");
+    var editWard = document.getElementById("editWard");
+    var editDistrictLabel = editDistrict.options[editDistrict.selectedIndex].label;
+    var endpoint = district + "/" + editDistrict.value;
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+        editWard.innerHTML = '';
+        var option = document.createElement("option");
+        option.value = "";
+        option.label = "Phường/Xã";
+        option.selected = true;
+        editWard.appendChild(option);
+        data.forEach(ward => {
+            var option = document.createElement("option");
+            option.value = ward.id;
+            option.label = ward.ward;
+            editWard.appendChild(option);
+        });
+    }).catch(error => {
+        console.info(error);
+    });
+    var addressParts = address.value.split(" - ");
+    addressParts[1] = editDistrictLabel;
+    address.value = addressParts.join(" - ");
+}
+
 function selectWard() {
     var address = document.getElementById("address");
     var editWard = document.getElementById("editWard");
     var editWardLabel = editWard.options[editWard.selectedIndex].label;
     var addressParts = address.value.split(" - ");
     addressParts[0] = editWardLabel;
-    address.value = addressParts.join(" - ");
-}
-
-function selectDistrict() {
-    var address = document.getElementById("address");
-    var editDistrict = document.getElementById("editDistrict");
-    var editDistrictLabel = editDistrict.options[editDistrict.selectedIndex].label;
-    var addressParts = address.value.split(" - ");
-    addressParts[1] = editDistrictLabel;
-    address.value = addressParts.join(" - ");
-}
-
-function selectCity() {
-    var address = document.getElementById("address");
-    var editCity = document.getElementById("editCity");
-    var editCityLabel = editCity.options[editCity.selectedIndex].label;
-    var addressParts = address.value.split(" - ");
-    addressParts[2] = editCityLabel;
     address.value = addressParts.join(" - ");
 }
