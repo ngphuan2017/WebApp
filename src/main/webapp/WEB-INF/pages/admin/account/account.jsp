@@ -14,6 +14,7 @@
 <c:url value="/admin/api/customer-management" var="customered" />
 <c:url value="/admin/api/customer-management/deleted" var="deleted" />
 <c:url value="/admin/api/customer-management/edited" var="edited" />
+<c:url value="/admin/api/users/level" var="leveled"/>
 
 <div class="container-fluid">
     <h3 class="text-dark mb-4">Quản lý tài khoản</h3>
@@ -55,6 +56,7 @@
                             <th>Số điện thoại</th>
                             <th>Giới tính</th>
                             <th>Cấp độ</th>
+                            <th>Rank</th>
                             <th>Trạng thái</th>
                             <th>Ngày tạo</th>
                             <th></th>
@@ -63,7 +65,7 @@
                     <tbody>
                         <c:forEach items="${users}" var="u" varStatus="loop">
                             <tr>
-                                <td><a class="js-add-cart" href="javascript:;" onclick="accountView('${customered}/${u.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td><a class="js-add-cart" href="javascript:;" onclick="accountView('${customered}/${u.id}', '${leveled}/${u.exp}')"><i class='fas fa-eye text-info'></i></a></td>
                                 <td>${loop.index + 1}</td>
                                 <td><img class="rounded-circle me-2" width="30" height="30" src="${u.avatar}">${u.fullname}</td>
                                 <td>${u.userRole.id == 1 ? "<span class='text-danger'>Quản trị</span>" : u.userRole.id == 2 ? "<span class='text-success'>Quản lý</span>" : "Người dùng"}</td>
@@ -73,10 +75,22 @@
                                     <c:set var="foundLevel" value="false" />
                                     <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
                                         <c:if test="${u.exp <= exp.requiredExp && status.index > 0 && foundLevel eq false}">
-                                            ${listUserLevels[status.index - 1].levelName}
+                                            <span class="level-${u.id}" style="color: ${listUserLevels[status.index - 1].rankColor}">
+                                                ${listUserLevels[status.index - 1].levelName}
+                                            </span>
                                             <c:set var="foundLevel" value="true" />
                                         </c:if>
                                     </c:forEach>
+                                </td>
+                                <td>
+                                    <c:set var="foundLevel" value="false" />
+                                    <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
+                                        <c:if test="${u.exp <= exp.requiredExp && status.index > 0 && foundLevel eq false}">
+                                            <img class="rounded" src="${listUserLevels[status.index - 1].rankImg}" style="width: 30px; height: 30px;" alt="rank" />
+                                            <c:set var="foundLevel" value="true" />
+                                        </c:if>
+                                    </c:forEach>
+                                    <span class="d-none required-exp-${u.id}">${u.exp}</span>
                                 </td>
                                 <td class="text-order-name" id="customer-status${u.id}">
                                     <c:set var="cssClass" value=""/>

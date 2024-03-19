@@ -25,4 +25,5 @@ public class CityServiceImpl implements CityService{
     public List<City> getCity() {
         return this.cityRepository.getCity();
     }
+
 }

@@ -179,7 +179,7 @@ public class UserRepositoryImpl implements UserRepository {
         Root root = q.from(Users.class);
         q.multiselect(root.get("id"), root.get("fullname"), root.get("avatar"),
                 root.get("gender"), root.get("userstatus"),
-                root.get("createdDate"), root.get("exp"));
+                root.get("createdDate"), root.get("exp"), root.get("userRole"));
         q.where(b.equal(root.get("id"), id));
         Query query = s.createQuery(q);
         try {

@@ -25,5 +25,10 @@ public class UserLevelsServiceImpl implements UserLevelsService{
     public List<UserLevels> getUserLevels() {
         return  this.userLevelsRepository.getUserLevels();
     }
+
+    @Override
+    public UserLevels getUserLevelByExp(int exp) {
+        return this.userLevelsRepository.getUserLevelByExp(exp);
+    }
     
 }

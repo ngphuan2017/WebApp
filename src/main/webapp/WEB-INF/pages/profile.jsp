@@ -8,6 +8,10 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:url value="/me/profile" var="changeProfile" />
+<c:url value="/api/users/register/city" var="city"/>
+<c:url value="/api/users/register/district" var="district"/>
+<c:url value="/me/orders" var="ordered" />
+
 <h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down" style="text-transform: uppercase;"><i class="fa-solid fa-user-gear"></i> Thông tin tài khoản</h1>
 <div class="container">
     <div class="main-body" style="padding: 15px;">
@@ -23,34 +27,22 @@
                             <div class="mt-3">
                                 <span id="currentUserId" style="display: none;">${currentUser.id}</span>
                                 <h4>${currentUser.fullname}</h4>
-                                <p class="text-secondary mb-1">
-                                    <c:set var="foundLevel" value="false" />
-                                    <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
-                                        <c:if test="${currentUser.exp <= exp.requiredExp && status.index > 0 && foundLevel eq false}">
+                                <c:set var="foundLevel" value="false" />
+                                <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
+                                    <c:if test="${currentUser.exp <= exp.requiredExp && status.index > 0 && foundLevel eq false}">
+                                        <img class="rounded mb-1" src="${listUserLevels[status.index - 1].rankImg}" style="width: 100px; height: 100px;" alt="rank" />
+                                        <c:set var="foundLevel" value="true" />
+                                    </c:if>
+                                </c:forEach>
+                                <c:set var="foundLevel" value="false" />
+                                <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
+                                    <c:if test="${currentUser.exp <= exp.requiredExp && status.index > 0 && foundLevel eq false}">
+                                        <p class="font-size-sm" style="color: ${listUserLevels[status.index - 1].rankColor}">
                                             ${listUserLevels[status.index - 1].levelName}
-                                            <c:set var="foundLevel" value="true" />
-                                        </c:if>
-                                    </c:forEach>
-                                </p>
-                                <p class="text-muted font-size-sm">
-                                    <c:choose>
-                                        <c:when test="${currentUser.userRole.id == 1}">
-                                            Trùm Cuối
-                                        </c:when>
-                                        <c:when test="${currentUser.userRole.id == 2}">
-                                            Quản trị viên
-                                        </c:when>
-                                        <c:when test="${currentUser.userRole.id == 3}">
-                                            <c:set var="foundRank" value="false" />
-                                            <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
-                                                <c:if test="${currentUser.exp <= exp.requiredExp && status.index > 0 && foundRank eq false}">
-                                                    ${listUserLevels[status.index - 1].userRank}
-                                                    <c:set var="foundRank" value="true" />
-                                                </c:if>
-                                            </c:forEach>
-                                        </c:when>
-                                    </c:choose>
-                                </p>
+                                        </p>
+                                        <c:set var="foundLevel" value="true" />
+                                    </c:if>
+                                </c:forEach>
                                 <form:form method="POST" action="${changeProfile}"
                                            modelAttribute="user" enctype="multipart/form-data">
                                     <form:hidden path="id" id="avatarUserId"/>
@@ -179,16 +171,10 @@
                                     <span id="editAddress" style="padding: 0;">${currentUser.address}</span>
                                     <form:hidden path="address" id="address"/>
                                     <select class="form-control col-4" id="editWard" onchange="selectWard()" style="display: none; width: 33.33%;">
-                                        <c:forEach items="${listWards}" var="w">
-                                            <option value="${w.id}" label="${w.ward}">${w.ward}</option>
-                                        </c:forEach>
                                     </select>
-                                    <select class="form-control col-4" id="editDistrict" onchange="selectDistrict()" style="display: none; width: 33.33%;">
-                                        <c:forEach items="${listDistricts}" var="d">
-                                            <option value="${d.id}" label="${d.district}">${d.district}</option>
-                                        </c:forEach>
+                                    <select class="form-control col-4" id="editDistrict" onchange="selectDistrict('${district}')" style="display: none; width: 33.33%;">
                                     </select>
-                                    <select class="form-control col-4" id="editCity" onchange="selectCity()" style="display: none; width: 33.33%;">
+                                    <select class="form-control col-4" id="editCity" onchange="selectCity('${city}')" style="display: none; width: 33.33%;">
                                         <c:forEach items="${listCitys}" var="c">
                                             <option value="${c.id}" label="${c.city}">${c.city}</option>
                                         </c:forEach>
@@ -229,21 +215,20 @@
                                 <div class="col-sm-9 text-secondary">
                                     <c:choose>
                                         <c:when test="${currentUser.userRole.id == 1}">
-                                            Trùm Cuối
+                                            <span class="badge bg-danger">Trùm Cuối</span>
+                                            <span class="badge bg-success">Quản trị viên</span>
                                         </c:when>
                                         <c:when test="${currentUser.userRole.id == 2}">
-                                            Quản trị viên
-                                        </c:when>
-                                        <c:when test="${currentUser.userRole.id == 3}">
-                                            <c:set var="foundRank" value="false" />
-                                            <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
-                                                <c:if test="${currentUser.exp <= exp.requiredExp && status.index > 0 && foundRank eq false}">
-                                                    ${listUserLevels[status.index - 1].userRank}
-                                                    <c:set var="foundRank" value="true" />
-                                                </c:if>
-                                            </c:forEach>
+                                            <span class="badge bg-success">Quản trị viên</span>
                                         </c:when>
                                     </c:choose>
+                                    <c:set var="foundRank" value="false" />
+                                    <c:forEach items="${listUserLevels}" var="exp" varStatus="status">
+                                        <c:if test="${currentUser.exp <= exp.requiredExp && status.index > 0 && foundRank eq false}">
+                                            <span class="badge bg-primary">${listUserLevels[status.index - 1].userRank}</span>
+                                            <c:set var="foundRank" value="true" />
+                                        </c:if>
+                                    </c:forEach>
                                 </div>
                             </div><hr/>
                             <div class="row">
@@ -293,7 +278,7 @@
                                 <div style="overflow: auto; height: 125px;">
                                     <c:forEach items="${orders}" var="o">
                                         <li id="${o.id}">
-                                            <a href="<c:url value="/me/orders/${o.id}" />">Đơn hàng: #${o.id} - Ngày: <span class="create-date">${o.createdDate}</span> ( ${o.type.statusname} )</a>
+                                            <a href="${ordered}/${o.id}">Đơn hàng: #${o.id} - Ngày: <span class="create-date">${o.createdDate}</span> ( ${o.type.statusname} )</a>
                                         </li>
                                     </c:forEach>
                                 </div>

@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface DistrictService {
     List<District> getDistrict();
+    List<District> getDistrictsByCityId(int id);
 }

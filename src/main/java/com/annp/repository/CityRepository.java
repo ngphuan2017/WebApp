@@ -12,5 +12,6 @@ import java.util.List;
  * @author phuan
  */
 public interface CityRepository {
+    City getCityById(int id);
     List<City> getCity();
 }

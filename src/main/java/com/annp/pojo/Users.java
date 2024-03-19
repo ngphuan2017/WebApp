@@ -171,7 +171,7 @@ public class Users implements Serializable {
         this.avatar = avatar;
     }
     
-    public Users(Integer id, String fullname, String avatar, Integer gender, Status userstatus, Date createdDate, Integer exp){
+    public Users(Integer id, String fullname, String avatar, Integer gender, Status userstatus, Date createdDate, Integer exp, Role userRole){
         this.id = id;
         this.fullname = fullname;
         this.avatar = avatar;
@@ -179,6 +179,7 @@ public class Users implements Serializable {
         this.userstatus = userstatus;
         this.createdDate = createdDate;
         this.exp = exp;
+        this.userRole = userRole;
     }
 
     public Users(Integer id, String fullname, String email, String phone, String username, String password, String address, Integer gender) {

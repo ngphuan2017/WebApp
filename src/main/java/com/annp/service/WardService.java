@@ -13,4 +13,5 @@ import java.util.List;
  */
 public interface WardService {
     List<Ward> getWard();
+    List<Ward> getWardsByDistrictId(int id);
 }

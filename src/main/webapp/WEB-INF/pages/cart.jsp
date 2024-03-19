@@ -8,7 +8,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <c:url value="/" var="action" />
+<c:url value="/api/cart" var="endpoint" />
 <c:url value="/api/cart/voucher" var="voucher" />
+<c:url value="/api/products" var="producted" />
+<c:url value="/login" var="loginUrl" />
+<c:url value="/api/pay" var="pUrl" />
 
 <h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down"><i class="fa-solid fa-cart-shopping"></i> GIỎ HÀNG</h1>
 
@@ -35,10 +39,9 @@
             </thead>
             <tbody>
                 <c:forEach items="${carts.values()}" var="c">
-                    <c:url value="/api/cart/${c.id}" var="endpoint" />
                     <tr id="cart${c.id}">
                         <td>
-                            <a href="<c:url value="/products/${c.id}"/>"><i class="fa-solid fa-eye"></i></a>
+                            <a class="js-add-cart" href="javascript:;" onclick="productDetailView('${producted}/${c.id}')"><i class="fa-solid fa-eye"></i></a>
                         </td>
                         <td>
                             <img src="${c.image}" width="33px" height="33px" />
@@ -50,7 +53,7 @@
                         <td>
                             <i class="d-none" id="product-quantity-${c.id}-old">${c.quantity}</i>
                             <input type="number" value="${c.quantity}" id="product-quantity-${c.id}"
-                                   onblur="updateItem('${endpoint}', this, ${c.id}, ${c.price})"
+                                   onblur="updateItem('${endpoint}/${c.id}', this, ${c.id}, ${c.price})"
                                    class="form-control" />
                         </td>
                         <td class="currency">
@@ -59,7 +62,7 @@
                             </span> <i class="fa-solid fa-coins" style="color: #ffdd10;"></i>
                         </td>
                         <td>
-                            <button class="btn btn-danger" onclick="deleteItem('${endpoint}', ${c.id})">Xóa</button>
+                            <button class="btn btn-danger" onclick="deleteItem('${endpoint}/${c.id}', ${c.id})">Xóa</button>
                         </td>
                     </tr>
                 </c:forEach>
@@ -67,7 +70,7 @@
         </table> 
 
         <div class="container alert alert-info text-center" data-aos="zoom-in">
-            <h7>Voucher giảm giá: <span style="color: #ee4d2d; font-size: 18px; font-weight: 600;" id="voucher-buy"></span>0 VNĐ</h7>
+            <h7>Voucher giảm giá: <span style="color: #ee4d2d; font-size: 18px; font-weight: 600;" id="voucher-buy">0</span> VNĐ</h7>
             <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-counter" id="total-quantity">${cartStats.totalQuantity}</span> sản phẩm</h6>
             <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h5>
         </div>
@@ -83,11 +86,9 @@
         <div class="d-flex justify-content-center mt-4 mb-4">
             <c:choose>
                 <c:when test="${pageContext.request.userPrincipal.name == null}">
-                    <c:url value="/login" var="loginUrl" />
                     <p style="font-size: 16px;">Vui lòng <a href="${loginUrl}">đăng nhập</a> để thanh toán!</p>
                 </c:when>
                 <c:when test="${pageContext.request.userPrincipal.name != null}">
-                    <c:url value="/api/pay" var="pUrl" />
                     <a href="javascript:;" class="animated-button1" onclick="pay('${pUrl}')">
                         <span></span>
                         <span></span>
@@ -100,3 +101,28 @@
         </div>
     </div>
 </c:if>
+<div class="js-modal">
+    <div class="modal-container-black js-modal-container">
+        <div class="js-modal-close">x</div>
+        <header class="modal-header-black">
+            <span><i class="fa-solid fa-address-card"></i> Thông tin</span>
+        </header>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                    <div class="modal-img-black" id="modal-account-img">
+
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6 col-12">
+                    <div class="modal-content" id="modal-account-about">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-modal-black" id="modal-account-title">
+
+        </div>
+    </div>
+</div>

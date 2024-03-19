@@ -42,6 +42,10 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Promotion.findByNote", query = "SELECT p FROM Promotion p WHERE p.note = :note")})
 public class Promotion implements Serializable {
 
+    @JoinColumn(name = "LEVEL_VIP", referencedColumnName = "id")
+    @ManyToOne
+    private UserLevels levelVip;
+
     @Size(max = 500)
     @Column(name = "IMG")
     private String img;
@@ -205,6 +209,14 @@ public class Promotion implements Serializable {
      */
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public UserLevels getLevelVip() {
+        return levelVip;
+    }
+
+    public void setLevelVip(UserLevels levelVip) {
+        this.levelVip = levelVip;
     }
 
 }

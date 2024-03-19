@@ -57,8 +57,6 @@ public class HomeController {
         model.addAttribute("categories", cates);
         model.addAttribute("categorySub", categorySub);
         model.addAttribute("cartStats", Utils.cartStats((Map<Integer, Cart>) session.getAttribute("cart")));
-        List<UserLevels> listUserLevelses = this.userLevelsService.getUserLevels();
-        model.addAttribute("listCmtUserLevels", listUserLevelses);
     }
 
     @GetMapping(path = "/")

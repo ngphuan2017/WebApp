@@ -12,5 +12,7 @@ import java.util.List;
  * @author phuan
  */
 public interface DistrictRepository {
+    District getDistrictById(int id);
     List<District> getDistrict();
+    List<District> getDistrictsByCityId(int id);
 }

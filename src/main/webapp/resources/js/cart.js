@@ -32,9 +32,9 @@ function updateItem(endpoint, obj, id, price) {
         inputQuantity.value = inputQuantityOld.textContent;
         Swal.fire('Lỗi!', 'Vui lòng nhập giá trị không âm!', 'error');
         return;
-    } else if (obj.value > 9999) {
+    } else if (obj.value > 999) {
         inputQuantity.value = inputQuantityOld.textContent;
-        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị nhỏ hơn!', 'error');
+        Swal.fire('Sản phẩm giới hạn số lượng!', 'Vui lòng nhập giá trị nhỏ hơn!', 'error');
         return;
     }
     inputQuantityOld.textContent = obj.value;
@@ -147,10 +147,14 @@ function checkVoucherCode(endpoint) {
     ).then(data => {
         var voucher = document.getElementById("voucher");
         var voucherContent = document.getElementById("voucher-content");
+        var voucherValue = document.getElementById("voucher-buy");
+        voucherContent.classList.remove('d-none');
+        voucherContent.classList.add('d-none');
         let flag = 0;
         for (let check of data.promotions) {
-            if (check.code.toLowerCase() === voucher.value.toLowerCase()) {
-                voucherContent.textContent = check.note.toString();
+            if (check.code !== null && check.code.toLowerCase() === voucher.value.toLowerCase()) {
+                voucherContent.textContent = check.note;
+                voucherValue.textContent = check.discount*1000;
                 flag = 1;
             }
         }

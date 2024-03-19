@@ -14,6 +14,9 @@
 <c:url value="/api/products/${product.id}/comments/report" var="report"/>
 <c:url value="/api/products/${product.id}/comments/deleted" var="deleted"/>
 <c:url value="/api/products/${product.id}/comments/changed" var="changed"/>
+<c:url value="/api/users/level" var="leveled"/>
+<c:url value="/login" var="loginUrl"/>
+
 <div class="container">
     <div class="row" style="margin: 30px 0;">
         <div class="d-none" id="currentUserId">${pageContext.session.getAttribute("currentUser").id}</div>
@@ -33,7 +36,7 @@
                 </c:forEach>
             </div>
         </div>
-        <div class="col-lg-7 col-md-7 col-sm-7 col-12" data-aos="fade-left">
+        <div class="col-lg-7 col-md-7 col-sm-7 col-12 overflow-hidden" data-aos="fade-left">
             <div style="padding: 20px;">
                 <div style="font-size: 24px; font-family: Arial, sans-serif;">
                     <span><i class="fa-solid fa-angles-right"></i> ${product.name}</span>
@@ -141,11 +144,10 @@
         <div class="d-flex justify-content-center m-2">
             <c:choose>
                 <c:when test="${pageContext.request.userPrincipal.name == null}">
-                    <c:url value="/login" var="loginUrl"/>
                     <p style="font-size: 16px;">Vui lòng <a href="${loginUrl}">đăng nhập</a> để bình luận!</p>
                 </c:when>
                 <c:when test="${pageContext.request.userPrincipal.name != null}">
-                    <button onclick="addComment('${comment}', '${voted}', '${report}', '${deleted}', '${changed}')"
+                    <button onclick="addComment('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', '${leveled}')"
                             class="btn btn-outline-danger">Thêm bình luận
                     </button>
                 </c:when>
@@ -182,7 +184,7 @@
                     </div>
                 </div>
                 <div class="col-lg-7 col-md-7 col-sm-6 col-12">
-                    <div class="modal-content" id="modal-account-about">
+                    <div class="modal-content card-body" id="modal-account-about">
 
                     </div>
                 </div>
@@ -210,76 +212,6 @@
 <script src="<c:url value="/resources/js/comment.js" />"></script>
 <script src="<c:url value="/resources/js/product-detail.js" />"></script>
 <script>
-                        window.addEventListener('load', () => {
-                            loadComments('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', function () {
-                                var levelsCmt = document.querySelectorAll(".card-body .level-name");
-                                levelCmt(levelsCmt);
-                            });
-                        });
-
-                        function levelCmt(levels) {
-    <c:forEach items="${listCmtUserLevels}" var="exp" varStatus="status">
-                            levels.forEach((element) => {
-                                switch (element.textContent) {
-                                    case "Trùm cuối":
-                                        element.style.backgroundImage = 'linear-gradient(45deg, yellow, orange, red, green, #00BFFF, blue, indigo, violet)';
-                                        element.style.webkitBackgroundClip = 'text';
-                                        element.style.webkitTextFillColor = 'transparent';
-                                        break;
-                                    case "Quản trị viên":
-                                        element.style.backgroundImage = 'linear-gradient(180deg, yellow, orange, red, violet, indigo, blue)';
-                                        element.style.webkitBackgroundClip = 'text';
-                                        element.style.webkitTextFillColor = 'transparent';
-                                        break;
-                                    default:
-                                        if (parseInt(element.textContent) <= ${exp.requiredExp}) {
-                                            element.textContent = "${listCmtUserLevels[status.index - 1].userRank}";
-                                            switch (parseInt(${listCmtUserLevels[status.index - 1].id})) {
-                                                case 1:
-                                                    element.style.color = '#000000';
-                                                    break;
-                                                case 2:
-                                                    element.style.color = '#8B4513'; // Nâu đậm
-                                                    break;
-                                                case 3:
-                                                    element.style.color = '#A0A0A0'; // Bạc
-                                                    break;
-                                                case 4:
-                                                    element.style.color = '#FFD700'; // Vàng
-                                                    break;
-                                                case 5:
-                                                    element.style.color = '#FF1493'; // Hồng đậm
-                                                    break;
-                                                case 6:
-                                                    element.style.color = '#00FFFF'; // Xanh lam đậm
-                                                    break;
-                                                case 7:
-                                                    element.style.color = '#00CC00'; // Xanh lá cây đậm
-                                                    break;
-                                                case 8:
-                                                    element.style.color = '#FF4500'; // Đỏ cam
-                                                    break;
-                                                case 9:
-                                                    element.style.color = '#8A2BE2'; // Tím đậm
-                                                    break;
-                                                case 10:
-                                                    element.style.color = '#FF0000'; // Đỏ
-                                                    break;
-                                                case 11:
-                                                {
-                                                    element.style.backgroundImage = 'linear-gradient(180deg, yellow, orange, red, violet, indigo, blue)';
-                                                    element.style.webkitBackgroundClip = 'text';
-                                                    element.style.webkitTextFillColor = 'transparent';
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        break;
-                                }
-                            });
-    </c:forEach>
-                        }
-
                         const quantityInput = document.getElementById('quantity');
                         const quantityValue = quantityInput.value;
                         let quantityCart = quantityValue;
@@ -301,4 +233,7 @@
                         // Gọi hàm cập nhật giá trị khi ấn nút cộng hoặc nút trừ
                         document.querySelector('.quantity-right-plus').addEventListener('click', handleQuantityIncrease);
                         document.querySelector('.quantity-left-minus').addEventListener('click', handleQuantityDecrease);
+                        window.addEventListener('load', () => {
+                            loadComments('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', '${leveled}');
+                        });
 </script>

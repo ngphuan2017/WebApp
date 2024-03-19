@@ -25,9 +25,10 @@ public class ApiProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products/{productId}/view")
-    public ResponseEntity<Product> aboutProductView(@PathVariable(value = "productId") int id) {
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<Object> aboutProductView(@PathVariable(value = "productId") int id) {
         Product product = this.productService.getProductById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
+
 }

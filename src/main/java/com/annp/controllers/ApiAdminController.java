@@ -13,6 +13,7 @@ import com.annp.pojo.Promotion;
 import com.annp.pojo.Report;
 import com.annp.pojo.Role;
 import com.annp.pojo.Status;
+import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
 import com.annp.service.CategorySubService;
 import com.annp.service.OrdersService;
@@ -21,6 +22,7 @@ import com.annp.service.PromotionService;
 import com.annp.service.ReportService;
 import com.annp.service.StatsService;
 import com.annp.service.StatusService;
+import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -74,11 +76,21 @@ public class ApiAdminController {
     private StatusService statusService;
     @Autowired
     private StatsService statsService;
+    @Autowired
+    private UserLevelsService userLevelsService;
 
     @GetMapping("/customer-management/{userId}")
     public ResponseEntity<Users> aboutAccountView(@PathVariable(value = "userId") int id) {
         Users user = this.userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+    
+    @GetMapping("/users/level/{userExp}")
+    public ResponseEntity<Object> aboutProductView(@PathVariable(value = "userExp") int exp) {
+        UserLevels level = this.userLevelsService.getUserLevelByExp(exp);
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("level", level);
+        return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
     @GetMapping("/{view:(?:order|product)-management}/{productId}")

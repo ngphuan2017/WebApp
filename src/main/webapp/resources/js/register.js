@@ -146,3 +146,80 @@ function validateConfirmPassword() {
         confirmPasswordError.style.display = 'none';
     }
 }
+
+function changeCity(city) {
+    var citySelect = document.getElementById("citySelect");
+    var selectedCityLabel = citySelect.options[citySelect.selectedIndex].label;
+    var pathCity = document.getElementById("pathCity");
+    pathCity.value = selectedCityLabel;
+    var districtSelect = document.getElementById("districtSelect");
+    var endpoint = city + "/" + citySelect.value;
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+        districtSelect.innerHTML = '';
+        var option = document.createElement("option");
+        option.value = "";
+        option.label = "Quận/Huyện";
+        option.style.color = "black";
+        option.selected = true;
+        districtSelect.appendChild(option);
+        data.forEach(district => {
+            var option = document.createElement("option");
+            option.value = district.id;
+            option.label = district.district;
+            option.style.color = "black";
+            districtSelect.appendChild(option);
+        });
+    }).catch(error => {
+        console.info(error);
+    });
+}
+
+function changeDistrict(district) {
+    var districtSelect = document.getElementById("districtSelect");
+    var selectedDistrictLabel = districtSelect.options[districtSelect.selectedIndex].label;
+    var pathDistrict = document.getElementById("pathDistrict");
+    pathDistrict.value = selectedDistrictLabel;
+    var wardSelect = document.getElementById("wardSelect");
+
+    var endpoint = district + "/" + districtSelect.value;
+
+    fetch(endpoint, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/xml'
+        }
+    }).then(res =>
+        res.json()
+    ).then(data => {
+        wardSelect.innerHTML = '';
+        var option = document.createElement("option");
+        option.value = "";
+        option.label = "Phường/Xã";
+        option.style.color = "black";
+        option.selected = true;
+        wardSelect.appendChild(option);
+        data.forEach(ward => {
+            var option = document.createElement("option");
+            option.value = ward.id;
+            option.label = ward.ward;
+            option.style.color = "black";
+            wardSelect.appendChild(option);
+        });
+    }).catch(error => {
+        console.info(error);
+    });
+}
+
+function changeWard() {
+    var wardSelect = document.getElementById("wardSelect");
+    var selectedWardLabel = wardSelect.options[wardSelect.selectedIndex].label;
+    var pathWard = document.getElementById("pathWard");
+    pathWard.value = selectedWardLabel;
+}
