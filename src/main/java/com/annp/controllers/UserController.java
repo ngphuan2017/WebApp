@@ -150,9 +150,6 @@ public class UserController {
 
             model.addAttribute("itemTypes", itemTypes);
             model.addAttribute("responseList", combinedList);
-            for (Object obj : combinedList) {
-                System.out.println(obj.toString());
-            }
 
         } catch (Exception e) {
             e.printStackTrace();
