@@ -110,7 +110,7 @@
                                 <td class="create-date">${u.createdDate}</td>
                                 <td>
                                     <se:authorize access="hasRole('ROLE_ADMIN')">
-                                        <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}')">
+                                        <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}', '${leveled}/${u.exp}')">
                                             <i class="fas fa-edit text-primary"></i>
                                         </a>
                                         <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">
@@ -120,7 +120,7 @@
                                     <se:authorize access="!hasRole('ROLE_ADMIN')">
                                         <c:choose>
                                             <c:when test="${u.userRole.id == 3}">
-                                                <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}')">
+                                                <a class="m-2 js-add-cart-edit" href="javascript:;" onclick="editCustomer('${customered}/${u.id}', '${edited}/${u.id}', '${leveled}/${u.exp}')">
                                                     <i class="fas fa-edit text-primary"></i>
                                                 </a>
                                                 <a class="m-2" href="javascript:;" onclick="deleteCustomer('${deleted}/${u.id}', ${u.id})">

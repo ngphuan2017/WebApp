@@ -3,6 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
 
+function setWheelValue(endpoint) {
+    return fetch(endpoint, {
+        method: "PUT",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => {
+        if (res.status === 200) {
+        }
+    });
+}
+
 (function () {
     var $,
             ele,
@@ -177,8 +189,8 @@
             var userId = currentUserId.textContent;
             var quantity = document.getElementById("number-turn");
             var quantityValue = parseInt(quantity.textContent); //số lượt quay còn lại
-            
-            if(!hasUserNumberTurnToday(userId)){
+
+            if (!hasUserNumberTurnToday(userId)) {
                 saveUserNumberTurning(userId);
             }
             quantityValue--;

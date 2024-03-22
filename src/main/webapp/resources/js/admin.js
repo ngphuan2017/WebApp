@@ -631,9 +631,7 @@ function editCustomer(endpoint, edited, leveled) {
             <div class="level level-${json.users.id}">
             </div>
         `;
-        let required = document.querySelector(`.required-exp-${json.users.id}`);
         let jss = document.getElementById("modal-account-about-edit");
-        let requiredExp = json.users.exp >= 12800 ? 99999 : parseInt(required.textContent) !== 0 ? parseInt(required.textContent) : 50;
         jss.innerHTML = `
             <span style="margin: 5px 0;">ID: #${json.users.id}</span>
             <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Họ và tên: </span><input id="edit-fullname" type="text" class="form-control" value="${json.users.fullname}" /></div>
