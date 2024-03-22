@@ -25,7 +25,6 @@ import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
 import com.annp.validator.UserValidator;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -121,27 +120,43 @@ public class UserController {
 
     @GetMapping(path = "/me/notification")
     public String userNotification(Model model, Authentication authentication) {
-        Users user = this.userService.getUserByUsername(authentication.getName());
-        user.setNotification(0);
-        this.userService.updateUser(user);
-        List<Orders> orders = this.ordersService.getOrderByUserId(user.getId());
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        for (Orders od : orders) {
-            orderDetails.addAll(this.ordersService.getOrderDetailByOrderId(od.getId()));
-        }
-        List<Promotion> promotions = this.promotionService.getPromotions(new Status(19));
-        List<Notification> notifications = this.notificationService.getNotificationsByUserId(user);
-        List<Object> combinedList = new ArrayList<>();
-        combinedList.addAll(orderDetails);
-        combinedList.addAll(promotions);
-        combinedList.addAll(notifications);
-        Collections.sort(combinedList, (obj1, obj2) -> {
-            Date date1 = getDateFromObject(obj1);
-            Date date2 = getDateFromObject(obj2);
-            return date2.compareTo(date1);
-        });
+        try {
+            Users user = this.userService.getUserByUsername(authentication.getName());
+            user.setNotification(0);
+            this.userService.updateUser(user);
+            List<Orders> orders = this.ordersService.getOrderByUserId(user.getId());
+            List<OrderDetail> orderDetails = new ArrayList<>();
+            for (Orders od : orders) {
+                orderDetails.addAll(this.ordersService.getOrderDetailByOrderId(od.getId()));
+            }
+            List<Promotion> promotions = this.promotionService.getPromotions(new Status(19));
+            List<Notification> notifications = this.notificationService.getNotificationsByUserId(user);
 
-        model.addAttribute("responseList", combinedList);
+            List<Object> combinedList = new ArrayList<>();
+            combinedList.addAll(orderDetails);
+            combinedList.addAll(promotions);
+            combinedList.addAll(notifications);
+
+            Collections.sort(combinedList, (obj1, obj2) -> {
+                Date date1 = getDateFromObject(obj1);
+                Date date2 = getDateFromObject(obj2);
+                return date2.compareTo(date1);
+            });
+
+            List<String> itemTypes = new ArrayList<>();
+            for (Object item : combinedList) {
+                itemTypes.add(item.getClass().getSimpleName());
+            }
+
+            model.addAttribute("itemTypes", itemTypes);
+            model.addAttribute("responseList", combinedList);
+            for (Object obj : combinedList) {
+                System.out.println(obj.toString());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return "notification";
     }
 
@@ -172,7 +187,12 @@ public class UserController {
             if (!this.googleHandler.isSameDay(u.getUpdatedDate(), currentDate)) {
                 u.setExp(u.getExp() + 5);
                 u.setUpdatedDate(currentDate);
+                u.setNotification(u.getNotification() + 1);
+                u.setWheel(u.getWheel() + 5);
+                Notification n = new Notification();
+                n.setUserId(u);
                 this.userService.updateUser(u);
+                this.notificationService.addNotification(n);
             }
         }
         UserDetails userDetail = googleHandler.buildUser(google);
@@ -210,7 +230,12 @@ public class UserController {
             if (!this.fbHandler.isSameDay(u.getUpdatedDate(), currentDate)) {
                 u.setExp(u.getExp() + 5);
                 u.setUpdatedDate(currentDate);
+                u.setNotification(u.getNotification() + 1);
+                u.setWheel(u.getWheel() + 5);
+                Notification n = new Notification();
+                n.setUserId(u);
                 this.userService.updateUser(u);
+                this.notificationService.addNotification(n);
             }
         }
         UserDetails userDetail = fbHandler.buildUser(user);
@@ -243,6 +268,8 @@ public class UserController {
         user.setUserRole(new Role(3));
         user.setUserstatus(new Status(1));
         user.setExp(5);
+        user.setNotification(1);
+        user.setWheel(5);
 
         if (this.userService.addOrUpdateUser(user)) {
             return "redirect:/login";

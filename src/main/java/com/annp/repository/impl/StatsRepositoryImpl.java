@@ -5,6 +5,7 @@ import com.annp.pojo.CategorySub;
 import com.annp.pojo.Orders;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
+import com.annp.pojo.Status;
 import com.annp.repository.StatsRepository;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,11 @@ public class StatsRepositoryImpl implements StatsRepository {
             predicates.add(b.equal(rootP.get("categorysubId"), rootCS.get("id")));
             predicates.add(b.equal(rootOD.get("productId"), rootP.get("id")));
             predicates.add(b.equal(rootOD.get("orderId"), rootO.get("id")));
+            predicates.add(b.or(
+                    b.equal(rootOD.get("orderstatus"), new Status(9)),
+                    b.equal(rootOD.get("orderstatus"), new Status(10)),
+                    b.equal(rootOD.get("orderstatus"), new Status(11))
+            ));
             predicates.add(b.equal(b.function("YEAR", Integer.class, rootO.get("createdDate")),
                     b.function("YEAR", Integer.class, b.currentDate())));
             predicates.add(b.equal(b.function("MONTH", Integer.class, rootO.get("createdDate")),
@@ -86,6 +92,11 @@ public class StatsRepositoryImpl implements StatsRepository {
             predicates.add(b.equal(rootP.get("categorysubId"), rootCS.get("id")));
             predicates.add(b.equal(rootOD.get("productId"), rootP.get("id")));
             predicates.add(b.equal(rootOD.get("orderId"), rootO.get("id")));
+            predicates.add(b.or(
+                    b.equal(rootOD.get("orderstatus"), new Status(9)),
+                    b.equal(rootOD.get("orderstatus"), new Status(10)),
+                    b.equal(rootOD.get("orderstatus"), new Status(11))
+            ));
             predicates.add(b.equal(b.function("YEAR", Integer.class, rootO.get("createdDate")),
                     b.function("YEAR", Integer.class, b.currentDate())));
             predicates.add(b.equal(b.function("MONTH", Integer.class, rootO.get("createdDate")),
@@ -125,6 +136,11 @@ public class StatsRepositoryImpl implements StatsRepository {
             predicates.add(b.equal(rootP.get("categorysubId"), rootCS.get("id")));
             predicates.add(b.equal(rootOD.get("productId"), rootP.get("id")));
             predicates.add(b.equal(rootOD.get("orderId"), rootO.get("id")));
+            predicates.add(b.or(
+                    b.equal(rootOD.get("orderstatus"), new Status(9)),
+                    b.equal(rootOD.get("orderstatus"), new Status(10)),
+                    b.equal(rootOD.get("orderstatus"), new Status(11))
+            ));
             predicates.add(b.equal(b.function("YEAR", Integer.class, rootO.get("createdDate")),
                     b.function("YEAR", Integer.class, b.currentDate())));
             q.where(predicates.toArray(Predicate[]::new));

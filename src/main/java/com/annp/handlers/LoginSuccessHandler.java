@@ -42,6 +42,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             u.setExp(u.getExp() + 5);
             u.setUpdatedDate(currentDate);
             u.setNotification(u.getNotification() + 1);
+            u.setWheel(u.getWheel() + 5);
             this.userService.updateUser(u);
             this.notificationService.addNotification(n);
         }

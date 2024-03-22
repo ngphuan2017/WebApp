@@ -10,11 +10,12 @@ import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
 import com.annp.pojo.Product;
 import com.annp.pojo.ProductImages;
+import com.annp.pojo.Users;
 import com.annp.service.CategoryService;
 import com.annp.service.CategorySubService;
 import com.annp.service.PaginatesService;
 import com.annp.service.ProductService;
-import com.annp.service.UserLevelsService;
+import com.annp.service.UserService;
 import com.annp.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -44,6 +47,8 @@ public class HomeController {
     private CategoryService categoryService;
     @Autowired
     private CategorySubService categorySubService;
+    @Autowired
+    private UserService userService;
     @Autowired
     private PaginatesService paginatesService;
 
@@ -80,7 +85,11 @@ public class HomeController {
     }
 
     @GetMapping(path = "/wheel-of-forture")
-    public String wheelOfForture() {
+    public String wheelOfForture(Model model, Authentication authentication) {
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            Users user = this.userService.getUserByUsername(authentication.getName());
+            model.addAttribute("currentUser", user);
+        }
         return "wheel";
     }
 

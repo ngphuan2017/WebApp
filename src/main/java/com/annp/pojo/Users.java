@@ -53,6 +53,9 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Users.findByUpdatedDate", query = "SELECT u FROM Users u WHERE u.updatedDate = :updatedDate")})
 public class Users implements Serializable {
 
+    @Column(name = "Wheel")
+    private Integer wheel;
+
     @Column(name = "Notification")
     private Integer notification;
 
@@ -502,6 +505,14 @@ public class Users implements Serializable {
 
     public void setNotification(Integer notification) {
         this.notification = notification;
+    }
+
+    public Integer getWheel() {
+        return wheel;
+    }
+
+    public void setWheel(Integer wheel) {
+        this.wheel = wheel;
     }
     
 }
