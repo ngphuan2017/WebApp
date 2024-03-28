@@ -11,52 +11,58 @@
 <c:url value="/products" var="detail"/>
 <c:url value="/api/products" var="endpointview"/>
 <c:url value="/api/cart" var="endpoint"/>
+<c:url value="/api/users" var="usered"/>
+<c:url value="/api/users/level" var="leveled"/>
 
-<div id="demo" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089462/WebApp/slider1_srjkgr.jpg"
-                 class="d-block" style="width:100%">
-        </div>
-        <div class="carousel-item">
-            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089465/WebApp/slider2_ssinep.jpg"
-                 class="d-block" style="width:100%">
-        </div>
-        <div class="carousel-item">
-            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089467/WebApp/slider3_bd6qzi.jpg"
-                 class="d-block" style="width:100%">
-        </div>
-        <div class="carousel-item">
-            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089469/WebApp/slider4_xjmrb8.jpg"
-                 class="d-block" style="width:100%">
-        </div>
-        <div class="carousel-item">
-            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089474/WebApp/dochoi_i93xog.jpg"
-                 class="d-block" style="width:100%">
-        </div>
-        <div class="carousel-item">
-            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1697729774/WebApp/cac-truong-hop-lam-gia-my-pham_dhpzjo.jpg"
-                 class="d-block" style="width:100%">
-        </div>
-        <div class="banner">
-            <div class="clouds">
-                <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075887/WebApp/cloud1_ortplp.png"
-                     style="--i:1;">
-                <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075891/WebApp/cloud2_ngpdc4.png"
-                     style="--i:2;">
-                <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075895/WebApp/cloud3_szlrii.png"
-                     style="--i:3;">
+<c:choose>
+    <c:when test="${empty param.categorysubId && empty param.kw}">
+        <div id="demo" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089462/WebApp/slider1_srjkgr.jpg"
+                         class="d-block" style="width:100%">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089465/WebApp/slider2_ssinep.jpg"
+                         class="d-block" style="width:100%">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089467/WebApp/slider3_bd6qzi.jpg"
+                         class="d-block" style="width:100%">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089469/WebApp/slider4_xjmrb8.jpg"
+                         class="d-block" style="width:100%">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687089474/WebApp/dochoi_i93xog.jpg"
+                         class="d-block" style="width:100%">
+                </div>
+                <div class="carousel-item">
+                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1697729774/WebApp/cac-truong-hop-lam-gia-my-pham_dhpzjo.jpg"
+                         class="d-block" style="width:100%">
+                </div>
+                <div class="banner">
+                    <div class="clouds">
+                        <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075887/WebApp/cloud1_ortplp.png"
+                             style="--i:1;">
+                        <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075891/WebApp/cloud2_ngpdc4.png"
+                             style="--i:2;">
+                        <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075895/WebApp/cloud3_szlrii.png"
+                             style="--i:3;">
+                    </div>
+                </div>
+                <div class="text-slider">
+                    <img id="logo-banner" data-aos="fade-down" data-aos-delay="300" data-aos-once="true"
+                         src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075874/WebApp/shops_ibolhy.png"
+                         alt="Phú An Shop">
+                    <h5 style="font-weight: bolder;" data-aos="fade-right" data-aos-delay="500" data-aos-once="true">Giá rẻ và
+                        chất lượng</h5>
+                </div>
             </div>
         </div>
-        <div class="text-slider">
-            <img id="logo-banner" data-aos="fade-down" data-aos-delay="300" data-aos-once="true"
-                 src="https://res.cloudinary.com/dkmug1913/image/upload/v1687075874/WebApp/shops_ibolhy.png"
-                 alt="Phú An Shop">
-            <h5 style="font-weight: bolder;" data-aos="fade-right" data-aos-delay="500" data-aos-once="true">Giá rẻ và
-                chất lượng</h5>
-        </div>
-    </div>
-</div>
+    </c:when>
+</c:choose>
 <c:if test="${products == null || empty products}">
     <div class="text-center m-2">
         <img class="rounded"
@@ -67,12 +73,71 @@
 </c:if>
 <c:if test="${products != null && not empty products}">
     <section class="container overflow-hidden">
-        <div class="content-title" data-aos="fade-left">
-            <h2 class="section-heading"><span class="colored-letter">Khuyến mãi hôm nay</span></h2>
-        </div>
-        <div class="row">
-
-        </div>
+        <c:if test="${empty param.categorysubId && empty param.kw}">
+            <div class="content-title" data-aos="fade-left">
+                <h2 class="section-heading"><span class="colored-letter">Top mua hàng</span></h2>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12 d-flex justify-content-center" data-aos="zoom-in">
+                    <div class="top-account">
+                        <c:choose>
+                            <c:when test="${listTopAccount != null}">
+                                <h5 class="text-center text-danger p-2">Top tiêu dùng tháng</h5>
+                                <div class="top10-account">
+                                    <table class="table table-hover table-borderless">
+                                        <c:forEach items="${listTopAccount}" var="u">
+                                            <tr>
+                                                <td class="position-relative">
+                                                    <div class="d-none required-exp-${u[0]}"></div>
+                                                    <a href="javascript:;" onclick="accountView('${usered}/${u[0]}', '${leveled}')" class="js-modal-user">
+                                                        <img width="30px" height="30px" src="${u[2] != null && not empty u[2] ? u[2] : 'https://res.cloudinary.com/dkmug1913/image/upload/v1690819242/WebApp/Avatar/none_ibdmnr.png'}" alt="${u[1]}" />
+                                                        <img class="avatar-frame m-2" width="30px" height="30px" src="${u[4].url}"/>
+                                                    </a>
+                                                </td>
+                                                <td>${u[1]}</td>
+                                                <td class="text-end text-primary currency"><span class="money">${u[3]}</span> VNĐ</td>
+                                            </tr>
+                                        </c:forEach>
+                                    </table>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <span>Danh sách trống</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-12 d-flex justify-content-center" data-aos="zoom-in">
+                    <div class="top-account">
+                        <c:choose>
+                            <c:when test="${listAccountLogin != null}">
+                                <h5 class="text-center text-danger p-2">Hoạt động gần đây</h5>
+                                <div class="top10-account">
+                                    <table class="table table-hover table-borderless">
+                                        <c:forEach items="${listAccountLogin}" var="u">
+                                            <tr>
+                                                <td class="position-relative">
+                                                    <div class="d-none required-exp-${u.id}"></div>
+                                                    <a href="javascript:;" onclick="accountView('${usered}/${u.id}', '${leveled}')" class="js-modal-user">
+                                                        <img width="30px" height="30px" src="${u.avatar != null && not empty u.avatar ? u.avatar : 'https://res.cloudinary.com/dkmug1913/image/upload/v1690819242/WebApp/Avatar/none_ibdmnr.png'}" alt="${u.fullname}" />
+                                                        <img class="avatar-frame m-2" width="30px" height="30px" src="${u.avatarFrame.url}"/>
+                                                    </a>
+                                                </td>
+                                                <td>${u.fullname}</td>
+                                                <td class="text-end text-secondary fst-italic time-ago">${u.updatedDate}</td>
+                                            </tr>
+                                        </c:forEach>
+                                    </table>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <span>Danh sách trống</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </div>
+        </c:if>
         <div class="content-title" data-aos="fade-left">
             <h2 class="section-heading"><span class="colored-letter">Top bán chạy</span></h2>
         </div>
@@ -149,7 +214,7 @@
                 <c:forEach begin="1" end="${page.totalPage}" var="item" varStatus="loop">
                     <c:set var="pageParam" value="page=${loop.index}"/>
                     <c:choose>
-                        <c:when test="${not empty param.categorysubId && param.kw}">
+                        <c:when test="${not empty param.categorysubId && not empty param.kw}">
                             <c:set var="categorysubIdParam" value="categorysubId=${param.categorysubId}"/>
                             <c:set var="kwParam" value="kw=${param.kw}"/>
                             <c:if test="${not empty pageContext.request.queryString}">
@@ -293,6 +358,33 @@
         </div>
         <div class="footer-modal">
             <p class="modal-help">Báo cáo <a href="mailto:phuan2017@gmail.com">sự cố?</a></p>
+        </div>
+    </div>
+</div>
+<div class="js-modal-account">
+    <div class="modal-container-black js-modal-container">
+        <div class="js-modal-close">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        <header class="modal-header-black">
+            <h3><i class="fa-solid fa-address-card"></i> Thông tin</h3>
+        </header>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-12">
+                    <div class="modal-img-black" id="modal-account-img">
+
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-7 col-sm-6 col-12">
+                    <div class="modal-content card-body" id="modal-account-about">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-modal-black" id="modal-account-title">
+
         </div>
     </div>
 </div>

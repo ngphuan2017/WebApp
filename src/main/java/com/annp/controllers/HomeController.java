@@ -64,12 +64,15 @@ public class HomeController {
     @GetMapping(path = "/")
     public String index(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
         int limit = 18; //Số sản phẩm 1 trang
+        int topAccount = 10; //Top 10 người dùng
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
         int totalData = this.productService.getProducts(params, 0, 0).size();
         PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
         model.addAttribute("page", paginates);
         List<Product> products = this.productService.getProducts(params, paginates.getStart(), paginates.getLimit());
         model.addAttribute("products", products);
+        model.addAttribute("listTopAccount", !this.userService.getTopUsers(topAccount).isEmpty() ? this.userService.getTopUsers(topAccount) : null);
+        model.addAttribute("listAccountLogin", !this.userService.getUsersLogin(topAccount).isEmpty() ? this.userService.getUsersLogin(topAccount) : null);
 
         return "index";
     }

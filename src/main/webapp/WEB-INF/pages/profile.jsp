@@ -8,9 +8,10 @@
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:url value="/me/profile" var="changeProfile" />
+<c:url value="/me/orders" var="ordered" />
 <c:url value="/api/users/register/city" var="city"/>
 <c:url value="/api/users/register/district" var="district"/>
-<c:url value="/me/orders" var="ordered" />
+<c:url value="/api/users/avatar/frame" var="framed"/>
 
 <h1 class="text-center text-success mt-4 mb-4" data-aos="flip-down" style="text-transform: uppercase;"><i class="fa-solid fa-user-gear"></i> Thông tin tài khoản</h1>
 <div class="container">
@@ -20,10 +21,14 @@
                 <div class="card-profile">
                     <div class="card-body-profile">
                         <div class="d-flex flex-column align-items-center text-center">
-                            <img id="img-preview" src="${currentUser.avatar}" alt="Avatar" class="rounded-circle"
-                                 width="150" height="150">
-                            <img id="img-oldview" src="${currentUser.avatar}" alt="Avatar" class="rounded-circle d-none"
-                                 width="150" height="150">
+                            <div class="position-relative">
+                                <img id="img-preview" src="${currentUser.avatar}" alt="${currentUser.fullname}"
+                                     width="150" height="150">
+                                <img class="avatar-frame" width="150" height="150"
+                                     src="${currentUser.avatarFrame.url}"/>
+                                <img id="img-oldview" src="${currentUser.avatar}" alt="Avatar" class="d-none"
+                                     width="150" height="150">
+                            </div>
                             <div class="mt-3">
                                 <span id="currentUserId" style="display: none;">${currentUser.id}</span>
                                 <h4>${currentUser.fullname}</h4>
@@ -43,19 +48,22 @@
                                         <c:set var="foundLevel" value="true" />
                                     </c:if>
                                 </c:forEach>
-                                <form:form method="POST" action="${changeProfile}"
-                                           modelAttribute="user" enctype="multipart/form-data">
-                                    <form:hidden path="id" id="avatarUserId"/>
-                                    <form:hidden path="avatar"/>
-                                    <button onclick="AvatarBrowse()" type="button" id="changeAvatar" class="btn btn-outline-primary m-auto">Đổi Avatar</button>
-                                    <div class="m-auto" id="saveAvatar" style="display: none;">
-                                        <button type="submit" class="btn btn-outline-primary">Lưu Thay Đổi</button>
-                                        <a href="javascript:;" onclick="cancelChangeAvatar()"><button type="button" class="btn btn-outline-danger">Trở lại</button></a>
-                                    </div>
-                                    <form:input type="file" id="avatarBrowse" path="file"
-                                                onchange="showPreviewDiv(event);"
-                                                accept="image/*" class="form-input" cssStyle="display: none"/>
-                                </form:form>
+                                <div class="d-flex m-auto">
+                                    <form:form method="POST" action="${changeProfile}"
+                                               modelAttribute="user" enctype="multipart/form-data">
+                                        <form:hidden path="id" id="avatarUserId"/>
+                                        <form:hidden path="avatar"/>
+                                        <button onclick="AvatarBrowse()" type="button" id="changeAvatar" class="btn btn-outline-primary m-1">Đổi Avatar</button>
+                                        <div class="m-1" id="saveAvatar" style="display: none;">
+                                            <button type="submit" class="btn btn-outline-primary">Lưu Thay Đổi</button>
+                                            <button type="button" onclick="cancelChangeAvatar()" class="btn btn-outline-danger">Trở lại</button>
+                                        </div>
+                                        <form:input type="file" id="avatarBrowse" path="file"
+                                                    onchange="showPreviewDiv(event);"
+                                                    accept="image/*" class="form-input" cssStyle="display: none"/>
+                                    </form:form>
+                                    <button type="button" onclick="changeAvatarFrame()" class="btn btn-outline-success m-1 js-modal-frame">Đổi khung viền</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -99,7 +107,7 @@
                                 <a href="javascript:;" id="changeNetwork" class="m-auto" onclick="changeNetwork()"><button type="button" class="btn btn-outline-info">Thay đổi</button></a>
                                 <div id="saveNetwork" class="m-auto" style="display: none;">
                                     <button type="submit" class="btn btn-outline-success m-auto">Lưu</button>
-                                    <a href="javascript:;" class="m-auto" onclick="cancelNetwork()"><button type="button" class="btn btn-outline-danger">Trở lại</button></a>
+                                    <button type="button" onclick="cancelNetwork()" class="btn btn-outline-danger">Trở lại</button>
                                 </div>
                             </li>
                         </ul>
@@ -261,7 +269,7 @@
                                         <a href="javascript:;" id="editProfile" onclick="editProfile()"><button class="btn btn-outline-secondary" type="button"><i class="fa-solid fa-pen"></i> Chỉnh sửa thông tin</button></a>
                                         <div id="saveEditProfile" style="display: none;">
                                             <button type="submit" class="btn btn-outline-success">Lưu</button>
-                                            <a href="javascript:;" onclick="cancelEditProfile()"><button type="button" class="btn btn-outline-danger">Trở lại</button></a>
+                                            <button type="button" onclick="cancelEditProfile()" class="btn btn-outline-danger">Trở lại</button>
                                         </div>
                                     </div>
                                 </div>
@@ -295,6 +303,33 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<div class="js-modal">
+    <div class="modal-container-frame js-modal-container">
+        <div class="js-modal-close">
+            <i class="fa-solid fa-xmark"></i>
+        </div>
+        <header class="modal-header-black">
+            <h3><i class="fa-solid fa-address-card"></i> Khung viền Avatar</h3>
+        </header>
+        <div class="modal-body-frame overflow-auto p-3">
+            <div class="row p-0">
+                <div class="d-none" id="frame-id"></div>
+                <c:forEach items="${frames}" var="f">
+                    <div class="block-frame position-relative col-lg-3 col-md-4 col-sm-6 col-12">
+                        <a href="javascript:;" onclick="focusItem(event, ${f.id})">
+                            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1711524012/WebApp/Khung/avatar_default_gpsilt.jpg" alt="default" width="180" height="180" />
+                            <img class="avatar-frame item-frame" style="left: 2.2rem;" src="${f.url}" alt="${f.id}" width="180" height="180" />
+                        </a>
+                    </div>
+                </c:forEach>
+            </div>
+        </div>
+        <div class="footer-modal-black p-2">
+            <button type="button" onclick="saveAvatarFrame('${framed}/${currentUser.id}')" class="btn btn-outline-light">Lưu Thay Đổi</button>
+            <button type="button" onclick="hideFrame()" class="btn btn-outline-danger">Trở lại</button>
         </div>
     </div>
 </div>

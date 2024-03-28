@@ -5,10 +5,12 @@
 package com.annp.controllers;
 
 import com.annp.pojo.District;
+import com.annp.pojo.Frame;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
 import com.annp.pojo.Ward;
 import com.annp.service.DistrictService;
+import com.annp.service.FrameService;
 import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
 import com.annp.service.WardService;
@@ -21,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +40,8 @@ public class ApiUserController {
     @Autowired
     private UserLevelsService userLevelsService;
     @Autowired
+    private FrameService frameService;
+    @Autowired
     private DistrictService districtService;
     @Autowired
     private WardService wardService;
@@ -47,6 +52,25 @@ public class ApiUserController {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("level", level);
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<Users> aboutAccountView(@PathVariable(value = "userId") int id) {
+        Users user = this.userService.getUserAccountById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/users/avatar/frame/{userId}")
+    public ResponseEntity changeFrameAvatar(@PathVariable(value = "userId") int id, @RequestBody Map<String, Integer> params) {
+        try {
+            Users user = this.userService.getUserById(id);
+            Frame frame = this.frameService.getFrameById(params.get("frameId"));
+            user.setAvatarFrame(frame);
+            this.userService.updateUser(user);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/users/register/city/{cityId}")

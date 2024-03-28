@@ -62,6 +62,12 @@ createDate.forEach((element) => {
     element.textContent = dateValue.format('DD-MM-YYYY');
 });
 
+let timeAgo = document.querySelectorAll(".row .time-ago");
+timeAgo.forEach((element) => {
+    const timeValue = moment(element.textContent);
+    element.textContent = moment(timeValue).locale("vi").fromNow();
+});
+
 var discountElements = document.querySelectorAll(".price-discount");
 var oldPriceElements = document.querySelectorAll(".price-del");
 var newPriceElements = document.querySelectorAll(".price-new");

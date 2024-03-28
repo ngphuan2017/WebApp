@@ -1,5 +1,7 @@
 package com.annp.repository.impl;
 
+import com.annp.pojo.OrderDetail;
+import com.annp.pojo.Orders;
 import com.annp.pojo.Status;
 import com.annp.pojo.Users;
 import com.annp.repository.UserRepository;
@@ -178,7 +180,7 @@ public class UserRepositoryImpl implements UserRepository {
         CriteriaQuery<Users> q = b.createQuery(Users.class);
         Root root = q.from(Users.class);
         q.multiselect(root.get("id"), root.get("fullname"), root.get("avatar"),
-                root.get("gender"), root.get("userstatus"),
+                root.get("gender"), root.get("userstatus"), root.get("avatarFrame"),
                 root.get("createdDate"), root.get("exp"), root.get("userRole"));
         q.where(b.equal(root.get("id"), id));
         Query query = s.createQuery(q);
@@ -233,6 +235,66 @@ public class UserRepositoryImpl implements UserRepository {
             return true;
         } catch (HibernateException ex) {
             return false;
+        }
+    }
+
+    @Override
+    public List<Object[]> getTopUsers(int limit) {
+        try {
+            Session s = factory.getObject().getCurrentSession();
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Object[]> q = b.createQuery(Object[].class);
+            
+            Root rootU = q.from(Users.class);
+            Root rootOD = q.from(OrderDetail.class);
+            Root rootO = q.from(Orders.class);
+            
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(b.equal(rootO.get("userid"), rootU.get("id")));
+            predicates.add(b.equal(rootOD.get("orderId"), rootO.get("id")));
+            predicates.add(b.equal(rootOD.get("orderstatus"), new Status(11)));
+            predicates.add(b.equal(b.function("YEAR", Integer.class, rootO.get("createdDate")),
+                    b.function("YEAR", Integer.class, b.currentDate())));
+            predicates.add(b.equal(b.function("MONTH", Integer.class, rootO.get("createdDate")),
+                    b.function("MONTH", Integer.class, b.currentDate())));
+            q.where(predicates.toArray(Predicate[]::new));
+            
+            q.multiselect(rootU.get("id"), rootU.get("fullname"), rootU.get("avatar"),
+                b.sum(b.prod(rootOD.get("price"), rootOD.get("number"))),
+                rootU.get("avatarFrame"));
+            q.groupBy(rootU.get("id"));
+            q.orderBy(b.desc(b.sum(b.prod(rootOD.get("price"), rootOD.get("number")))));
+            
+            Query query = s.createQuery(q);
+            if (limit > 0) {
+                query.setFirstResult(0); // Vị trí bắt đầu
+                query.setMaxResults(limit); // Số lượng kết quả trả về
+            }
+            return query.getResultList();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Users> getUsersLogin(int limit) {
+        try {
+            Session s = factory.getObject().getCurrentSession();
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Users> q = b.createQuery(Users.class);
+            Root root = q.from(Users.class);
+            q = q.multiselect(root.get("id"), root.get("fullname"), root.get("avatar"),
+                    root.get("avatarFrame"), root.get("updatedDate"));
+
+            q.orderBy(b.desc(root.get("updatedDate")));
+            Query query = s.createQuery(q);
+            if (limit > 0) {
+                query.setFirstResult(0); // Vị trí bắt đầu
+                query.setMaxResults(limit); // Số lượng kết quả trả về
+            }
+            return query.getResultList();
+        } catch (Exception ex) {
+            return null;
         }
     }
 }

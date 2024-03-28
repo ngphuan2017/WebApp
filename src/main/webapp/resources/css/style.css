@@ -298,8 +298,23 @@ body a:hover {
     transform: rotateY(-180deg);
     transition: transform 1s ease-in;
 }
+
+.top-account {
+    width: 90%;
+    color: #bbb;
+    background-color: #dfdfdf;
+    border-radius: 10px;
+    opacity: 0.8;
+    box-shadow: 0 0 27px rgba(255, 255, 255, 0.9);
+}
+
+.top10-account {
+    height: 220px;
+    overflow: auto;
+}
+
 /* modal */
-.js-modal{
+.js-modal, .js-modal-account {
     display: none;
     position: fixed;
     height: 100%;
@@ -316,7 +331,7 @@ body a:hover {
 .js-modal-open {
     display: flex;
 }
-.js-modal .modal-container {
+.modal-container {
     position: fixed;
     top: 10%;
     width: 500px;
@@ -327,7 +342,7 @@ body a:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     animation: modalFadeIn ease 0.5s;
 }
-.js-modal .modal-container-black {
+.modal-container-black {
     position: fixed;
     bottom: 30%;
     width: 600px;
@@ -339,7 +354,19 @@ body a:hover {
     box-shadow: 0 0 27px rgba(255, 255, 255, 0.9);
     animation: modalFadeIn ease 0.5s;
 }
-.js-modal .js-modal-close {
+.modal-container-frame {
+    position: fixed;
+    top: 10%;
+    width: 1000px;
+    max-width: 95%;
+    min-height: 200px;
+    background-color: #212121;
+    color: #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 27px rgba(255, 255, 255, 0.9);
+    animation: modalFadeIn ease 0.5s;
+}
+.js-modal-close {
     position: absolute;
     color: #fff;
     font-size: 25px;
@@ -348,33 +375,31 @@ body a:hover {
     padding: 5px;
     opacity: 0.8;
 }
-.js-modal .js-modal-close:hover {
+.js-modal-close:hover {
     color: red;
     opacity: 1;
 }
-.js-modal .modal-img {
+.modal-img {
     position: relative;
     width: 100%;
     height: 40%;
     padding: 5px;
     text-align: center;
 }
-.js-modal .modal-img-black {
+.modal-img-black {
     width: 100%;
     padding: 5px;
 }
-.js-modal .modal-img img {
+.modal-img img {
     width: 70%;
     height: 90%;
 }
-.js-modal .modal-img-black img {
+.modal-img-black img {
     border-radius: 10px;
-    padding: 2px;
-    border: 1px solid #8d8d8d;
-    width: 160px;
+    width: 170px;
     height: 170px;
 }
-.js-modal .level {
+.level {
     margin: 10px;
     background: #000;
     color: #6ebee5;
@@ -383,7 +408,7 @@ body a:hover {
     font-weight: 700;
     box-shadow: 0 0 5px 3px;
 }
-.js-modal .text-account-title {
+.text-account-title {
     color: #FF2400;
     text-shadow: 1px 0 1px rgba(255, 255, 255, 0.75);
 }
@@ -396,7 +421,7 @@ body a:hover {
     font-size: 20px;
     text-transform: uppercase;
 }
-.js-modal .modal-header-black {
+.modal-header-black {
     color: #f98d8d;
     display: block;
     border-bottom: 1px dashed #f98d8d;
@@ -407,19 +432,25 @@ body a:hover {
     font-size: 16px;
     text-transform: uppercase;
 }
-.js-modal .modal-body {
+.modal-body {
     padding: 1px;
 }
-.js-modal .modal-content {
+.modal-body-frame {
+    height: 35rem;
+}
+.block-frame {
+    margin-bottom: 2rem;
+}
+.modal-content {
     font-family: Roboto, sans-serif;
     font-size: 14px;
     font-weight: 500;
     text-align: left;
 }
-.js-modal .footer-modal {
+.footer-modal {
     margin-bottom: 5%;
 }
-.js-modal .footer-modal-black {
+.footer-modal-black {
     border-top: 1px dashed #f98d8d;
     margin: 0 10px;
     padding: 1px 0;
@@ -427,13 +458,13 @@ body a:hover {
     font-size: 20px;
     font-weight: 700;
 }
-.js-modal .footer-modal a{
+.footer-modal a{
     color: #2196f3;
 }
-.js-modal .btn-buy-product {
+.btn-buy-product {
     margin: 5% 0;
 }
-.js-modal .button-quantity {
+.button-quantity {
     align-items: center; /* Căn giữa dọc */
     justify-content: center;
 }
@@ -1016,4 +1047,16 @@ body{
     margin-top: 15px;
     font-size: 20px;
     font-weight: 500;
+}
+
+/*Khung avatar*/
+
+.avatar-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scale(1.1);
+}
+.item-frame:hover {
+    border: 5px solid red !important;
 }

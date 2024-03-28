@@ -180,7 +180,7 @@
         </section>
     </div>
 
-    <div class="js-modal">
+    <div class="js-modal-account">
         <div class="modal-container-black js-modal-container">
             <div class="js-modal-close">
                 <i class="fa-solid fa-xmark"></i>
@@ -221,7 +221,6 @@
         <strong>Thông Báo!</strong> Báo cáo đã được gửi đến <strong>Quản trị viên</strong>.
     </div>
 
-    <script src="<c:url value="/resources/js/comment.js" />"></script>
     <script src="<c:url value="/resources/js/product-detail.js" />"></script>
     <script>
                             const quantityInput = document.getElementById('quantity');

@@ -23,9 +23,11 @@ function accountView(endpoint, leveled) {
         const json = xmlToJson(xml);
         let js = document.getElementById("modal-account-img");
         js.innerHTML = `
-            <img src="${json.users.avatar}" alt="avatar">
-            <div class="level level-${json.users.id}">
+            <div class="position-relative">
+                <img src="${json.users.avatar}" alt="${json.users.fullname}">
+                <img class="avatar-frame p-0" src="${json.users.avatarFrame.url}"/>
             </div>
+            <div class="level level-${json.users.id}"></div>
         `;
         let required = document.querySelector(`.required-exp-${json.users.id}`);
         let jss = document.getElementById("modal-account-about");
@@ -51,8 +53,8 @@ function accountView(endpoint, leveled) {
             </div>
         `;
         levelCmt(leveled + "/" + json.users.exp, json.users.id);
-        let btns = document.querySelectorAll('.js-add-cart');
-        let cart = document.querySelector('.js-modal');
+        let btns = document.querySelectorAll('.js-modal-user');
+        let modalAccount = document.querySelector('.js-modal-account');
         let modalClose = document.querySelector('.js-modal-close');
         let modalContainer = document.querySelector('.js-modal-container');
         let createDated = document.querySelectorAll(".modal-content .create-date");
@@ -61,10 +63,10 @@ function accountView(endpoint, leveled) {
             element.textContent = dateValue.format('DD-MM-YYYY');
         });
         for (const btn of btns) {
-            btn.addEventListener('click', showCart);
+            btn.addEventListener('click', showAccount);
         }
-        modalClose.addEventListener('click', hideCart);
-        cart.addEventListener('click', hideCart);
+        modalClose.addEventListener('click', hideAccount);
+        modalAccount.addEventListener('click', hideAccount);
         modalContainer.addEventListener('click', function (event) {
             event.stopPropagation();
         });
@@ -87,8 +89,11 @@ function loadComments(endpointed, voted, report, deleted, changed, leveled) {
             msg += `
                 <div class="d-flex flex-start m-2" id="comment${d.id}">
                     <div class="d-none required-exp-${d.userid.id}"></div>
-                    <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}', '${leveled}')" class="js-add-cart">
-                        <img class="rounded-circle shadow-1-strong me-3" src="${d.userid.avatar}" alt="avatar" width="50" height="50" />
+                    <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}', '${leveled}')" class="js-modal-user">
+                        <div class="position-relative float-start">
+                            <img class="shadow-1-strong me-3" src="${d.userid.avatar}" alt="${d.userid.fullname}" width="50" height="50" />
+                            <img class="avatar-frame" width="50" height="50" src="${d.userid.avatarFrame.url}"/>
+                        </div>
                     </a>
                     <div class="card w-100">
                       <div class="card-body p-1">
@@ -165,8 +170,11 @@ function addComment(endpoint, voted, report, deleted, changed, leveled) {
             el.innerHTML = `
                 <div class="d-flex flex-start m-2" id="comment${d.id}">
                     <div class="d-none required-exp-${d.userid.id}"></div>
-                    <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}', '${leveled}')" class="js-add-cart">
-                        <img class="rounded-circle shadow-1-strong me-3" src="${d.userid.avatar}" alt="avatar" width="50" height="50" />
+                    <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}', '${leveled}')" class="js-modal-user">
+                        <div class="position-relative float-start">
+                            <img class="shadow-1-strong me-3" src="${d.userid.avatar}" alt="${d.userid.fullname}" width="50" height="50" />
+                            <img class="avatar-frame" width="50" height="50" src="${d.userid.avatarFrame.url}"/>
+                        </div>
                     </a>
                     <div class="card w-100">
                       <div class="card-body p-1">

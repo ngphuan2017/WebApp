@@ -88,10 +88,14 @@
                         <c:when test="${pageContext.request.userPrincipal.name != null}">
                             <li class="nav-item dropdown" onmouseover="showDropdownMenu(this)"
                                 onmouseout="hideDropdownMenu(this)">
-                                <a class="nav-link text-success position-relative" href="javascript:;" data-bs-toggle="dropdown">
+                                <a class="nav-link text-success" href="javascript:;" data-bs-toggle="dropdown">
                                     <span id="badge-position" class="${sessionScope.currentUser.notification > 0 ? '' : 'd-none'} position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"></span>
-                                    <img class="rounded-circle" width="27px" height="27px"
+                                    <div class="position-relative float-start">
+                                        <img width="30px" height="30px"
                                          src="${sessionScope.currentUser.avatar}"/>
+                                        <img class="avatar-frame" width="30px" height="30px"
+                                         src="${sessionScope.currentUser.avatarFrame.url}"/>
+                                    </div>
                                     <span>&nbsp;${sessionScope.currentUser.fullname}</span>
                                 </a>
                                 <ul class="dropdown-menu">

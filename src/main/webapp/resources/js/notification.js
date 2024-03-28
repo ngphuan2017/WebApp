@@ -1,5 +1,5 @@
-function copyCode(index) {
-    const textToCopy = document.getElementsByClassName('discountCode')[index].innerText;
+function copyCode(id) {
+    const textToCopy = document.getElementById(`discount-code-${id}`);
 
     const clipboard = new ClipboardJS('.copy-button', {
         text: () => textToCopy
