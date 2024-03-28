@@ -1,6 +1,7 @@
 package com.annp.service.impl;
 
 import com.annp.pojo.Facebook;
+import com.annp.pojo.Frame;
 import com.annp.pojo.Google;
 import com.annp.pojo.Notification;
 import com.annp.pojo.Recaptcha;
@@ -72,6 +73,7 @@ public class UserServiceImpl implements UserService {
             String pass = user.getPassword().trim();
             user.setPassword(this.bCryptPasswordEncoder.encode(pass));
             user.setAddress(user.getWard() + " - " + user.getDistrict() + " - " + user.getCity());
+            user.setUserstatus(new Status(1));
             String avatar = user.getAvatar();
 
             if (!user.getFile().isEmpty()) {
@@ -91,9 +93,13 @@ public class UserServiceImpl implements UserService {
             }
 
             if (user.getId() == 0) {
+                user.setExp(5);
+                user.setWheel(5);
+                user.setUserRole(new Role(3));
                 user.setNotification(1);
                 user.setCreatedDate(new Date());
                 user.setUpdatedDate(new Date());
+                user.setAvatarFrame(new Frame(1));
                 Notification n = new Notification();
                 n.setUserId(user);
                 this.notificationService.addNotification(n);
@@ -200,6 +206,8 @@ public class UserServiceImpl implements UserService {
             user.setGoogleID(google.getId());
             user.setTokenGoogle("");
             user.setNotification(1);
+            user.setWheel(5);
+            user.setAvatarFrame(new Frame(1));
 
             Notification n = new Notification();
             n.setUserId(user);
@@ -229,6 +237,8 @@ public class UserServiceImpl implements UserService {
             user.setFacebookID(facebook.getId());
             user.setTokenFacbook("");
             user.setNotification(1);
+            user.setWheel(5);
+            user.setAvatarFrame(new Frame(1));
 
             Notification n = new Notification();
             n.setUserId(user);
@@ -329,6 +339,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean deleteCustomer(int id) {
         return this.userRepository.deleteCustomer(id);
+    }
+
+    @Override
+    public List<Object[]> getTopUsers(int limit) {
+        return this.userRepository.getTopUsers(limit);
+    }
+
+    @Override
+    public List<Users> getUsersLogin(int limit) {
+        return this.userRepository.getUsersLogin(limit);
     }
 
 }

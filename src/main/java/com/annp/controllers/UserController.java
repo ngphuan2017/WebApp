@@ -8,6 +8,7 @@ import com.annp.handlers.FacebookHandler;
 import com.annp.handlers.GoogleHandler;
 import com.annp.pojo.City;
 import com.annp.pojo.Facebook;
+import com.annp.pojo.Frame;
 import com.annp.pojo.Google;
 import com.annp.pojo.Notification;
 import com.annp.pojo.OrderDetail;
@@ -18,6 +19,7 @@ import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
 import com.annp.service.CityService;
+import com.annp.service.FrameService;
 import com.annp.service.NotificationService;
 import com.annp.service.OrdersService;
 import com.annp.service.PromotionService;
@@ -77,6 +79,8 @@ public class UserController {
     @Autowired
     private NotificationService notificationService;
     @Autowired
+    private FrameService frameService;
+    @Autowired
     private UserValidator userValidator;
     @Autowired
     private GoogleHandler googleHandler;
@@ -102,7 +106,9 @@ public class UserController {
         model.addAttribute("user", user);
         Users userid = this.userService.getUserByUsername(authentication.getName());
         List<Orders> orders = this.ordersService.getOrderByUserId(userid.getId());
+        List<Frame> frames = this.frameService.getFrames();
         model.addAttribute("orders", orders);
+        model.addAttribute("frames", frames);
         return "profile";
     }
 
@@ -183,14 +189,14 @@ public class UserController {
             Date currentDate = new Date();
             if (!this.googleHandler.isSameDay(u.getUpdatedDate(), currentDate)) {
                 u.setExp(u.getExp() + 5);
-                u.setUpdatedDate(currentDate);
                 u.setNotification(u.getNotification() + 1);
                 u.setWheel(u.getWheel() + 5);
                 Notification n = new Notification();
                 n.setUserId(u);
-                this.userService.updateUser(u);
                 this.notificationService.addNotification(n);
             }
+            u.setUpdatedDate(currentDate);
+            this.userService.updateUser(u);
         }
         UserDetails userDetail = googleHandler.buildUser(google);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetail, null,
@@ -226,14 +232,14 @@ public class UserController {
             Date currentDate = new Date();
             if (!this.fbHandler.isSameDay(u.getUpdatedDate(), currentDate)) {
                 u.setExp(u.getExp() + 5);
-                u.setUpdatedDate(currentDate);
                 u.setNotification(u.getNotification() + 1);
                 u.setWheel(u.getWheel() + 5);
                 Notification n = new Notification();
                 n.setUserId(u);
-                this.userService.updateUser(u);
                 this.notificationService.addNotification(n);
             }
+            u.setUpdatedDate(currentDate);
+            this.userService.updateUser(u);
         }
         UserDetails userDetail = fbHandler.buildUser(user);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetail, null,
@@ -261,12 +267,6 @@ public class UserController {
         if (result.hasErrors()) {
             return "register";
         }
-
-        user.setUserRole(new Role(3));
-        user.setUserstatus(new Status(1));
-        user.setExp(5);
-        user.setNotification(1);
-        user.setWheel(5);
 
         if (this.userService.addOrUpdateUser(user)) {
             return "redirect:/login";

@@ -118,9 +118,9 @@
                         <div>
                             <div style="background-image: url('${index.img}'); background-size: contain; background-repeat: no-repeat; width: 400px; height: 200px;">
                             </div>
-                            <p style="margin: 14px 0;"><span class="discountCode"
+                            <p style="margin: 14px 0;"><span id="discount-code-${index.id}"
                                                              style="background-color: yellow; color: red; font-weight: bolder; text-transform: uppercase;">${index.code}</span>
-                                <a class="copy-button m-2" onclick="copyCode(${loop.index})"><i
+                                <a class="copy-button m-2" onclick="copyCode(${index.id})"><i
                                         class="fa-regular fa-copy"></i></a>
                             </p>
                             <p>Mã hết hạn vào <span class="create-date">${index.endDate}</span>! Mã đã có sẵn trong ví! Hàng

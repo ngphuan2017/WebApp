@@ -19,6 +19,7 @@
     <class>com.annp.pojo.Promotion</class>
     <class>com.annp.pojo.ProductImages</class>
     <class>com.annp.pojo.Notification</class>
+    <class>com.annp.pojo.Frame</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value=""/>

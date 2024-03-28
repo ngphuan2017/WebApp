@@ -43,6 +43,14 @@ function hideCart() {
     cart.classList.remove('js-modal-open');
 }
 
+let modalAccount = document.querySelector('.js-modal-account');
+function showAccount() {
+    modalAccount.classList.add('js-modal-open');
+}
+function hideAccount() {
+    modalAccount.classList.remove('js-modal-open');
+}
+
 function productView(endpointview, endpoint) {
     fetch(endpointview, {
         method: 'GET',

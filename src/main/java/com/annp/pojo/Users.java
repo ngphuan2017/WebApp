@@ -53,6 +53,10 @@ import org.springframework.web.multipart.MultipartFile;
     @NamedQuery(name = "Users.findByUpdatedDate", query = "SELECT u FROM Users u WHERE u.updatedDate = :updatedDate")})
 public class Users implements Serializable {
 
+    @JoinColumn(name = "avatar_frame", referencedColumnName = "ID")
+    @ManyToOne
+    private Frame avatarFrame;
+
     @Column(name = "Wheel")
     private Integer wheel;
 
@@ -174,18 +178,29 @@ public class Users implements Serializable {
         this.avatar = avatar;
     }
     
-    public Users(Integer id, String fullname, String avatar, Integer gender, Status userstatus, Date createdDate, Integer exp, Role userRole){
+    public Users(Integer id, String fullname, String avatar, Frame avatarFrame, Date updatedDate){
+        this.id = id;
+        this.fullname = fullname;
+        this.avatar = avatar;
+        this.avatarFrame = avatarFrame;
+        this.updatedDate = updatedDate;
+    }
+    
+    public Users(Integer id, String fullname, String avatar, Integer gender, Status userstatus,
+            Frame avatarFrame, Date createdDate, Integer exp, Role userRole){
         this.id = id;
         this.fullname = fullname;
         this.avatar = avatar;
         this.gender = gender;
         this.userstatus = userstatus;
+        this.avatarFrame = avatarFrame;
         this.createdDate = createdDate;
         this.exp = exp;
         this.userRole = userRole;
     }
 
-    public Users(Integer id, String fullname, String email, String phone, String username, String password, String address, Integer gender) {
+    public Users(Integer id, String fullname, String email, String phone, String username,
+            String password, String address, Integer gender) {
         this.id = id;
         this.fullname = fullname;
         this.email = email;
@@ -513,6 +528,14 @@ public class Users implements Serializable {
 
     public void setWheel(Integer wheel) {
         this.wheel = wheel;
+    }
+
+    public Frame getAvatarFrame() {
+        return avatarFrame;
+    }
+
+    public void setAvatarFrame(Frame avatarFrame) {
+        this.avatarFrame = avatarFrame;
     }
     
 }

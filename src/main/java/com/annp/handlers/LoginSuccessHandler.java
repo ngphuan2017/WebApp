@@ -40,13 +40,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             Notification n = new Notification();
             n.setUserId(u);
             u.setExp(u.getExp() + 5);
-            u.setUpdatedDate(currentDate);
             u.setNotification(u.getNotification() + 1);
             u.setWheel(u.getWheel() + 5);
-            this.userService.updateUser(u);
             this.notificationService.addNotification(n);
         }
-
+        u.setUpdatedDate(currentDate);
+        this.userService.updateUser(u);
         request.getSession().setAttribute("currentUser", u);
         if (u.getUserRole().getId() == 1 || u.getUserRole().getId() == 2) {
             response.sendRedirect("admin");
