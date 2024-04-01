@@ -302,7 +302,7 @@ body a:hover {
 .top-account {
     width: 90%;
     color: #bbb;
-    background-color: #dfdfdf;
+    background-color: #f0f8ff;
     border-radius: 10px;
     opacity: 0.8;
     box-shadow: 0 0 27px rgba(255, 255, 255, 0.9);
@@ -376,6 +376,7 @@ body a:hover {
     opacity: 0.8;
 }
 .js-modal-close:hover {
+    cursor: default;
     color: red;
     opacity: 1;
 }
@@ -1059,4 +1060,5 @@ body{
 }
 .item-frame:hover {
     border: 5px solid red !important;
+    cursor: pointer;
 }

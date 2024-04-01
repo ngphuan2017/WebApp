@@ -3,6 +3,7 @@ package com.annp.service;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
 import com.annp.pojo.Users;
+import com.annp.pojo.Verification;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public interface UserService extends UserDetailsService {
     public boolean verifyRecaptcha(String captchaResponse);
     public List<Users> getUserByEmail(String email);
     public boolean sendCodeToEmail(int userId, String email, String baseUrl);
+    public boolean sendOtpCodeToEmail(Verification verification);
     public boolean changePassword(String password, Users user);
     public Users getUserByTicket(String ticket);
     public Users getUserAccountById(int id);

@@ -3,11 +3,11 @@ package com.annp.service.impl;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Frame;
 import com.annp.pojo.Google;
-import com.annp.pojo.Notification;
 import com.annp.pojo.Recaptcha;
 import com.annp.pojo.Role;
 import com.annp.pojo.Status;
 import com.annp.pojo.Users;
+import com.annp.pojo.Verification;
 import com.annp.repository.UserRepository;
 import com.annp.service.NotificationService;
 import com.annp.service.UserService;
@@ -39,8 +39,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private NotificationService notificationService;
     @Autowired
     private Cloudinary cloudinary;
     @Autowired
@@ -100,9 +98,6 @@ public class UserServiceImpl implements UserService {
                 user.setCreatedDate(new Date());
                 user.setUpdatedDate(new Date());
                 user.setAvatarFrame(new Frame(1));
-                Notification n = new Notification();
-                n.setUserId(user);
-                this.notificationService.addNotification(n);
             }
 
             return this.userRepository.addOrUpdateUser(user);
@@ -209,10 +204,6 @@ public class UserServiceImpl implements UserService {
             user.setWheel(5);
             user.setAvatarFrame(new Frame(1));
 
-            Notification n = new Notification();
-            n.setUserId(user);
-            this.notificationService.addNotification(n);
-
             return this.userRepository.addOrUpdateUser(user);
         } catch (Exception ex) {
             return false;
@@ -239,10 +230,6 @@ public class UserServiceImpl implements UserService {
             user.setNotification(1);
             user.setWheel(5);
             user.setAvatarFrame(new Frame(1));
-
-            Notification n = new Notification();
-            n.setUserId(user);
-            this.notificationService.addNotification(n);
 
             return this.userRepository.addOrUpdateUser(user);
         } catch (Exception ex) {
@@ -299,12 +286,44 @@ public class UserServiceImpl implements UserService {
             htmlMessage += "<p>Bạn vừa thực hiện yêu cầu phục hồi mật khẩu, để thay đổi mật khẩu, bạn vui lòng click vào đường link bên dưới:</p>";
             htmlMessage += "<p><a href=\"" + baseUrl + "?ticket=" + ticket + "\">Đường dẫn đến trang đổi mật khẩu</a></p>";
             htmlMessage += "<p>Lưu ý: Đường dẫn trên chỉ tồn tại trong vòng 1 giờ.</p>";
-            htmlMessage += "<p>Đây là email tự động, vui lòng không phản hồi lại trên email này.</p>";
             htmlMessage += "<p>Trân trọng,</p>";
             htmlMessage += "<p>PhuAnShop</p>";
+            htmlMessage += "<h5><span style='font-size: 13px;'>Đây là email tự động, vui lòng không phản hồi lại trên email này.</span></h5>";
             htmlMessage += "</body></html>";
             htmlEmail.setHtmlMsg(htmlMessage);
             htmlEmail.addTo(email);
+
+            htmlEmail.send();
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean sendOtpCodeToEmail(Verification verification) {
+        try {
+            HtmlEmail htmlEmail = new HtmlEmail();
+            htmlEmail.setHostName(env.getProperty("spring.mail.host")); // SMTP server
+            htmlEmail.setSmtpPort(Integer.parseInt(env.getProperty("spring.mail.port"))); // Port
+            htmlEmail.setAuthenticator(new DefaultAuthenticator(env.getProperty("spring.mail.username"), env.getProperty("spring.mail.password"))); // Email và mật khẩu
+            htmlEmail.setStartTLSEnabled(true); // Bật TLS
+
+            htmlEmail.setFrom(env.getProperty("spring.mail.username"), "PhuAnShop");
+            htmlEmail.setCharset("UTF-8");
+            htmlEmail.setSubject(verification.getOtpCode() + " là mã xác nhận tài khoản của bạn trên PhuAnShop");
+            String htmlMessage = "<html><body style='margin-right: auto; margin-left: auto; padding-left: 5px; padding-right: 5px; width: 90%; font-size:16px;'>";
+            htmlMessage += "<p align='center'><img src='https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png' alt='Phú An Shop' /></p>";
+            htmlMessage += "<h1 style='text-align: center;'>Xác minh qua Email</h1>";
+            htmlMessage += "<p>Chào bạn,</p>";
+            htmlMessage += "<p>Mã xác minh của bạn là: <strong><span style='color: #4ea4dc'>" + verification.getOtpCode() + "</span></strong></p>";
+            htmlMessage += "<p>Lưu ý: Vui lòng hoàn thành xác nhận trong vòng 30 phút.</p>";
+            htmlMessage += "<p>PhuAnShop</p>";
+            htmlMessage += "<h5><span style='font-size: 13px; color: #777'>Đây là email tự động, vui lòng không phản hồi lại trên email này.</span></h5>";
+            htmlMessage += "</body></html>";
+            htmlEmail.setHtmlMsg(htmlMessage);
+            htmlEmail.addTo(verification.getPropersion());
 
             htmlEmail.send();
             return true;

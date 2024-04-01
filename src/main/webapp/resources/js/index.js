@@ -65,7 +65,7 @@ createDate.forEach((element) => {
 let timeAgo = document.querySelectorAll(".row .time-ago");
 timeAgo.forEach((element) => {
     const timeValue = moment(element.textContent);
-    element.textContent = moment(timeValue).locale("vi").fromNow();
+    element.textContent = moment(timeValue).locale("vi").utcOffset(0).fromNow();
 });
 
 var discountElements = document.querySelectorAll(".price-discount");

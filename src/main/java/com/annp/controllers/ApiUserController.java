@@ -8,20 +8,26 @@ import com.annp.pojo.District;
 import com.annp.pojo.Frame;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
+import com.annp.pojo.Verification;
 import com.annp.pojo.Ward;
 import com.annp.service.DistrictService;
 import com.annp.service.FrameService;
 import com.annp.service.UserLevelsService;
 import com.annp.service.UserService;
+import com.annp.service.VerificationService;
 import com.annp.service.WardService;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +47,8 @@ public class ApiUserController {
     private UserLevelsService userLevelsService;
     @Autowired
     private FrameService frameService;
+    @Autowired
+    private VerificationService verificationService;
     @Autowired
     private DistrictService districtService;
     @Autowired
@@ -94,6 +102,52 @@ public class ApiUserController {
             }
             this.userService.updateUser(user);
             return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/users/verification")
+    public ResponseEntity checkVerification(@RequestBody Map<String, String> params) {
+        try {
+            String email = params.get("propersion");
+            Verification v = this.verificationService.getVerificationByEmail(email);
+            if (v == null) {
+                v = new Verification();
+                v.setId(0);
+                v.setOtpCode(this.verificationService.randomOtp()); // 6 số ngẫu nhiên
+                v.setPropersion(email);
+                v.setGeneratedTime(new Date());
+            } else {
+                v.setOtpCode(this.verificationService.randomOtp());
+                v.setGeneratedTime(new Date());
+            }
+            if (this.userService.sendOtpCodeToEmail(v)) {
+                this.verificationService.addOrUpdateOtpCode(v);
+            }
+            return new ResponseEntity(HttpStatus.CREATED);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("/users/verification/checked")
+    public ResponseEntity checkedVerification(@RequestBody Map<String, String> params) {
+        try {
+            String email = params.get("propersion");
+            String otpCode = params.get("otpCode");
+            Date generatedTime = new Date();
+
+            Verification v = this.verificationService.getVerificationByEmail(email);
+            if (v == null) {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            } else {
+                if (otpCode.equals(v.getOtpCode()) && generatedTime.getTime() - v.getGeneratedTime().getTime() <= 30 * 60 * 1000) {
+                    return new ResponseEntity(HttpStatus.OK);
+                } else {
+                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                }
+            }
         } catch (Exception ex) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }

@@ -92,7 +92,7 @@ function loadComments(endpointed, voted, report, deleted, changed, leveled) {
                     <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}', '${leveled}')" class="js-modal-user">
                         <div class="position-relative float-start">
                             <img class="shadow-1-strong me-3" src="${d.userid.avatar}" alt="${d.userid.fullname}" width="50" height="50" />
-                            <img class="avatar-frame" width="50" height="50" src="${d.userid.avatarFrame.url}"/>
+                            <img class="avatar-frame item-frame" width="50" height="50" src="${d.userid.avatarFrame.url}"/>
                         </div>
                     </a>
                     <div class="card w-100">
@@ -173,7 +173,7 @@ function addComment(endpoint, voted, report, deleted, changed, leveled) {
                     <a href="javascript:;" onclick="accountView('${endpoint}/${d.userid.id}', '${leveled}')" class="js-modal-user">
                         <div class="position-relative float-start">
                             <img class="shadow-1-strong me-3" src="${d.userid.avatar}" alt="${d.userid.fullname}" width="50" height="50" />
-                            <img class="avatar-frame" width="50" height="50" src="${d.userid.avatarFrame.url}"/>
+                            <img class="avatar-frame item-frame" width="50" height="50" src="${d.userid.avatarFrame.url}"/>
                         </div>
                     </a>
                     <div class="card w-100">

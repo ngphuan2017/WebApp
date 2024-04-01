@@ -102,7 +102,8 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <span>Danh sách trống</span>
+                                <h5 class="text-center text-danger p-2">Top tiêu dùng tháng</h5>
+                                <p class="text-center text-primary">Danh sách trống</p>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -131,7 +132,8 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <span>Danh sách trống</span>
+                                <h5 class="text-center text-danger p-2">Hoạt động gần đây</h5>
+                                <p class="text-center text-primary">Danh sách trống</p>
                             </c:otherwise>
                         </c:choose>
                     </div>

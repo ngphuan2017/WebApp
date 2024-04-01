@@ -20,6 +20,7 @@
     <class>com.annp.pojo.ProductImages</class>
     <class>com.annp.pojo.Notification</class>
     <class>com.annp.pojo.Frame</class>
+    <class>com.annp.pojo.Verification</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value=""/>

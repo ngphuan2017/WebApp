@@ -189,6 +189,7 @@ public class ApiAdminController {
                     break;
                 case 11:
                     u.setExp(u.getExp() + 30);
+                    u.setWheel(u.getWheel() + 1);
                     break;
                 case 13:
                     p.setQuantity(p.getQuantity() + od.getNumber());

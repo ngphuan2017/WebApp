@@ -9,9 +9,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <script src="<c:url value="/resources/js/register.js" />"></script>
+
 <c:url value="/" var="action" />
 <c:url value="/login" var="login" />
 <c:url value="/register" var="register"/>
+<c:url value="/api/users/verification" var="verification"/>
+<c:url value="/api/users/verification/checked" var="checkedverify"/>
 <c:url value="/api/users/register/city" var="city"/>
 <c:url value="/api/users/register/district" var="district"/>
 <c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png" var="logoBackground" />
@@ -168,13 +171,67 @@
                     </div>
                 </div>
                 <div class="d-flex-center">
-                    <a href="javascript:;" class="form-submit" id="submitButton"><span><input type="submit" style="display: none;" value=""/>Đăng Ký</span></a>
+                    <input type="submit" id="submit-button" style="display: none;" value=""/>
+                    <a href="javascript:;" class="form-submit" id="form-submit" onclick="checkVerification('${verification}')"><span>Đăng Ký</span></a>
+                    <div class="spinner-loading" id="spinner-loading"></div>
                 </div>
                 <div style="width: 100%; text-align: center; padding: 10px;">
                     <span style="color: #fff; font-size: 13px;">Đã có tài khoản</span>
                     <a href="${login}" style="color: #09f; font-size: 13px;">Đăng nhập ngay</a>
                 </div>
             </form:form>
+            <div id="verification-email" style="display: none;">
+                <div style="display: flex; width: 100%; justify-content: center; margin-bottom: 20px;">
+                    <a href="${action}">
+                        <img style="width: 90px; border-radius: 50%;"
+                             src="<c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png" />"
+                             alt="logo">
+                    </a>
+                    <div>
+                        <span class="form-heading" style="font-size: 25px;">&nbsp;&nbsp;&nbsp;
+                            <i class="fa-solid fa-user-check"></i> MÃ XÁC MINH
+                        </span>
+                    </div>
+                </div>
+                <div style="color: #fff; text-align: center; font-size: 14px;">
+                    <p>Đã gửi email với mã xác minh đến "<span id="send-email"></span>. Nhập mã ở đây:</p>
+                </div>
+                <div class="v-form-group">
+                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                </div>
+                <div class="resend-email">
+                    <a class="disabled-link" href="javascript:;" style="color: #09f;">Gửi lại mã</a>
+                </div>
+                <div style="display: flex; justify-content: center;">
+                    <div class="g-recaptcha" data-sitekey="6LfuJ-UnAAAAAJ5PRW85U1UQy4JS8lqUe7vfrcxs"
+                         data-callback="enableSubmitButton"></div>
+                </div>
+                <p id="recaptcha-error" style="display: none; font-size: 14px; color: red; text-align: center;">Bạn là
+                    Robot?!</p>
+                <p class="inner">
+                    <a href="javascript:;" class="button disabled-link" id="submit-send" onclick="checkedVerify('${checkedverify}')">
+                        <span class="border"></span>
+                        <span class="top"></span>
+                        <span class="right"></span>
+                        <span class="bottom"></span>
+                        <span class="left"></span>
+                        <span class="text"><input type="button" style="display: none;" value=""/>Xác nhận</span>
+                    </a>
+                </p>
+                <div class="d-flex-center">
+                    <div class="spinner-loading" id="spinner-verify"></div>
+                </div>
+                <div class="facebook-btn">
+                    <a href="javascript:;" onclick="cancelCheckVerification()">
+                        <p class="btn-text"><b>Quay lại chỉnh sửa</b></p>
+                    </a>
+                </div>
+            </div>
         </div>
         <div class="banner">
             <div class="clouds">
@@ -186,15 +243,8 @@
     </div>
 </div>
 <script>
-    // Tham chiếu đến thẻ form và nút <a>
-    const myForm = document.getElementById('form-register');
-    const submitButton = document.getElementById('submitButton');
-// Hàm xử lý sự kiện khi ấn vào nút <a>
-    function handleSubmit(event) {
-        event.preventDefault(); // Ngăn chặn hành vi mặc định của liên kết
-        // Gửi form bằng cách sử dụng phương thức submit() của form
+    function handleSubmit() {
+        const myForm = document.getElementById('form-register');
         myForm.submit();
     }
-// Gán hàm xử lý cho sự kiện click trên nút <a>
-    submitButton.addEventListener('click', handleSubmit);
 </script>

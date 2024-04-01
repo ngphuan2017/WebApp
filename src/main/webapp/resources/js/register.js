@@ -33,9 +33,10 @@ function validateUsername() {
     var fusernameError = document.getElementById('form-username-error');
     const usernameMinLength = 6;
 
-    fusernameError.textContent = '';
-    fusernameError.style.display = 'none';
-
+    if (fusernameError !== null) {
+        fusernameError.textContent = '';
+        fusernameError.style.display = 'none';
+    }
     if (username.includes(" ")) {
         usernameError.textContent = 'Tên đăng nhập không chứa khoảng trắng';
         usernameError.style.display = 'block';
@@ -45,7 +46,9 @@ function validateUsername() {
     } else {
         usernameError.textContent = '';
         usernameError.style.display = 'none';
+        return true;
     }
+    return false;
 }
 
 function validateFullname() {
@@ -54,9 +57,10 @@ function validateFullname() {
     var ffullnameError = document.getElementById('form-fullname-error');
     const fullnameMaxLength = 100;
 
-    ffullnameError.textContent = '';
-    ffullnameError.style.display = 'none';
-
+    if (ffullnameError !== null) {
+        ffullnameError.textContent = '';
+        ffullnameError.style.display = 'none';
+    }
     if (fullname.length > fullnameMaxLength) {
         fullnameError.textContent = 'Họ và tên tối đa ' + fullnameMaxLength + ' ký tự';
         fullnameError.style.display = 'block';
@@ -66,7 +70,9 @@ function validateFullname() {
     } else {
         fullnameError.textContent = '';
         fullnameError.style.display = 'none';
+        return true;
     }
+    return false;
 }
 
 function validateEmail() {
@@ -75,9 +81,10 @@ function validateEmail() {
     var femailError = document.getElementById('form-email-error');
     var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
-    femailError.textContent = '';
-    femailError.style.display = 'none';
-
+    if (femailError !== null) {
+        femailError.textContent = '';
+        femailError.style.display = 'none';
+    }
     if (email.includes(" ")) {
         emailError.textContent = 'Email không chứa khoảng trắng';
         emailError.style.display = 'block';
@@ -87,7 +94,9 @@ function validateEmail() {
     } else {
         emailError.textContent = '';
         emailError.style.display = 'none';
+        return true;
     }
+    return false;
 }
 
 function validatePassword() {
@@ -96,9 +105,10 @@ function validatePassword() {
     var fpasswordError = document.getElementById('form-password-error');
     const passwordMinLength = 6;
 
-    fpasswordError.textContent = '';
-    fpasswordError.style.display = 'none';
-
+    if (fpasswordError !== null) {
+        fpasswordError.textContent = '';
+        fpasswordError.style.display = 'none';
+    }
     if (password.includes(" ")) {
         passwordError.textContent = 'Mật khẩu không chứa khoảng trắng';
         passwordError.style.display = 'block';
@@ -108,7 +118,9 @@ function validatePassword() {
     } else {
         passwordError.textContent = '';
         passwordError.style.display = 'none';
+        return true;
     }
+    return false;
 }
 
 function validatePhone() {
@@ -117,16 +129,19 @@ function validatePhone() {
     var fphoneError = document.getElementById('form-phone-error');
     var phonePattern = /^[0-9]{10}$/;
 
-    fphoneError.textContent = '';
-    fphoneError.style.display = 'none';
-
+    if (fphoneError !== null) {
+        fphoneError.textContent = '';
+        fphoneError.style.display = 'none';
+    }
     if (!phonePattern.test(phone)) {
         phoneError.textContent = 'Số điện thoại chưa đúng';
         phoneError.style.display = 'block';
     } else {
         phoneError.textContent = '';
         phoneError.style.display = 'none';
+        return true;
     }
+    return false;
 }
 
 function validateConfirmPassword() {
@@ -135,16 +150,19 @@ function validateConfirmPassword() {
     var confirmPasswordError = document.getElementById('confirmPassword-error');
     var fconfirmPasswordError = document.getElementById('form-confirmPassword-error');
 
-    fconfirmPasswordError.textContent = '';
-    fconfirmPasswordError.style.display = 'none';
-
+    if (fconfirmPasswordError !== null) {
+        fconfirmPasswordError.textContent = '';
+        fconfirmPasswordError.style.display = 'none';
+    }
     if (password !== confirmPassword) {
         confirmPasswordError.textContent = 'Mật khẩu không trùng khớp';
         confirmPasswordError.style.display = 'block';
     } else {
         confirmPasswordError.textContent = '';
         confirmPasswordError.style.display = 'none';
+        return true;
     }
+    return false;
 }
 
 function changeCity(city) {
@@ -222,4 +240,104 @@ function changeWard() {
     var selectedWardLabel = wardSelect.options[wardSelect.selectedIndex].label;
     var pathWard = document.getElementById("pathWard");
     pathWard.value = selectedWardLabel;
+}
+
+function checkVerification(endpoint) {
+    let email = document.getElementById("email");
+    let sendEmail = document.getElementById("send-email");
+    document.getElementById("form-submit").style.display = 'none';
+    document.getElementById("spinner-loading").style.display = 'block';
+    if (validateFullname() && validatePhone() && validateEmail() && validateUsername() && validatePassword() && validateConfirmPassword()) {
+        fetch(endpoint, {
+            method: "POST",
+            body: JSON.stringify({
+                "propersion": email.value
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(res => {
+            if (res.status === 201) {
+                document.getElementById("form-register").style.display = 'none';
+                document.getElementById("verification-email").style.display = 'block';
+                sendEmail.textContent = email.value;
+                document.getElementById("form-submit").style.display = 'block';
+                document.getElementById("spinner-loading").style.display = 'none';
+            }
+        });
+    } else {
+        Swal.fire('Cảnh báo!', 'Vui lòng điền đầy đủ thông tin!', 'warning');
+        document.getElementById("form-submit").style.display = 'block';
+        document.getElementById("spinner-loading").style.display = 'none';
+    }
+}
+
+function cancelCheckVerification() {
+    document.getElementById("form-register").style.display = 'block';
+    document.getElementById("verification-email").style.display = 'none';
+}
+
+var flagCaptcha = 0;
+
+function enableSubmitButton() {
+    flagCaptcha = 1;
+    if (flagCaptcha === 1 && flagOtpInput === 1) {
+        var submitButton = document.getElementById("submit-send");
+        submitButton.classList.remove("disabled-link");
+    }
+}
+
+var flagOtpInput = 0;
+
+function checkAllInputsFilled() {
+    let otpInputs = document.querySelectorAll('.v-form-group .otp-email');
+    for (var i = 0; i < otpInputs.length; i++) {
+        if (otpInputs[i].value === "") {
+            var submitButton = document.getElementById("submit-send");
+            submitButton.classList.add("disabled-link");
+            return false;
+        }
+    }
+    return true;
+}
+function handleAllInputsFilled() {
+    if (checkAllInputsFilled()) {
+        flagOtpInput = 1;
+        if (flagCaptcha === 1 && flagOtpInput === 1) {
+            var submitButton = document.getElementById("submit-send");
+            submitButton.classList.remove("disabled-link");
+        }
+    }
+}
+
+function checkedVerify(endpoint) {
+    document.getElementById("submit-send").style.display = 'none';
+    document.getElementById("spinner-verify").style.display = 'block';
+    let email = document.getElementById("email");
+    let otpInputs = document.getElementsByClassName('otp-email');
+    let otpCode = "";
+    for (let i = 0; i < otpInputs.length; i++) {
+        otpCode += otpInputs[i].value.trim();
+    }
+    fetch(endpoint, {
+        method: "PUT",
+        body: JSON.stringify({
+            "propersion": email.value,
+            "otpCode": otpCode
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(res => {
+        if (res.status === 200) {
+            document.getElementById("spinner-verify").style.display = 'none';
+            document.getElementById("submit-send").style.display = 'block';
+            Swal.fire('Xác thực thành công!', 'Xin vui lòng đợi trong giây lát!', 'success');
+            handleSubmit();
+        } else {
+            document.getElementById("spinner-verify").style.display = 'none';
+            document.getElementById("submit-send").style.display = 'block';
+            Swal.fire('Lỗi!', 'Mã xác thực của bạn không đúng!', 'error');
+        }
+    });
 }
