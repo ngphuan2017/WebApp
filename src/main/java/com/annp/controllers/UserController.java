@@ -14,7 +14,6 @@ import com.annp.pojo.Notification;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Orders;
 import com.annp.pojo.Promotion;
-import com.annp.pojo.Role;
 import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;

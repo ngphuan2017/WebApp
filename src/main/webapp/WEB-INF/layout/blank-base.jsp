@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="<c:url value="/resources/css/login.css"/> ">
     <link rel="stylesheet" href="<c:url value="/resources/css/register.css"/> ">
     <script src="<c:url value="/resources/jquery-3.6.1/jquery-3.6.1.min.js" />"></script>
+    <script src="<c:url value="/resources/sweetalert2-10/sweetalert2-10.js" />"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>

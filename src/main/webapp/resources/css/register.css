@@ -6,6 +6,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Created on : Jul 31, 2023, 1:18:52 PM
     Author     : phuan
 */
+.d-none {
+    display: none;
+}
 .row {
     display: flex;
     flex-wrap: wrap;
@@ -28,6 +31,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     box-shadow: 0px 0px 17px 2px rgba(255, 255, 255, 0.8);
     z-index: 10;
 }
+#verification-email{
+    max-width: 400px;
+    background: rgba(0, 0, 0 , 0.8);
+    flex-grow: 1;
+    padding: 30px 30px 40px;
+    box-shadow: 0px 0px 17px 2px rgba(255, 255, 255, 0.8);
+    z-index: 10;
+}
+.resend-email {
+    margin: 0.5rem;
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+}
 .r-form-group{
     margin: 0 10px;
     padding: 20px 0;
@@ -38,6 +55,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     font-size: 16px;
     padding-top: 5px;
     padding-right: 10px;
+}
+.v-form-group{
+    margin-top: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    line-height: 50px;
+}
+.v-form-input{
+    text-align: center;
+    font-size: 30px;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: 1px solid #fff;
+    margin: 1rem;
+    outline: none;
+    color: #f5f5f5;
+    width: 1rem;
+    height: 50px;
+    flex-grow: 1;
 }
 .r-form-input {
     display: flex;
@@ -132,4 +168,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 .btn-button:active{
     box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
     transition: .05s
+}
+
+.spinner-loading {
+  display: none;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #ff003b;
+  animation: spin 1s ease-in-out infinite;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
 }
