@@ -100,13 +100,13 @@ function pay(endpoint) {
         cancelButtonText: 'Hủy'
     }).then((result) => {
         if (result.isConfirmed) {
-            var totalQuantity = document.getElementById("total-quantity").textContent;
+            let totalQuantity = document.getElementById("total-quantity").textContent;
             if (totalQuantity !== "0") {
-// Hành động khi người dùng xác nhận
                 fetch(endpoint, {
                     method: "POST",
                     body: JSON.stringify({
-                        "optionPay": document.getElementById("option-pay").value
+                        "optionPay": document.getElementById("option-pay").value,
+                        "discount": document.getElementById("d-voucher-discount").textContent
                     }),
                     headers: {
                         "Content-Type": "application/json"
@@ -130,7 +130,7 @@ function pay(endpoint) {
                     }
                 });
             } else {
-                Swal.fire('Đặt hàng không thành công!', 'Vui lòng thêm sản phẩm vào giỏ hàng!', 'warning');
+                Swal.fire('Đặt hàng không thành công!', 'Vui lòng thêm ít nhất 1 sản phẩm vào giỏ hàng!', 'warning');
             }
         }
     });
@@ -145,21 +145,28 @@ function checkVoucherCode(endpoint) {
     }).then(res =>
         res.json()
     ).then(data => {
-        var voucher = document.getElementById("voucher");
-        var voucherContent = document.getElementById("voucher-content");
-        var voucherValue = document.getElementById("voucher-buy");
+        let voucher = document.getElementById("voucher");
+        let voucherContent = document.getElementById("voucher-content");
+        let voucherValue = document.getElementById("voucher-discount");
+        let dVoucherValue = document.getElementById("d-voucher-discount");
+        let totalPrice = document.getElementById("total-price");
+        let dTotalPrice = document.getElementById("d-total-price");
         voucherContent.classList.remove('d-none');
         voucherContent.classList.add('d-none');
         let flag = 0;
         for (let check of data.promotions) {
             if (check.code !== null && check.code.toLowerCase() === voucher.value.toLowerCase()) {
                 voucherContent.textContent = check.note;
-                voucherValue.textContent = check.discount*1000;
+                voucherValue.textContent = numberWithCommas(check.discount*1000);
+                dVoucherValue.textContent = check.discount*1000;
+                totalPrice.textContent = numberWithCommas(dTotalPrice.textContent - check.discount*1000);
                 flag = 1;
             }
         }
         if (flag !== 1) {
             voucherContent.textContent = "Không tìm thấy Voucher";
+            voucherValue.textContent = 0;
+            dVoucherValue.textContent = 0;
         }
         voucherContent.classList.remove('d-none');
     });

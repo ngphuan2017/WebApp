@@ -1031,6 +1031,10 @@ function editPromotion(id) {
     promotionQuantityOld.classList.add('d-none');
     let promotionQuantityNew = document.getElementById(`promotion-quantity-new${id}`);
     promotionQuantityNew.classList.remove('d-none');
+    let promotionVipOld = document.getElementById(`promotion-vip-old${id}`);
+    promotionVipOld.classList.add('d-none');
+    let promotionVipNew = document.getElementById(`promotion-vip-new${id}`);
+    promotionVipNew.classList.remove('d-none');
     let promotionEdit = document.getElementById(`promotion-edit${id}`);
     promotionEdit.classList.add('d-none');
     let promotionSuccess = document.getElementById(`promotion-success${id}`);
@@ -1064,6 +1068,8 @@ function savePromotion(endpoint, id) {
             let promotionTypeNew = document.getElementById(`promotion-type-new${id}`);
             let promotionQuantityOld = document.getElementById(`promotion-quantity-old${id}`);
             let promotionQuantityNew = document.getElementById(`promotion-quantity-new${id}`);
+            let promotionVipOld = document.getElementById(`promotion-vip-old${id}`);
+            let promotionVipNew = document.getElementById(`promotion-vip-new${id}`);
             fetch(endpoint, {
                 method: "Put",
                 body: JSON.stringify({
@@ -1073,7 +1079,8 @@ function savePromotion(endpoint, id) {
                     "beginDate": promotionBeginNew.value,
                     "endDate": promotionEndNew.value,
                     "type": promotionTypeNew.selectedOptions[0].value,
-                    "quantity": promotionQuantityNew.value
+                    "quantity": promotionQuantityNew.value,
+                    "levelVip": promotionVipNew.selectedOptions[0].value
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -1089,6 +1096,7 @@ function savePromotion(endpoint, id) {
                     promotionEndOld.textContent = moment(promotionEndOld.textContent).format('DD-MM-YYYY');
                     promotionTypeOld.textContent = promotionTypeNew.selectedOptions[0].textContent;
                     promotionQuantityOld.textContent = promotionQuantityNew.value;
+                    promotionVipOld.textContent = promotionVipNew.selectedOptions[0].textContent;
                     Swal.fire('Thành công!', 'Bạn đã cập nhật thành công!', 'success');
                 } else {
                     Swal.fire('Không thành công!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
@@ -1128,6 +1136,10 @@ function cancelPromotion(id) {
     promotionQuantityOld.classList.remove('d-none');
     let promotionQuantityNew = document.getElementById(`promotion-quantity-new${id}`);
     promotionQuantityNew.classList.add('d-none');
+    let promotionVipOld = document.getElementById(`promotion-vip-old${id}`);
+    promotionVipOld.classList.remove('d-none');
+    let promotionVipNew = document.getElementById(`promotion-vip-new${id}`);
+    promotionVipNew.classList.add('d-none');
     let promotionEdit = document.getElementById(`promotion-edit${id}`);
     promotionEdit.classList.remove('d-none');
     let promotionSuccess = document.getElementById(`promotion-success${id}`);
@@ -1210,6 +1222,9 @@ function saveAddPromotion(endpoint) {
     formData.append("quantity", document.getElementById('add-quantity').value);
     if (document.getElementById('add-percentpage').value !== "") {
         formData.append("percentpage", document.getElementById('add-percentpage').value);
+    }
+    if (document.getElementById('add-vip-promotion').value !== "") {
+        formData.append("levelVip", document.getElementById('add-vip-promotion').selectedOptions[0].value);
     }
     fetch(endpoint, {
         method: "POST",

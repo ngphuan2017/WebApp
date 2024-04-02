@@ -357,7 +357,8 @@ public class ApiAdminController {
             @RequestParam("endDate") String endDate,
             @RequestParam("type") String type,
             @RequestParam("quantity") String quantity,
-            @RequestParam(value = "percentpage", required = false) String percentpage) {
+            @RequestParam(value = "percentpage", required = false) String percentpage,
+            @RequestParam(value = "levelVip", required = false) String levelVip) {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Promotion p = new Promotion();
@@ -375,6 +376,8 @@ public class ApiAdminController {
             if (percentpage != null) {
                 p.setPercentpage(Float.valueOf(percentpage));
             }
+            p.setLevelVip(new UserLevels(levelVip != null ? Integer.parseInt(levelVip) : 0));
+            p.setCreatedDate(new Date());
             if (this.promotionService.addPromotion(p)) {
                 return new ResponseEntity(HttpStatus.CREATED);
             }
@@ -397,6 +400,7 @@ public class ApiAdminController {
             promotion.setEndDate(dateFormat.parse(params.get("endDate")));
             promotion.setType(new Status(Integer.valueOf(params.get("type"))));
             promotion.setQuantity(Integer.valueOf(params.get("quantity")));
+            promotion.setLevelVip(new UserLevels(params.get("levelVip") != null ? Integer.parseInt(params.get("levelVip")) : 0));
             if (this.promotionService.updatePromotion(promotion)) {
                 return new ResponseEntity(HttpStatus.OK);
             }

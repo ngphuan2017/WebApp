@@ -60,6 +60,7 @@ function focusItem(event, id) {
     let frameId = document.getElementById('frame-id');
     frameId.textContent = id;
     selectedItem.style.border = "5px solid #00bbb3";
+    document.getElementById('save-avatar-frame').classList.remove('disabled');
 }
 
 function saveAvatarFrame(endpoint) {

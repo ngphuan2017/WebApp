@@ -334,10 +334,18 @@ function checkedVerify(endpoint) {
             document.getElementById("submit-send").style.display = 'block';
             Swal.fire('Xác thực thành công!', 'Xin vui lòng đợi trong giây lát!', 'success');
             handleSubmit();
-        } else {
+        } else if (res.status === 403){
             document.getElementById("spinner-verify").style.display = 'none';
             document.getElementById("submit-send").style.display = 'block';
             Swal.fire('Lỗi!', 'Mã xác thực của bạn không đúng!', 'error');
+        }
+        else if (res.status === 401){
+            document.getElementById("spinner-verify").style.display = 'none';
+            document.getElementById("submit-send").style.display = 'block';
+            Swal.fire('Lỗi!', 'Mã xác thực của bạn đã hết hạn!', 'error');
+        }
+        else {
+            Swal.fire('Lỗi!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
         }
     });
 }

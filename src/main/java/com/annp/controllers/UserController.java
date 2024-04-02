@@ -112,11 +112,14 @@ public class UserController {
     }
 
     @PostMapping(value = "/me/profile")
-    public String changeAvatarProfile(Model model, @ModelAttribute(value = "user") @Valid Users user,
+    public String changeAvatarProfile(Model model, HttpServletRequest request, @ModelAttribute(value = "user") @Valid Users user,
             BindingResult result, final RedirectAttributes redirectAttributes) {
 //        userValidator.validate(user, result);
 
         if (this.userService.updateProfileUser(user)) {
+            Users u = this.userService.getUserById(user.getId());
+            request.getSession().setAttribute("currentUser", u);
+            model.addAttribute("currentUser", u);
             return "redirect:/me/profile";
         } else {
             return "maintenance";
@@ -124,7 +127,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/me/notification")
-    public String userNotification(Model model, Authentication authentication) {
+    public String userNotification(Model model, HttpServletRequest request, Authentication authentication) {
         try {
             Users user = this.userService.getUserByUsername(authentication.getName());
             user.setNotification(0);
@@ -153,6 +156,9 @@ public class UserController {
                 itemTypes.add(item.getClass().getSimpleName());
             }
 
+            Users u = this.userService.getUserById(user.getId());
+            request.getSession().setAttribute("currentUser", u);
+            model.addAttribute("currentUser", u);
             model.addAttribute("itemTypes", itemTypes);
             model.addAttribute("responseList", combinedList);
 

@@ -31,6 +31,7 @@
         <script src="<c:url value="/resources/js/moment-with-locales.min.js" />"></script>
         <script src="<c:url value="/resources/sweetalert2-10/sweetalert2-10.js" />"></script>
         <script src="<c:url value="/resources/sweetalert2-10/clipboard.min.js" />"></script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9231912895667591" crossorigin="anonymous"></script>
     </head>
     <body>
         <!--Loading Animation-->

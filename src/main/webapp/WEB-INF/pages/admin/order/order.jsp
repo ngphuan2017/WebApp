@@ -42,6 +42,7 @@
                             <th>Đơn giá</th>
                             <th>Số lượng</th>
                             <th>Thành tiền</th>
+                            <th>Voucher</th>
                             <th>Trạng thái thanh toán</th>
                             <th>Ngày mua</th>
                             <th>Trạng thái</th>
@@ -58,6 +59,7 @@
                                 <td class="currency"><span class="money">${o.price}</span></td>
                                 <td>${o.number}</td>
                                 <td class="currency"><span class="money">${o.price * o.number}</span></td>
+                                <td class="currency"><span class="money">${o.orderId.discount}</span></td>
                                 <td class="text-customer-email">${o.orderId.type.statusname}</td>
                                 <td class="create-date">${o.createdDate}</td>
                                 <td class="text-order-name" id="order-status${o.id}">

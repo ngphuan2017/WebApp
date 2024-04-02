@@ -60,25 +60,25 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean addReceipt(Map<String, Cart> cart) {
+    public boolean addReceipt(Map<String, Cart> cart, Integer discount) {
         if (cart != null) {
             Integer amount = 0;
             for (Cart c: cart.values()) {
                 amount += c.getQuantity()*c.getPrice();
             }
-            return this.productRepository.addReceipt(cart, amount);
+            return this.productRepository.addReceipt(cart, amount, discount);
         }
         return false;
     }
 
     @Override
-    public boolean addReceiptPaid(Map<String, Cart> cart) {
+    public boolean addReceiptPaid(Map<String, Cart> cart, Integer discount) {
         if (cart != null) {
             Integer amount = 0;
             for (Cart c: cart.values()) {
                 amount += c.getQuantity()*c.getPrice();
             }
-            return this.productRepository.addReceiptPaid(cart, amount);
+            return this.productRepository.addReceiptPaid(cart, amount, discount);
         }
         return false;
     }

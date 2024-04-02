@@ -154,16 +154,22 @@
             <textarea class="form-control" rows="2" id="content-comment" name="content" style="background-color: #dff;"
                       placeholder="Mời bạn bình luận, vui lòng không spam, share link kiếm tiền, thiếu lành mạnh,... để tránh bị khóa tài khoản"></textarea>
             <div class="d-flex justify-content-center m-2">
-                <c:choose>
-                    <c:when test="${pageContext.request.userPrincipal.name == null}">
-                        <p style="font-size: 16px;">Vui lòng <a href="${loginUrl}">đăng nhập</a> để bình luận!</p>
-                    </c:when>
-                    <c:when test="${pageContext.request.userPrincipal.name != null}">
-                        <button onclick="addComment('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', '${leveled}')"
-                                class="btn btn-outline-danger">Thêm bình luận
-                        </button>
-                    </c:when>
-                </c:choose>
+                <c:if test="${pageContext.request.userPrincipal.name == null}">
+                    <p style="font-size: 16px;">Vui lòng <a href="${loginUrl}">đăng nhập</a> để bình luận!</p>
+                </c:if>
+                <c:if test="${pageContext.request.userPrincipal.name != null}">
+                    <c:choose>
+                        <c:when test="${pageContext.session.getAttribute('currentUser').userstatus.id == 1}">
+                            <button onclick="addComment('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', '${leveled}')"
+                                    class="btn btn-outline-danger">Thêm bình luận
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <button onclick="banComment()" class="btn btn-outline-danger">Thêm bình luận</button>
+                        </c:otherwise>
+                    </c:choose>
+
+                </c:if>
             </div>
         </div>
         <div class="spinner-grow text-primary spinner m-auto"></div>
@@ -223,29 +229,29 @@
 
     <script src="<c:url value="/resources/js/product-detail.js" />"></script>
     <script>
-                            const quantityInput = document.getElementById('quantity');
-                            const quantityValue = quantityInput.value;
-                            let quantityCart = quantityValue;
-                            const updateQuantityValue = () => {
-                                quantityCart = quantityInput.value;
-                            };
-                            const handleQuantityIncrease = () => {
-                                quantityInput.stepUp();
-                                updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
-                            };
+                                const quantityInput = document.getElementById('quantity');
+                                const quantityValue = quantityInput.value;
+                                let quantityCart = quantityValue;
+                                const updateQuantityValue = () => {
+                                    quantityCart = quantityInput.value;
+                                };
+                                const handleQuantityIncrease = () => {
+                                    quantityInput.stepUp();
+                                    updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
+                                };
 
-                            // Hàm xử lý sự kiện khi ấn nút trừ
-                            const handleQuantityDecrease = () => {
-                                quantityInput.stepDown();
-                                updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
-                            };
-                            // Gọi hàm cập nhật giá trị khi có sự kiện 'input'
-                            quantityInput.addEventListener('input', updateQuantityValue);
-                            // Gọi hàm cập nhật giá trị khi ấn nút cộng hoặc nút trừ
-                            document.querySelector('.quantity-right-plus').addEventListener('click', handleQuantityIncrease);
-                            document.querySelector('.quantity-left-minus').addEventListener('click', handleQuantityDecrease);
-                            window.addEventListener('load', () => {
-                                loadComments('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', '${leveled}');
-                            });
+                                // Hàm xử lý sự kiện khi ấn nút trừ
+                                const handleQuantityDecrease = () => {
+                                    quantityInput.stepDown();
+                                    updateQuantityValue(); // Cập nhật giá trị quantityValue sau khi thay đổi giá trị trong ô input
+                                };
+                                // Gọi hàm cập nhật giá trị khi có sự kiện 'input'
+                                quantityInput.addEventListener('input', updateQuantityValue);
+                                // Gọi hàm cập nhật giá trị khi ấn nút cộng hoặc nút trừ
+                                document.querySelector('.quantity-right-plus').addEventListener('click', handleQuantityIncrease);
+                                document.querySelector('.quantity-left-minus').addEventListener('click', handleQuantityDecrease);
+                                window.addEventListener('load', () => {
+                                    loadComments('${comment}', '${voted}', '${report}', '${deleted}', '${changed}', '${leveled}');
+                                });
     </script>
 </c:if>
