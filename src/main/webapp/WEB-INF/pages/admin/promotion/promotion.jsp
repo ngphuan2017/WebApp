@@ -101,7 +101,11 @@
                                 </td>
                                 <td>
                                     <span id="promotion-vip-old${p.id}">${p.levelVip.levelName}</span>
-                                    <input class="form-control d-none" id="promotion-vip-new${p.id}" type="number" value="${p.levelVip.id}" />
+                                    <select class="form-select d-none" id="promotion-vip-new${p.id}">
+                                        <c:forEach items="${listUserLevels}" var="l">
+                                            <option value="${l.id}" ${p.levelVip.id == l.id ? "selected" : ""}>${l.levelName}</option>
+                                        </c:forEach>
+                                    </select>
                                 </td>
                                 <td class="d-flex">
                                     <a class="m-2" id="promotion-edit${p.id}" href="javascript:;" onclick="editPromotion(${p.id})"><i class="fas fa-edit text-primary"></i></a>
@@ -179,6 +183,15 @@
                 <div class="col-lg-7 col-md-7 col-sm-6 col-12">
                     <div class="modal-content" id="modal-account-about-edit">
 
+                    </div>
+                    <div class="modal-content">
+                        <div class="input-group" style="margin: 5px 0;"><span class="input-group-text">Level: </span>
+                            <select id="add-vip-promotion" class="form-select">
+                                <c:forEach items="${listUserLevels}" var="l">
+                                    <option value="${l.id}">${l.levelName}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -70,11 +70,15 @@
         </table> 
 
         <div class="container alert alert-info text-center" data-aos="zoom-in">
-            <h7>Voucher giảm giá: <span style="color: #ee4d2d; font-size: 18px; font-weight: 600;" id="voucher-buy">0</span> VNĐ</h7>
             <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-counter" id="total-quantity">${cartStats.totalQuantity}</span> sản phẩm</h6>
-            <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h5>
+            <h6 class="currency">Tổng tiền: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h6>
+            <span class="d-none" id="d-voucher-discount"></span>
+            <h7>Voucher giảm giá: <span style="color: #ee4d2d; font-size: 18px; font-weight: 600;" id="voucher-discount">0</span> VNĐ</h7>
+            <span class="d-none" id="d-total-price">${cartStats.totalAmount}</span>
+            <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money" id="total-price">${cartStats.totalAmount}</span> VNĐ</h5>
         </div>
-        <label for="voucher">Mã Voucher:</label><input type="text" class="form-control text-center" id="voucher" onchange="checkVoucherCode('${voucher}')" placeholder="Nhập Mã Voucher..." />
+        <label for="voucher">Mã Voucher:</label>
+        <input type="text" class="form-control text-center" id="voucher" onchange="checkVoucherCode('${voucher}')" placeholder="Nhập Mã Voucher..." />
         <div class="alert alert-secondary text-center text-danger container d-none" id="voucher-content"></div>
         <label for="option-pay" class="form-labe">Phương thức thanh toán:</label>
         <select class="form-select text-center" name="option-pay" id="option-pay">

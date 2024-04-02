@@ -28,15 +28,11 @@ import com.annp.service.UserService;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -150,6 +146,8 @@ public class AdminController {
         PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
         model.addAttribute("page", paginates);
         List<Promotion> promotions = this.promotionService.getPromotion(params, paginates.getStart(), paginates.getLimit());
+        List<UserLevels> listUserLevelses = this.userLevelsService.getUserLevels();
+        model.addAttribute("listUserLevels", listUserLevelses);
         model.addAttribute("promotions", promotions);
         model.addAttribute("sidebar", "promotion");
         return "admin-promotion";

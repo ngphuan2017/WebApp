@@ -221,6 +221,10 @@ function addComment(endpoint, voted, report, deleted, changed, leveled) {
     }
 }
 
+function banComment() {
+    Swal.fire('Bình luận không thành công!', 'Bạn đang bị cấm bình luận do quy phạm tiêu chuẩn cộng đồng.', 'warning');
+}
+
 function hasUserCmtToday(userId, cmtId) {
     const key = `liking_${userId}_${cmtId}`;
     const lastLikingTimestamp = localStorage.getItem(key);

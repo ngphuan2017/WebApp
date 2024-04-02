@@ -111,7 +111,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public boolean addReceipt(Map<String, Cart> cart, Integer amount) {
+    public boolean addReceipt(Map<String, Cart> cart, Integer amount, Integer discount) {
         Session s = this.factory.getObject().getCurrentSession();
 
         try {
@@ -119,6 +119,7 @@ public class ProductRepositoryImpl implements ProductRepository {
             r.setId(0);
             r.setUserid(userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
             r.setAmount(amount);
+            r.setDiscount(discount);
             r.setType(new Status(17));
             r.setCreatedDate(new Date());
             s.save(r);
@@ -142,7 +143,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public boolean addReceiptPaid(Map<String, Cart> cart, Integer amount) {
+    public boolean addReceiptPaid(Map<String, Cart> cart, Integer amount, Integer discount) {
         Session s = this.factory.getObject().getCurrentSession();
 
         try {
@@ -150,6 +151,7 @@ public class ProductRepositoryImpl implements ProductRepository {
             r.setId(0);
             r.setUserid(userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
             r.setAmount(amount);
+            r.setDiscount(discount);
             r.setType(new Status(18));
             r.setCreatedDate(new Date());
             s.save(r);

@@ -116,6 +116,7 @@ public class ApiCartController {
     public ResponseEntity pay(HttpSession session, Authentication authentication, @RequestBody Map<String, String> params, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         int option = Integer.parseInt(params.get("optionPay"));
+        Integer discount = Integer.valueOf(params.get("discount"));
         Map<String, Cart> cart = (Map<String, Cart>) session.getAttribute("cart");
         Integer amount = 0;
         if (cart != null) {
@@ -128,16 +129,16 @@ public class ApiCartController {
 
         switch (option) {
             case 1:
-                if (this.productService.addReceipt((Map<String, Cart>) session.getAttribute("cart"))) {
+                if (this.productService.addReceipt((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
-                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount);
+                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount, discount);
                     return new ResponseEntity(HttpStatus.OK);
                 }
                 break;
             case 2:
-                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"))) {
+                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
-                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount);
+                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount, discount);
                     HttpHeaders headers = new HttpHeaders();
                     String urlPayment = doPost(req, resp, amount);
                     headers.add("Location", urlPayment);
@@ -145,13 +146,13 @@ public class ApiCartController {
                 }
                 break;
             case 3:
-                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"))) {
+                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
                     return new ResponseEntity(HttpStatus.OK);
                 }
                 break;
             case 4:
-                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"))) {
+                if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
                     return new ResponseEntity(HttpStatus.OK);
                 }
@@ -162,7 +163,7 @@ public class ApiCartController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
-    private boolean sendOrderToEmail(String fullname, String email, String baseUrl, Map<String, Cart> cart, Integer amount) {
+    private boolean sendOrderToEmail(String fullname, String email, String baseUrl, Map<String, Cart> cart, Integer amount, Integer discount) {
         try {
             Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"));
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
@@ -193,9 +194,9 @@ public class ApiCartController {
                 }
             }
             htmlMessage += "<tr><td>Tổng tiền: </td><td style='color: #FA8072;'>"+ decimalFormat.format(amount) +" VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Voucher từ Shop: </td><td style='color: #FA8072;'>0 VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Voucher từ Shop: </td><td style='color: #FA8072;'>"+ decimalFormat.format(discount) +" VNĐ</td></tr>";
             htmlMessage += "<tr><td>Phí vận chuyển: </td><td style='color: #FA8072;'>0 VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Tổng thanh toán: </td><td style='color: red;'>"+ decimalFormat.format(amount) +" VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Tổng thanh toán: </td><td style='color: red;'>"+ decimalFormat.format(amount - discount) +" VNĐ</td></tr>";
             htmlMessage += "</tbody></table>";
             htmlMessage += "<p align='center' style='padding: 10px;'><a href='" + baseUrl + "' align='center' ";
             htmlMessage += "style='padding: 8px 30px; border-radius: 3px; background-color: #ee4d2d; color:#fff; text-decoration: none;'>Đi đến Shop</a></p>";

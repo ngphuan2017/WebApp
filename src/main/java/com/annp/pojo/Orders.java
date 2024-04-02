@@ -44,6 +44,9 @@ import lombok.AllArgsConstructor;
     @NamedQuery(name = "Orders.findByNote", query = "SELECT o FROM Orders o WHERE o.note = :note")})
 public class Orders implements Serializable {
 
+    @Column(name = "DISCOUNT")
+    private Integer discount;
+
     @JoinColumn(name = "TYPE", referencedColumnName = "ID")
     @ManyToOne
     private Status type;
@@ -167,6 +170,14 @@ public class Orders implements Serializable {
 
     public void setType(Status type) {
         this.type = type;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
     
 }

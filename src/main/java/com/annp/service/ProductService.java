@@ -15,6 +15,6 @@ public interface ProductService {
     boolean updateProduct(Product p);
     boolean deleteProduct(int id);
     boolean addOrUpdateProductImages(ProductImages img);
-    boolean addReceipt(Map<String, Cart> cart);
-    boolean addReceiptPaid(Map<String, Cart> cart);
+    boolean addReceipt(Map<String, Cart> cart, Integer discount);
+    boolean addReceiptPaid(Map<String, Cart> cart, Integer discount);
 }

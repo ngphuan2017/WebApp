@@ -144,8 +144,10 @@ public class ApiUserController {
             } else {
                 if (otpCode.equals(v.getOtpCode()) && generatedTime.getTime() - v.getGeneratedTime().getTime() <= 30 * 60 * 1000) {
                     return new ResponseEntity(HttpStatus.OK);
+                } else if (!otpCode.equals(v.getOtpCode())) {
+                    return new ResponseEntity(HttpStatus.FORBIDDEN);
                 } else {
-                    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity(HttpStatus.UNAUTHORIZED);
                 }
             }
         } catch (Exception ex) {

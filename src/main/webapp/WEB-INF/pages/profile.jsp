@@ -328,7 +328,7 @@
             </div>
         </div>
         <div class="footer-modal-black p-2">
-            <button type="button" onclick="saveAvatarFrame('${framed}/${currentUser.id}')" class="btn btn-outline-light">Lưu Thay Đổi</button>
+            <button type="button" onclick="saveAvatarFrame('${framed}/${currentUser.id}')" class="btn btn-outline-light disabled" id="save-avatar-frame">Lưu Thay Đổi</button>
             <button type="button" onclick="hideFrame()" class="btn btn-outline-danger">Trở lại</button>
         </div>
     </div>
