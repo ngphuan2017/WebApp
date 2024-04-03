@@ -5,9 +5,11 @@
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <c:url value="/" var="action" />
+<c:url value="/me/profile" var="profile"/>
 <c:url value="/api/cart" var="endpoint" />
 <c:url value="/api/cart/voucher" var="voucher" />
 <c:url value="/api/products" var="producted" />
@@ -88,20 +90,41 @@
             <option value="4" disabled>Ví điện tử Momo <span>(Đang bảo trì)</span></option>
         </select>
         <div class="d-flex justify-content-center mt-4 mb-4">
-            <c:choose>
-                <c:when test="${pageContext.request.userPrincipal.name == null}">
-                    <p style="font-size: 16px;">Vui lòng <a href="${loginUrl}">đăng nhập</a> để thanh toán!</p>
-                </c:when>
-                <c:when test="${pageContext.request.userPrincipal.name != null}">
-                    <a href="javascript:;" class="animated-button1" onclick="pay('${pUrl}')">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        Đặt Hàng
-                    </a>
-                </c:when>
-            </c:choose>
+            <c:if test="${pageContext.request.userPrincipal.name == null}">
+                <p style="font-size: 16px;">Vui lòng <a href="${loginUrl}">đăng nhập</a> để thanh toán!</p>
+            </c:if>
+            <c:if test="${pageContext.request.userPrincipal.name != null}">
+                <c:set var="address" value="${pageContext.session.getAttribute('currentUser').address}" />
+                <c:set var="phone" value="${pageContext.session.getAttribute('currentUser').phone}" />
+                <c:choose>
+                    <c:when test="${address != null && not empty address && fn:contains(address, '-') && phone != null && not empty phone}">
+                        <c:set var="parts" value="${fn:split(address, '-')}" />
+                        <c:if test="${fn:length(parts) == 3}">
+                            <c:set var="part1" value="${fn:trim(parts[0])}" />
+                            <c:set var="part2" value="${fn:trim(parts[1])}" />
+                            <c:set var="part3" value="${fn:trim(parts[2])}" />
+                            <c:if test="${not empty part1 && not empty part2 && not empty part3}">
+                                <a href="javascript:;" class="animated-button1" onclick="pay('${pUrl}')">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                    Đặt Hàng
+                                </a>
+                            </c:if>
+                            <c:if test="${empty part1 || empty part2 || empty part3}">
+                                <p style="font-size: 16px;">Vui lòng cập nhật đầy đủ <a href="${profile}">thông tin liên hệ</a> để đặt hàng!</p>
+                            </c:if>
+                        </c:if>
+                        <c:if test="${fn:length(parts) != 3}">
+                            <p style="font-size: 16px;">Vui lòng cập nhật đầy đủ <a href="${profile}">thông tin liên hệ</a> để đặt hàng!</p>
+                        </c:if>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="font-size: 16px;">Vui lòng cập nhật đầy đủ <a href="${profile}">thông tin liên hệ</a> để đặt hàng!</p>
+                    </c:otherwise>
+                </c:choose>
+            </c:if>
         </div>
     </div>
 </c:if>

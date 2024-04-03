@@ -187,16 +187,15 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public ProductImages getImagesByProductId(Product product) {
-        Session session = this.factory.getObject().getCurrentSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<ProductImages> query = builder.createQuery(ProductImages.class);
-        Root root = query.from(ProductImages.class);
-        query = query.select(root);
-        query = query.where(builder.equal(root.get("productId"), product));
-
-        Query q = session.createQuery(query);
-
         try {
+            Session session = this.factory.getObject().getCurrentSession();
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<ProductImages> query = builder.createQuery(ProductImages.class);
+            Root root = query.from(ProductImages.class);
+            query = query.select(root);
+            query = query.where(builder.equal(root.get("productId"), product));
+
+            Query q = session.createQuery(query);
             ProductImages p = (ProductImages) q.getSingleResult();
             return p;
         } catch (Exception e) {
@@ -220,5 +219,5 @@ public class ProductRepositoryImpl implements ProductRepository {
             return false;
         }
     }
-    
+
 }

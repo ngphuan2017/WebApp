@@ -107,7 +107,7 @@ function loadComments(endpointed, voted, report, deleted, changed, leveled) {
                             <div class="dropdown mr-auto">
                                 <a href="javascript:;" title="Báo cáo vi phạm" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis"></i></a>
                                 <ul class="dropdown-menu">
-                                    ${d.userid.id === userId ?
+                                    ${d.userid.id === userId || userRole === 1 ?
                     `<li><a class="dropdown-item" href="javascript:;" onclick="changeCmt(${d.id})">Chỉnh sửa bình luận</a></li>
                                     <li><a class="dropdown-item" href="javascript:;" onclick="deleteCmt('${deleted}/${d.id}', ${d.id})">Xóa bình luận</a></li>
                                     ` : ``}

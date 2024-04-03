@@ -46,9 +46,10 @@
                     <h3 class="text-center" style="margin: 20px;">Phú An Shop</h3><hr/>
                     <p class="mb-30 footer-desc" style="color: #ccc;">
                         Chào mừng bạn đến với Phú An Shop - điểm đến đáng tin cậy cho các sản phẩm đồ dùng học sinh, văn phòng phẩm, đồ chơi và mỹ phẩm hàng đầu. Chúng tôi tự hào là đơn vị cung cấp những sản phẩm chất lượng với mức giá phải chăng, đồng thời cam kết luôn đặt uy tín và chất lượng lên hàng đầu.<br>
-                        Chúng tôi tự tin về cam kết về chất lượng của mỗi sản phẩm có mặt trên kệ hàng của Phú An Shop. Chúng tôi chỉ liên kết với các thương hiệu uy tín, được sản xuất từ các nguyên liệu chất lượng và đáp ứng đầy đủ các tiêu chuẩn an toàn. Sự hài lòng và niềm tin của khách hàng là nguồn động lực để chúng tôi không ngừng hoàn thiện và cải tiến từng ngày.<br>
+                        Sự hài lòng và niềm tin của khách hàng là nguồn động lực để chúng tôi không ngừng hoàn thiện và cải tiến từng ngày.<br>
                         Hãy cùng chúng tôi trải nghiệm cuộc sống thú vị và tiện ích qua những sản phẩm tuyệt vời tại Phú An Shop!
                     </p>
+                    <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fan11012001&tabs=timeline&width=340&height=130&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId=1795411487539115" width="340" height="130" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
                 </div>
             </div>
             <div class="col-md-4 col-sm-12 col-12">

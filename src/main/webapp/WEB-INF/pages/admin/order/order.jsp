@@ -71,7 +71,8 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <a class="m-2" href="javascript:;" onclick="showStatus(${o.id})"><i class="fas fa-edit text-primary"></i></a>
+                                    <a class="m-2" id="order-edit${o.id}" href="javascript:;" onclick="showStatus(${o.id})"><i class="fas fa-edit text-primary"></i></a>
+                                    <a class="m-2 d-none" id="order-cancel${o.id}" href="javascript:;" onclick="cancelStatus(${o.id})"><i class="fas fa-times-circle text-danger"></i></a>
                                     <a class="m-2" href="javascript:;" onclick="deleteOrder('${deleted}/${o.id}', ${o.id})">
                                         <i class='fas fa-trash text-danger'></i>
                                     </a>
