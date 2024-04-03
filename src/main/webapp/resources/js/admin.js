@@ -201,7 +201,7 @@ function productImages(endpoint, images) {
         `;
         let button = document.getElementById("change-product-images");
         button.innerHTML = `
-            <button type="button" class="m-1 btn btn-outline-success" onclick="saveProductImages('${images}')">Lưu</button>
+            <button type="button" class="m-1 btn btn-outline-success" id="save-product-images" onclick="saveProductImages('${images}')">Lưu</button>
             <button type="button" class="m-1 btn btn-outline-danger" onclick="hideProductImages()">Trở lại</button>
         `;
         let jsss = document.getElementById("modal-account-title-images");
@@ -232,6 +232,8 @@ function productImages(endpoint, images) {
 }
 
 function saveProductImages(endpoint) {
+    const saveProductImages = document.getElementById("save-product-images");
+    saveProductImages.classList.add('disabled');
     const avatarInput = document.getElementById("product-images");
     const avatarInput1 = document.getElementById("product-images1");
     const avatarInput2 = document.getElementById("product-images2");
@@ -257,6 +259,7 @@ function saveProductImages(endpoint) {
             hideProductImages();
             Swal.fire('Cập nhật thành công!', 'Dữ liệu sẽ mất chút thời gian để thay đổi!', 'success');
         } else {
+            saveProductImages.classList.remove('disabled');
             Swal.fire('Lỗi!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
         }
     });
@@ -329,7 +332,7 @@ function editProduct(endpoint, edited) {
         status.innerHTML = optionStatus;
         let button = document.getElementById("change-profile-user");
         button.innerHTML = `
-            <button type="button" class="m-1 btn btn-outline-success" onclick="saveEditProduct('${edited}')">Lưu</button>
+            <button type="button" class="m-1 btn btn-outline-success" id="save-edit-product" onclick="saveEditProduct('${edited}')">Lưu</button>
             <button type="button" class="m-1 btn btn-outline-danger" onclick="hideEditProfile()">Trở lại</button>
         `;
         let jsss = document.getElementById("modal-account-title-edit");
@@ -359,6 +362,8 @@ function editProduct(endpoint, edited) {
 }
 
 function saveEditProduct(endpoint) {
+    const saveEditProduct = document.getElementById("save-edit-product");
+    saveEditProduct.classList.add('disabled');
     const avatarInput = document.getElementById("avatarBrowse");
     const formData = new FormData();
     if (avatarInput.files.length > 0) {
@@ -378,6 +383,7 @@ function saveEditProduct(endpoint) {
             hideEditProfile();
             Swal.fire('Cập nhật thành công!', 'Dữ liệu sẽ mất chút thời gian để thay đổi!', 'success');
         } else {
+            saveEditProduct.classList.remove('disabled');
             Swal.fire('Lỗi!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
         }
     });
@@ -681,7 +687,7 @@ function editCustomer(endpoint, edited, leveled) {
         }
         let button = document.getElementById("change-profile-user");
         button.innerHTML = `
-            <button type="button" class="m-1 btn btn-outline-success" onclick="saveEditUser('${edited}')">Lưu</button>
+            <button type="button" class="m-1 btn btn-outline-success" id="save-edit-user" onclick="saveEditUser('${edited}')">Lưu</button>
             <button type="button" class="m-1 btn btn-outline-danger" onclick="hideEditProfile()">Trở lại</button>
         `;
         let jsss = document.getElementById("modal-account-title-edit");
@@ -717,6 +723,8 @@ function editCustomer(endpoint, edited, leveled) {
 }
 
 function saveEditUser(endpoint) {
+    const saveEditUser = document.getElementById("save-edit-user");
+    saveEditUser.classList.add('disabled');
     const avatarInput = document.getElementById("avatarBrowse");
     const formData = new FormData();
     if (avatarInput.files.length > 0) {
@@ -739,6 +747,7 @@ function saveEditUser(endpoint) {
             hideEditProfile();
             Swal.fire('Cập nhật thành công!', 'Dữ liệu sẽ mất chút thời gian để thay đổi!', 'success');
         } else {
+            saveEditUser.classList.remove('disabled');
             Swal.fire('Lỗi!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
         }
     });
@@ -1179,7 +1188,7 @@ function addPromotion(endpoint) {
         `;
     let button = document.getElementById("change-profile-user");
     button.innerHTML = `
-            <button type="button" class="m-1 btn btn-outline-success" onclick="saveAddPromotion('${endpoint}')">Lưu</button>
+            <button type="button" class="m-1 btn btn-outline-success" id="save-add-promotion" onclick="saveAddPromotion('${endpoint}')">Lưu</button>
             <button type="button" class="m-1 btn btn-outline-danger" onclick="hideEditProfile()">Trở lại</button>
         `;
     let btns = document.querySelectorAll('.js-add-cart-edit');
@@ -1208,6 +1217,8 @@ function selectTypePromotion() {
 }
 
 function saveAddPromotion(endpoint) {
+    const saveAddPromotion = document.getElementById("save-add-promotion");
+    saveAddPromotion.classList.add('disabled');
     const avatarInput = document.getElementById("avatarBrowse");
     const formData = new FormData();
     if (avatarInput.files.length > 0) {
@@ -1234,6 +1245,7 @@ function saveAddPromotion(endpoint) {
             hideEditProfile();
             Swal.fire('Thao tác thành công!', 'Đã thêm 1 khuyến mãi mới thành công!', 'success');
         } else {
+            saveAddPromotion.classList.remove('disabled');
             Swal.fire('Thao tác không thành công!', 'Vui lòng nhập đầy đủ thông tin và thử lại!', 'error');
         }
     });
@@ -1280,6 +1292,21 @@ function showStatus(id) {
     orderStatusOld.classList.add('d-none');
     let orderStatusNew = document.getElementById(`order-status-new${id}`);
     orderStatusNew.classList.remove('d-none');
+    let orderEdit = document.getElementById(`order-edit${id}`);
+    orderEdit.classList.add('d-none');
+    let orderCancel = document.getElementById(`order-cancel${id}`);
+    orderCancel.classList.remove('d-none');
+}
+
+function cancelStatus(id) {
+    let orderStatusOld = document.getElementById(`order-status-old${id}`);
+    orderStatusOld.classList.remove('d-none');
+    let orderStatusNew = document.getElementById(`order-status-new${id}`);
+    orderStatusNew.classList.add('d-none');
+    let orderEdit = document.getElementById(`order-edit${id}`);
+    orderEdit.classList.remove('d-none');
+    let orderCancel = document.getElementById(`order-cancel${id}`);
+    orderCancel.classList.add('d-none');
 }
 
 function updateOrderStatus(endpoint, id) {
@@ -1293,6 +1320,8 @@ function updateOrderStatus(endpoint, id) {
     }).then((result) => {
         let orderStatusOld = document.getElementById(`order-status-old${id}`);
         let orderStatusNew = document.getElementById(`order-status-new${id}`);
+        let orderEdit = document.getElementById(`order-edit${id}`);
+        let orderCancel = document.getElementById(`order-cancel${id}`);
         if (result.isConfirmed) {
 // Hành động khi người dùng xác nhận
             fetch(endpoint, {
@@ -1319,6 +1348,8 @@ function updateOrderStatus(endpoint, id) {
         }
         orderStatusOld.classList.remove('d-none');
         orderStatusNew.classList.add('d-none');
+        orderEdit.classList.remove('d-none');
+        orderCancel.classList.add('d-none');
     });
 }
 

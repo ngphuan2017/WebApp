@@ -112,31 +112,26 @@
                         <span class="p-2"><i class="fa-solid fa-truck-fast" style="color: #d0011b"></i> Miễn phí vận chuyển trong bán kính 3km</span>
                     </div>
                     <div class="d-flex justify-content-center" style="margin-top: 20px; font-size: 16px;">
-                        <c:choose>
-                            <c:when test="${pageContext.request.userPrincipal.name == null}">
-                            </c:when>
-                            <c:when test="${pageContext.request.userPrincipal.name != null}">
-                                <span style="line-height: 46px; color: #999;">Đánh Giá Sản Phẩm</span>
-                                <div class="rate">
-                                    <input type="radio" id="star5" name="rate" value="5"
-                                           onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
-                                    <label for="star5" title="5 stars">5 stars</label>
-                                    <input type="radio" id="star4" name="rate" value="4"
-                                           onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
-                                    <label for="star4" title="4 stars">4 stars</label>
-                                    <input type="radio" id="star3" name="rate" value="3"
-                                           onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
-                                    <label for="star3" title="3 stars">3 stars</label>
-                                    <input type="radio" id="star2" name="rate" value="2"
-                                           onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
-                                    <label for="star2" title="2 stars">2 stars</label>
-                                    <input type="radio" id="star1" name="rate" value="1"
-                                           onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
-                                    <label for="star1" title="1 stars">1 star</label>
-                                </div>
-                            </c:when>
-                        </c:choose>
-
+                        <c:if test="${pageContext.request.userPrincipal.name != null}">
+                            <span style="line-height: 46px; color: #999;">Đánh Giá Sản Phẩm</span>
+                            <div class="rate">
+                                <input type="radio" id="star5" name="rate" value="5"
+                                       onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
+                                <label for="star5" title="5 stars">5 stars</label>
+                                <input type="radio" id="star4" name="rate" value="4"
+                                       onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
+                                <label for="star4" title="4 stars">4 stars</label>
+                                <input type="radio" id="star3" name="rate" value="3"
+                                       onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
+                                <label for="star3" title="3 stars">3 stars</label>
+                                <input type="radio" id="star2" name="rate" value="2"
+                                       onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
+                                <label for="star2" title="2 stars">2 stars</label>
+                                <input type="radio" id="star1" name="rate" value="1"
+                                       onclick="ratingStar('${rating}', this, ${pageContext.session.getAttribute("currentUser").id}, ${product.id})"/>
+                                <label for="star1" title="1 stars">1 star</label>
+                            </div>
+                        </c:if>
                     </div>
                     <div class="alert alert-success" style="display: none;">
                         <strong>Thông Báo!</strong> Đánh giá sản phẩm thành công.

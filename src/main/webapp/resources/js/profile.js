@@ -236,6 +236,8 @@ function selectCity(city) {
         console.info(error);
     });
     let addressParts = address.value.split(" - ");
+    addressParts[0] = "";
+    addressParts[1] = "";
     addressParts[2] = editCityLabel;
     address.value = addressParts.join(" - ");
 }
@@ -271,6 +273,7 @@ function selectDistrict(district) {
         console.info(error);
     });
     let addressParts = address.value.split(" - ");
+    addressParts[0] = "";
     addressParts[1] = editDistrictLabel;
     address.value = addressParts.join(" - ");
 }
