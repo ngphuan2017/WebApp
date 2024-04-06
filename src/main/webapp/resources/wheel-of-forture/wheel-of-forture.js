@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Other/javascript.js to edit this template
  */
-
+// số lượt quay còn lại
 function setWheelValue(endpoint) {
     return fetch(endpoint, {
         method: "PUT",
@@ -11,6 +11,22 @@ function setWheelValue(endpoint) {
         }
     }).then(res => {
         if (res.status === 200) {
+        }
+    });
+}
+// thông báo
+function addWheelNotification(link, id) {
+    let endpoint = link + "/" + id;
+    return fetch(endpoint, {
+        method: "Post",
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => {
+        if (res.status === 200) {
+            return true;
+        } else {
+            return false;
         }
     });
 }
@@ -323,6 +339,7 @@ document.addEventListener(
         function () {
             var chances = null;
             const endpoint = document.getElementById("api-wheel-of-forture").href;
+            const link = document.getElementById("api-wheel-of-forture-added").href;
             fetch(endpoint, {
                 method: 'GET',
                 headers: {
@@ -333,6 +350,7 @@ document.addEventListener(
             ).then(data => {
                 for (let d of data) {
                     prizes.push({
+                        id: d.id,
                         text: d.note,
                         img: d.img,
                         number: d.quantity,
@@ -354,38 +372,39 @@ document.addEventListener(
                     },
                     gotBack: function (data) {
                         if (data === null) {
-                            Swal.fire('Chương trình kết thúc', 'Đã hết phần thưởng', 'error')
+                            Swal.fire('Chương trình kết thúc', 'Đã hết phần thưởng', 'error');
                         } else if (data === 'Chúc bạn may mắn lần sau') {
                             Swal.fire('Bạn không trúng thưởng', data, 'info');
                         } else {
-                            Swal.fire({
-                                icon: "success",
-                                title: data,
-                                html: `<span class="m-2 text-danger">${prizes[chances].code}</span><a class="copy-button"><i class="fa-regular fa-copy"></i></a>`,
-                                imageUrl: prizes[chances].img,
-                                imageHeight: 200,
-                                footer: "Chúc mừng bạn đã trúng giải thưởng",
-                                didOpen: () => {
-                                    // Lấy chuỗi cần copy
-                                    const textToCopy = prizes[chances].code;
-
-                                    // Cấu hình Clipboard.js
-                                    const clipboard = new ClipboardJS('.copy-button', {
-                                        text: () => textToCopy
-                                    });
-
-                                    // Xử lý sự kiện khi copy thành công
-                                    clipboard.on('success', (e) => {
-                                        e.clearSelection();
-                                        Swal.fire("Đã sao chép!", "", "success");
-                                    });
-
-                                    // Xử lý sự kiện khi copy thất bại
-                                    clipboard.on('error', () => {
-                                        Swal.fire("Sao chép thất bại. Hãy thử lại!", "", "error");
-                                    });
-                                }
-                            });
+                            if (addWheelNotification(link, prizes[chances].id)) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: data,
+                                    html: `<span class="m-2 text-danger">${prizes[chances].code}</span><a class="copy-button"><i class="fa-regular fa-copy"></i></a>`,
+                                    imageUrl: prizes[chances].img,
+                                    imageHeight: 200,
+                                    footer: "Chúc mừng bạn đã trúng giải thưởng",
+                                    didOpen: () => {
+                                        // Lấy chuỗi cần copy
+                                        const textToCopy = prizes[chances].code;
+                                        // Cấu hình Clipboard.js
+                                        const clipboard = new ClipboardJS('.copy-button', {
+                                            text: () => textToCopy
+                                        });
+                                        // Xử lý sự kiện khi copy thành công
+                                        clipboard.on('success', (e) => {
+                                            e.clearSelection();
+                                            Swal.fire("Đã sao chép!", "", "success");
+                                        });
+                                        // Xử lý sự kiện khi copy thất bại
+                                        clipboard.on('error', () => {
+                                            Swal.fire("Sao chép thất bại. Hãy thử lại!", "", "error");
+                                        });
+                                    }
+                                });
+                            } else {
+                                Swal.fire('Lỗi!', 'Đã xảy ra lỗi, nhưng đừng bực mình - đây không phải là lỗi của bạn!', 'error');
+                            }
                         }
                     }
                 });
@@ -409,7 +428,6 @@ function randomIndex(prizes) {
         let cumulativePercentage = 0;
         for (let i = 0; i < prizes.length; i++) {
             cumulativePercentage += prizes[i].percentpage;
-
             if (rand < cumulativePercentage) {
                 prizeIndex = i;
                 if (prizes[prizeIndex].number !== 0) {

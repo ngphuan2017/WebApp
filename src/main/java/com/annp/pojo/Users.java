@@ -537,5 +537,5 @@ public class Users implements Serializable {
     public void setAvatarFrame(Frame avatarFrame) {
         this.avatarFrame = avatarFrame;
     }
-    
+
 }

@@ -38,6 +38,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Date currentDate = new Date(); // Lấy ngày hiện tại
         if (!isSameDay(u.getUpdatedDate(), currentDate)) {
             Notification n = new Notification();
+            n.setId(0);
+            n.setName("Thông báo từ hệ thống");
+            n.setDescription("🎁Bạn nhận được 5 lượt vòng quay may mắn và 5 điểm kinh nghiệm");
             n.setUserId(u);
             u.setExp(u.getExp() + 5);
             u.setNotification(u.getNotification() + 1);

@@ -9,12 +9,12 @@
 <%@taglib prefix="se" uri="http://www.springframework.org/security/tags" %>
 
 <c:url value="/api/wheel-of-forture" var="wheel"/>
-<c:url value="/api/wheel-of-forture/history/${currentUser.id}" var="historyWheel"/>
+<c:url value="/api/wheel-of-forture/add/${currentUser.id}" var="addWheel"/>
 <c:url value="/api/users/wheel" var="wheelValue"/>
 
 <div class="bg">
     <a id="api-wheel-of-forture" href="${wheel}" class="d-none"></a>
-    <a id="api-wheel-of-forture-history" href="${historyWheel}" class="d-none"></a>
+    <a id="api-wheel-of-forture-added" href="${addWheel}" class="d-none"></a>
     <i id="current-user-id" class="d-none">${currentUser.id}</i>
     <div class="wrapper" id="wrapper">
         <section id="luckywheel" class="hc-luckywheel">

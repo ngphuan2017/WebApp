@@ -30,9 +30,6 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public boolean addNotification(Notification n) {
-        n.setId(0);
-        n.setName("Thông báo từ hệ thống");
-        n.setDescription("🎁Bạn nhận được 5 lượt vòng quay may mắn và 5 điểm kinh nghiệm");
         n.setCreatedDate(new Date());
         n.setUpdatedDate(new Date());
         return this.notificationRepository.addNotification(n);

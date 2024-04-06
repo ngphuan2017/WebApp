@@ -133,17 +133,37 @@
         </c:if>
         <c:if test="${type == 'Notification'}">
             <div class="row m-2 p-2">
-                <div class="col-lg-2 col-md-2 col-sm-2 col-4">
-                    <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1710837521/WebApp/tl_1_bhz4fn.webp" alt="picture"
-                         style="width: 100%; max-height: 140px; min-height: 140px;"/>
-                </div>
-                <div class="col-lg-10 col-md-10 col-sm-10 col-8">
-                    <h4 class="text-info">${index.name}</h4>
-                    <div>
-                        <p>${index.description}</p>
-                        <p class="create-date">${index.createdDate}</p>
-                    </div>
-                </div>
+                <c:choose>
+                    <c:when test="${index.promotionId == null}">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-4">
+                            <img src="https://res.cloudinary.com/dkmug1913/image/upload/v1710837521/WebApp/tl_1_bhz4fn.webp" alt="picture"
+                                 style="width: 100%; max-height: 140px; min-height: 140px;"/>
+                        </div>
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-8">
+                            <h4 class="text-info">${index.name}</h4>
+                            <div>
+                                <p>${index.description}</p>
+                                <p class="create-date">${index.createdDate}</p>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-4">
+                            <img src="${index.promotionId.img}" alt="picture"
+                                 style="width: 100%; max-height: 140px; min-height: 140px;"/>
+                        </div>
+                        <div class="col-lg-10 col-md-10 col-sm-10 col-8">
+                            <h4 class="text-primary">${index.name}</h4>
+                            <p>${index.description}</p>
+                            <p style="margin: 14px 0;"><span id="wheel-code-${index.id}"
+                                                             style="background-color: yellow; color: red; font-weight: bolder; text-transform: uppercase;">${index.promotionId.code}</span>
+                                <a class="copy-button m-2" onclick="copyWheelCode(${index.id})"><i
+                                        class="fa-regular fa-copy"></i></a>
+                            </p>
+                            <p class="create-date">${index.createdDate}</p>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </c:if>
     </c:forEach>

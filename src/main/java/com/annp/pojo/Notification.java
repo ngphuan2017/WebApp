@@ -38,6 +38,10 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Notification.findByUpdatedDate", query = "SELECT n FROM Notification n WHERE n.updatedDate = :updatedDate")})
 public class Notification implements Serializable {
 
+    @JoinColumn(name = "PROMOTION_ID", referencedColumnName = "ID")
+    @ManyToOne
+    private Promotion promotionId;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -138,6 +142,14 @@ public class Notification implements Serializable {
     @Override
     public String toString() {
         return "com.annp.pojo.Notification[ id=" + id + " ]";
+    }
+
+    public Promotion getPromotionId() {
+        return promotionId;
+    }
+
+    public void setPromotionId(Promotion promotionId) {
+        this.promotionId = promotionId;
     }
     
 }

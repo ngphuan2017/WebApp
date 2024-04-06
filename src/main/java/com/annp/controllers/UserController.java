@@ -197,6 +197,9 @@ public class UserController {
                 u.setNotification(u.getNotification() + 1);
                 u.setWheel(u.getWheel() + 5);
                 Notification n = new Notification();
+                n.setId(0);
+                n.setName("Thông báo từ hệ thống");
+                n.setDescription("🎁Bạn nhận được 5 lượt vòng quay may mắn và 5 điểm kinh nghiệm");
                 n.setUserId(u);
                 this.notificationService.addNotification(n);
             }
@@ -240,6 +243,9 @@ public class UserController {
                 u.setNotification(u.getNotification() + 1);
                 u.setWheel(u.getWheel() + 5);
                 Notification n = new Notification();
+                n.setId(0);
+                n.setName("Thông báo từ hệ thống");
+                n.setDescription("🎁Bạn nhận được 5 lượt vòng quay may mắn và 5 điểm kinh nghiệm");
                 n.setUserId(u);
                 this.notificationService.addNotification(n);
             }
