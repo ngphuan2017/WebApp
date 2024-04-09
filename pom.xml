@@ -195,9 +195,21 @@
             <version>9.1.22</version>
         </dependency>
         <!-- Pay MOMO -->
-        
+        <dependency>
+            <groupId>io.github.momo-wallet</groupId>
+            <artifactId>momopayment</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!--end add-->
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>

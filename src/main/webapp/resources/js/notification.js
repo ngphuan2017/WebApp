@@ -7,7 +7,7 @@ function copyCode(id) {
 
     clipboard.on('success', (e) => {
         e.clearSelection();
-        Swal.fire("Đã sao chép!", "", "success");
+        Swal.fire("Đã sao chép mã Voucher!", "", "success");
     });
 
     clipboard.on('error', () => {
@@ -24,7 +24,7 @@ function copyWheelCode(id) {
 
     clipboard.on('success', (e) => {
         e.clearSelection();
-        Swal.fire("Đã sao chép!", "", "success");
+        Swal.fire("Đã sao chép mã Voucher!", "", "success");
     });
 
     clipboard.on('error', () => {

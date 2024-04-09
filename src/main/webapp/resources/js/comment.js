@@ -430,6 +430,9 @@ function levelCmt(endpoint, id) {
 
 function reply(cmtid) {
     let reply = document.getElementById(`reply${cmtid}`);
+    let formReply = ``;
+    reply.innerHTML = formReply;
+    Swal.fire('Thông báo!', 'Chức năng đang phát triển!', 'info');
 }
 
 function extractBaseEndpointAndPage(endpointed) {
