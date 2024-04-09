@@ -16,6 +16,6 @@ public class PaymentController {
     
     @GetMapping(path = "/payment")
     public String payment() {
-        return "payment";
+        return "vn-payment";
     }
 }

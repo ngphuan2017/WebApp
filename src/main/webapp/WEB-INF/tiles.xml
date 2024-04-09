@@ -112,9 +112,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/cart.jsp" />
     </definition>
-    <definition name="payment" extends="baseLayout">
+    <definition name="vn-payment" extends="baseLayout">
         <put-attribute name="title" value="Phú An Shop" />
         <put-attribute name="content" value="/WEB-INF/pages/vnpay-return.jsp" />
+    </definition>
+    <definition name="momo-payment" extends="baseLayout">
+        <put-attribute name="title" value="Phú An Shop" />
+        <put-attribute name="content" value="/WEB-INF/pages/momo-return.jsp" />
     </definition>
 
 

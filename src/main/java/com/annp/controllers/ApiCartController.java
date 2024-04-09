@@ -5,7 +5,10 @@
 package com.annp.controllers;
 
 import com.annp.configs.VNPayConfig;
+import com.annp.dto.PaymentResponseDto;
+import com.annp.enums.RequestType;
 import com.annp.pojo.*;
+import com.annp.service.PaymentService;
 import com.annp.service.ProductService;
 import com.annp.service.PromotionService;
 import com.annp.service.UserService;
@@ -54,7 +57,20 @@ public class ApiCartController {
     @Autowired
     private PromotionService promotionService;
     @Autowired
+    private PaymentService paymentService;
+    @Autowired
     private Environment env;
+
+    String requestId = String.valueOf(System.currentTimeMillis());
+    String orderId = String.valueOf(System.currentTimeMillis());
+    Long transId = 2L;
+
+    String partnerClientId = "partnerClientId";
+    String orderInfo = "Thanh toán bằng ví điện tử MoMo";
+    String callbackToken = "callbackToken";
+    String token = "";
+
+    com.annp.configs.Environment environment = com.annp.configs.Environment.selectEnv("dev");
 
     @PostMapping(value = "/cart")
     public ResponseEntity<Map<String, String>> addToCart(@RequestBody Cart c, HttpSession session) {
@@ -113,10 +129,10 @@ public class ApiCartController {
     }
 
     @PostMapping("/pay")
-    public ResponseEntity pay(HttpSession session, Authentication authentication, @RequestBody Map<String, String> params, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public ResponseEntity pay(HttpSession session, Authentication authentication, @RequestBody Map<String, String> params, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, Exception {
 
         int option = Integer.parseInt(params.get("optionPay"));
-        Integer discount = Integer.valueOf(params.get("discount"));
+        Integer discount = "".equals(params.get("discount")) ? 0 : Integer.parseInt(params.get("discount")) > 0 ? Integer.valueOf(params.get("discount")) : 0;
         Map<String, Cart> cart = (Map<String, Cart>) session.getAttribute("cart");
         Integer amount = 0;
         if (cart != null) {
@@ -148,7 +164,13 @@ public class ApiCartController {
             case 3:
                 if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
-                    return new ResponseEntity(HttpStatus.OK);
+                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount, discount);
+                    PaymentResponseDto pay = this.paymentService.createPayment(environment, orderId, requestId, Integer.toString(amount - discount),
+                            orderInfo, "", RequestType.CAPTURE_WALLET, Boolean.TRUE);
+                    HttpHeaders headers = new HttpHeaders();
+                    String urlPayment = pay.getPayUrl();
+                    headers.add("Location", urlPayment);
+                    return new ResponseEntity(headers, HttpStatus.OK);
                 }
                 break;
             case 4:
@@ -179,24 +201,24 @@ public class ApiCartController {
             htmlEmail.setFrom(env.getProperty("spring.mail.username"), "PhuAnShop");
             htmlEmail.setCharset("UTF-8");
             htmlEmail.setSubject("Thông tin đơn hàng đã mua tại Phú An Shop");
-            String htmlMessage = "<html><body style='margin-right: auto; margin-left: auto; padding-left: 15px; padding-right: 15px; width: 100%; font-size:16px;'>";
+            String htmlMessage = "<html><body style='margin: auto; width: 100%; font-size:16px;'>";
             htmlMessage += "<p align='center'><a href='" + baseUrl + "'><img src='https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png' alt='Phú An Shop' /></a></p>";
             htmlMessage += "<p>Xin chào <span style='color: #ee4d2d'>" + fullname + "</span>,</p>";
             htmlMessage += "<table bgcolor='#fff' cellpadding='0' cellspacing='0' border='0' align='center'><thead><tr><th colspan='2' style='padding-bottom: 15px;'>THÔNG TIN ĐƠN HÀNG</th></tr></thead><tbody>";
             if (cart != null) {
                 for (Cart c : cart.values()) {
-                    htmlMessage += "<tr><td>Sản phẩm: </td><td style='color: gray;'>"+ c.getName() +"</td></tr>";
-                    htmlMessage += "<tr><td>Đơn giá: </td><td style='color: gray;'>"+ decimalFormat.format(c.getPrice()) +" VNĐ</td></tr>";
-                    htmlMessage += "<tr><td>Số lượng: </td><td style='color: gray;'>"+ c.getQuantity() +"</td></tr>";
-                    htmlMessage += "<tr><td>Số tiền: </td><td style='color: gray;'>"+ decimalFormat.format((long) c.getPrice() *c.getQuantity()) +" VNĐ</td></tr>";
-                    htmlMessage += "<tr><td>Ngày đặt hàng: </td><td style='color: gray;'>"+ date +"</td></tr>";
+                    htmlMessage += "<tr><td>Sản phẩm: </td><td style='color: gray;'>" + c.getName() + "</td></tr>";
+                    htmlMessage += "<tr><td>Đơn giá: </td><td style='color: gray;'>" + decimalFormat.format(c.getPrice()) + " VNĐ</td></tr>";
+                    htmlMessage += "<tr><td>Số lượng: </td><td style='color: gray;'>" + c.getQuantity() + "</td></tr>";
+                    htmlMessage += "<tr><td>Số tiền: </td><td style='color: gray;'>" + decimalFormat.format((long) c.getPrice() * c.getQuantity()) + " VNĐ</td></tr>";
+                    htmlMessage += "<tr><td>Ngày đặt hàng: </td><td style='color: gray;'>" + date + "</td></tr>";
                     htmlMessage += "<tr><td colspan='2'><hr/></td></tr>";
                 }
             }
-            htmlMessage += "<tr><td>Tổng tiền: </td><td style='color: #FA8072;'>"+ decimalFormat.format(amount) +" VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Voucher từ Shop: </td><td style='color: #FA8072;'>"+ decimalFormat.format(discount) +" VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Tổng tiền: </td><td style='color: #FA8072;'>" + decimalFormat.format(amount) + " VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Voucher từ Shop: </td><td style='color: #FA8072;'>" + decimalFormat.format(discount) + " VNĐ</td></tr>";
             htmlMessage += "<tr><td>Phí vận chuyển: </td><td style='color: #FA8072;'>0 VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Tổng thanh toán: </td><td style='color: red;'>"+ decimalFormat.format(amount - discount) +" VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Tổng thanh toán: </td><td style='color: red;'>" + decimalFormat.format(amount - discount) + " VNĐ</td></tr>";
             htmlMessage += "</tbody></table>";
             htmlMessage += "<p align='center' style='padding: 10px;'><a href='" + baseUrl + "' align='center' ";
             htmlMessage += "style='padding: 8px 30px; border-radius: 3px; background-color: #ee4d2d; color:#fff; text-decoration: none;'>Đi đến Shop</a></p>";

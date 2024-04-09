@@ -62,12 +62,12 @@
                     <td><%=request.getParameter("vnp_TxnRef")%></td>
                 </tr>
                 <tr>
-                    <td>Số tiền:</td>
-                    <td><%= formattedAmount%> VNĐ</td>
-                </tr>
-                <tr>
                     <td>Mô tả giao dịch:</td>
                     <td><%=request.getParameter("vnp_OrderInfo")%></td>
+                </tr>
+                <tr>
+                    <td>Số tiền:</td>
+                    <td><%= formattedAmount%> VNĐ</td>
                 </tr>
                 <tr>
                     <td>Mã lỗi thanh toán:</td>

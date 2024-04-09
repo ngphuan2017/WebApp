@@ -86,8 +86,8 @@
         <select class="form-select text-center" name="option-pay" id="option-pay">
             <option value="1">Thanh toán khi nhận hàng</option>
             <option value="2">Cổng thanh toán VNPay</option>
-            <option value="3" disabled>Chuyển khoản ngân hàng <span>(Đang bảo trì)</span></option>
-            <option value="4" disabled>Ví điện tử Momo <span>(Đang bảo trì)</span></option>
+            <option value="3">Ví điện tử Momo</option>
+            <option value="4" disabled>Chuyển khoản ngân hàng <span>(Đang bảo trì)</span></option>
         </select>
         <div class="d-flex justify-content-center mt-4 mb-4">
             <c:if test="${pageContext.request.userPrincipal.name == null}">
