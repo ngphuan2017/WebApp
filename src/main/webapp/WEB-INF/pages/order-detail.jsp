@@ -76,7 +76,7 @@
             <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" id="total-quantity">${totalQuantity}</span> sản phẩm</h6>
             <h6 class="currency">Tổng tiền: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="money" id="total-price">${totalAmount}</span> VNĐ</h6>
             <h7 class="currency">Voucher giảm giá: <span style="color: #ee4d2d; font-size: 18px; font-weight: 600;" class="money" id="voucher-discount">${voucherDiscount}</span> VNĐ</h7>
-            <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="money" id="total-amount">${totalAmount - voucherDiscount >= 0 ? totalAmount - voucherDiscount : 0}</span> VNĐ</h5>
+            <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="money" id="total-amount">${totalAmount - voucherDiscount > 0 ? totalAmount - voucherDiscount : 0}</span> VNĐ</h5>
         </div>
     </div>
 </c:if>

@@ -21,44 +21,70 @@ function addToCart(endpoint, id, name, price, image) {
     }).then(res => res.json()).then(data => {
         let counters = document.getElementsByClassName("cart-counter");
         for (let d of counters)
-            d.innerText = data.totalQuantity;
+            d.innerText = data.totalCount;
     });
 }
 
-function updateItem(endpoint, obj, id, price) {
+function updateItem(endpoint, productUrl, obj, id, price) {
+    let dVoucherValue = document.getElementById("d-voucher-discount");
+    let totalPrices = document.getElementById("total-price");
+    let dTotalPrices = document.getElementById("d-total-price");
     var inputQuantity = document.getElementById(`product-quantity-${id}`);
     var inputQuantityOld = document.getElementById(`product-quantity-${id}-old`);
-    if (obj.value < 1) {
+    if (parseInt(obj.value) < 1) {
         inputQuantity.value = inputQuantityOld.textContent;
-        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị không âm!', 'error');
-        return;
-    } else if (obj.value > 999) {
-        inputQuantity.value = inputQuantityOld.textContent;
-        Swal.fire('Sản phẩm giới hạn số lượng!', 'Vui lòng nhập giá trị nhỏ hơn!', 'error');
-        return;
+        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị dương!', 'error');
+    } else {
+        fetch(productUrl, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/xml'
+            }
+        }).then(res =>
+            res.text()
+        ).then(data => {
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(data, 'application/xml');
+            const json = xmlToJson(xml);
+            if (parseInt(obj.value) > parseInt(json.product.quantity)) {
+                inputQuantity.value = inputQuantityOld.textContent;
+                Swal.fire('Sản phẩm giới hạn số lượng!', 'Vui lòng nhập giá trị nhỏ hơn hoặc bằng: ' + json.product.quantity, 'error');
+            } else {
+                inputQuantityOld.textContent = obj.value;
+                fetch(endpoint, {
+                    method: "put",
+                    body: JSON.stringify({
+                        "quantity": obj.value
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }).then(res => res.json()).then(data => {
+                    let quantitys = document.getElementsByClassName("cart-quantity");
+                    for (let d of quantitys)
+                        d.innerText = data.totalQuantity;
+                    let counters = document.getElementsByClassName("cart-counter");
+                    for (let d of counters)
+                        d.innerText = data.totalCount;
+                    let amounts = document.getElementsByClassName("cart-amount");
+                    for (let d of amounts)
+                        d.innerText = parseFloat(data.totalAmount).toLocaleString("en-US");
+                    let quantity = parseInt(obj.value);
+                    let totalElement = document.getElementById(`total${id}`);
+                    let totalPrice = price * quantity;
+                    totalElement.innerText = parseFloat(totalPrice).toLocaleString("en-US");
+                    dTotalPrices.textContent = parseFloat(data.totalAmount);
+                    let discount = parseInt(dVoucherValue.textContent);
+                    if (discount > 0) {
+                        totalPrices.textContent = numberWithCommas(parseFloat(data.totalAmount) - discount > 0 ? parseFloat(data.totalAmount) - discount : 0);
+                    }
+                    ;
+                });
+            }
+        }).catch(error => {
+            console.info(error);
+        });
     }
-    inputQuantityOld.textContent = obj.value;
-    fetch(endpoint, {
-        method: "put",
-        body: JSON.stringify({
-            "quantity": obj.value
-        }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }).then(res => res.json()).then(data => {
-        let counters = document.getElementsByClassName("cart-counter");
-        for (let d of counters)
-            d.innerText = data.totalQuantity;
-        let amounts = document.getElementsByClassName("cart-amount");
-        for (let d of amounts)
-            d.innerText = parseFloat(data.totalAmount).toLocaleString("en-US");
-        let quantity = obj.value;
-        let totalElement = document.getElementById(`total${id}`);
-        let totalPrice = price * quantity;
-        totalElement.innerText = parseFloat(totalPrice).toLocaleString("en-US");
-        ;
-    });
 }
 
 function deleteItem(endpoint, id) {
@@ -77,13 +103,25 @@ function deleteItem(endpoint, id) {
             }).then(res => res.json()).then(data => {
                 let el = document.getElementById(`cart${id}`);
                 el.style.display = "none";
+                let quantitys = document.getElementsByClassName("cart-quantity");
+                for (let d of quantitys)
+                    d.innerText = data.totalQuantity;
                 let counters = document.getElementsByClassName("cart-counter");
                 for (let d of counters)
-                    d.innerText = data.totalQuantity;
+                    d.innerText = data.totalCount;
                 let amounts = document.getElementsByClassName("cart-amount");
                 for (let d of amounts) {
                     d.innerText = parseFloat(data.totalAmount).toLocaleString("en-US");
                 }
+                let dTotalPrices = document.getElementById("d-total-price");
+                let dVoucherValue = document.getElementById("d-voucher-discount");
+                let totalPrices = document.getElementById("total-price");
+                dTotalPrices.textContent = parseFloat(data.totalAmount);
+                let discount = parseInt(dVoucherValue.textContent);
+                    if (discount > 0) {
+                        totalPrices.textContent = numberWithCommas(parseFloat(data.totalAmount) - discount > 0 ? parseFloat(data.totalAmount) - discount : 0);
+                    }
+                    ;
                 Swal.fire('Xóa thành công!', 'Sản phẩm đã bị xóa khỏi giỏ hàng!', 'success');
             });
         }
@@ -117,12 +155,16 @@ function pay(endpoint) {
                         if (locationHeader !== null) {
                             window.location.href = locationHeader;
                         } else {
+                            let totalCount = document.getElementById("total-count").textContent;
+                            let quantitys = document.getElementsByClassName("cart-quantity");
                             let counters = document.getElementsByClassName("cart-counter");
                             document.querySelector('.table').innerHTML = ``;
                             document.querySelector('.cart-amount').innerHTML = 0;
                             for (let d of counters)
                                 d.innerText = 0;
-                            setNotification(1, totalQuantity);
+                            for (let d of quantitys)
+                                d.innerText = 0;
+                            setNotification(1, totalCount);
                             Swal.fire('Đặt hàng thành công!', 'Thông tin đơn hàng của bạn đã được gửi về Email. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi!', 'success');
                         }
                     } else {
@@ -157,9 +199,10 @@ function checkVoucherCode(endpoint) {
         for (let check of data.promotions) {
             if (check.code !== null && check.code.toLowerCase() === voucher.value.toLowerCase()) {
                 voucherContent.textContent = check.note;
-                voucherValue.textContent = numberWithCommas(check.discount*1000);
-                dVoucherValue.textContent = check.discount*1000;
-                totalPrice.textContent = numberWithCommas(dTotalPrice.textContent - check.discount*1000);
+                voucherValue.textContent = numberWithCommas(check.discount * 1000);
+                dVoucherValue.textContent = check.discount * 1000;
+                let total = parseInt(dTotalPrice.textContent) - check.discount * 1000 > 0 ? parseInt(dTotalPrice.textContent) - check.discount * 1000 : 0;
+                totalPrice.textContent = numberWithCommas(total);
                 flag = 1;
             }
         }

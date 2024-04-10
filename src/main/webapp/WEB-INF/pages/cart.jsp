@@ -55,7 +55,7 @@
                         <td>
                             <i class="d-none" id="product-quantity-${c.id}-old">${c.quantity}</i>
                             <input type="number" value="${c.quantity}" id="product-quantity-${c.id}"
-                                   onblur="updateItem('${endpoint}/${c.id}', this, ${c.id}, ${c.price})"
+                                   onblur="updateItem('${endpoint}/${c.id}', '${producted}/${c.id}', this, ${c.id}, ${c.price})"
                                    class="form-control" />
                         </td>
                         <td class="currency">
@@ -70,11 +70,13 @@
                 </c:forEach>
             </tbody>
         </table> 
-
+        <div class="d-none">
+            <span id="total-count">${cartStats.totalCount}</span>
+        </div>
         <div class="container alert alert-info text-center" data-aos="zoom-in">
-            <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-counter" id="total-quantity">${cartStats.totalQuantity}</span> sản phẩm</h6>
+            <h6>Tổng số lượng: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-quantity" id="total-quantity">${cartStats.totalQuantity}</span> sản phẩm</h6>
             <h6 class="currency">Tổng tiền: <span style="color: #ee4d2d; font-size: 20px; font-weight: 600;" class="cart-amount money">${cartStats.totalAmount}</span> VNĐ</h6>
-            <span class="d-none" id="d-voucher-discount"></span>
+            <span class="d-none" id="d-voucher-discount">0</span>
             <h7>Voucher giảm giá: <span style="color: #ee4d2d; font-size: 18px; font-weight: 600;" id="voucher-discount">0</span> VNĐ</h7>
             <span class="d-none" id="d-total-price">${cartStats.totalAmount}</span>
             <h5 class="currency">Tổng thanh toán: <span style="color: #ee4d2d; font-size: 25px; font-weight: 700;" class="cart-amount money" id="total-price">${cartStats.totalAmount}</span> VNĐ</h5>

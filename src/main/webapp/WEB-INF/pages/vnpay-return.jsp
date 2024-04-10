@@ -4,15 +4,11 @@
     Author     : phuan
 --%>
 
-<%@page import="java.util.Date"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.text.NumberFormat"%>
-<%@page import="java.util.Locale"%>
 <%@page import="com.annp.configs.VNPayConfig"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.nio.charset.StandardCharsets"%>
-<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Enumeration"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
@@ -27,7 +23,6 @@
             fields.put(fieldName, fieldValue);
         }
     }
-
     String vnp_SecureHash = request.getParameter("vnp_SecureHash");
     if (fields.containsKey("vnp_SecureHashType")) {
         fields.remove("vnp_SecureHashType");
@@ -36,17 +31,6 @@
         fields.remove("vnp_SecureHash");
     }
     String signValue = VNPayConfig.hashAllFields(fields);
-
-    String vnpAmountStr = request.getParameter("vnp_Amount");
-    double vnpAmount = Double.parseDouble(vnpAmountStr)/100;
-    NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.US);
-    String formattedAmount = numberFormat.format(vnpAmount);
-    
-    String vnp_PayDate = request.getParameter("vnp_PayDate");
-    SimpleDateFormat sdfInput = new SimpleDateFormat("yyyyMMddHHmmss");
-    Date paymentDate = sdfInput.parse(vnp_PayDate);
-    SimpleDateFormat sdfOutput = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
-    String formattedDate = sdfOutput.format(paymentDate);
 
 %>
 
@@ -59,36 +43,35 @@
             <tbody>
                 <tr>
                     <td>Mã giao dịch thanh toán:</td>
-                    <td><%=request.getParameter("vnp_TxnRef")%></td>
+                    <td>${vnp_TxnRef}</td>
                 </tr>
                 <tr>
                     <td>Mô tả giao dịch:</td>
-                    <td><%=request.getParameter("vnp_OrderInfo")%></td>
+                    <td>${vnp_OrderInfo}</td>
                 </tr>
                 <tr>
                     <td>Số tiền:</td>
-                    <td><%= formattedAmount%> VNĐ</td>
+                    <td>${vnp_Amount} VNĐ</td>
                 </tr>
                 <tr>
                     <td>Mã lỗi thanh toán:</td>
-                    <td><%=request.getParameter("vnp_ResponseCode")%></td>
+                    <td>${vnp_ResponseCode}</td>
                 </tr>
                 <tr>
                     <td>Mã giao dịch tại CTT VNPAY-QR:</td>
-                    <td><%=request.getParameter("vnp_TransactionNo")%></td>
+                    <td>${vnp_TransactionNo}</td>
                 </tr>
                 <tr>
                     <td>Mã ngân hàng thanh toán:</td>
-                    <td><%=request.getParameter("vnp_BankCode")%></td>
+                    <td>${vnp_BankCode}</td>
                 </tr>
                 <tr>
                     <td>Thời gian thanh toán:</td>
-                    <td><%= formattedDate %></td>
+                    <td>${vnp_PayDate}</td>
                 </tr>
                 <tr>
                     <td>Tình trạng giao dịch:</td>
-                    <td><%
-                        if (signValue.equals(vnp_SecureHash)) {
+                    <td><% if (signValue.equals(vnp_SecureHash)) {
                             if ("00".equals(request.getParameter("vnp_TransactionStatus"))) {
                                 out.print("Thành công");
                             } else {
@@ -96,9 +79,10 @@
                             }
 
                         } else {
-                            out.print("invalid signature");
+                            out.print("Chữ ký không hợp lệ");
                         }
-                        %></td>
+                        %>
+                    </td>
                 </tr>
             </tbody>
         </table>

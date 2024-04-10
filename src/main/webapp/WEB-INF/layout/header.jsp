@@ -76,7 +76,7 @@
                     </c:forEach>
                     <li class="nav-item">
                         <a class="nav-link" href="${cart}"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng <span
-                                class="badge bg-danger cart-counter">${cartStats.totalQuantity}</span></a>
+                                class="badge bg-danger cart-counter">${cartStats.totalCount}</span></a>
                     </li>
                     <c:choose>
                         <c:when test="${pageContext.request.userPrincipal.name == null}">

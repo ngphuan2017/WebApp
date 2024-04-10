@@ -15,17 +15,17 @@ import java.util.Properties;
  *
  * @author phuan
  */
-public class Environment {
+public class MomoConfig {
 
     private PartnerInfoDto partnerInfo;
     private MoMoEndpointDto endpoints;
     private String target;
 
-    public Environment(MoMoEndpointDto endpoints, PartnerInfoDto partnerInfo, EnvTarget target) {
+    public MomoConfig(MoMoEndpointDto endpoints, PartnerInfoDto partnerInfo, EnvTarget target) {
         this(endpoints, partnerInfo, target.string());
     }
 
-    public Environment(MoMoEndpointDto momoEndpoint, PartnerInfoDto partnerInfo, String target) {
+    public MomoConfig(MoMoEndpointDto momoEndpoint, PartnerInfoDto partnerInfo, String target) {
         this.endpoints = momoEndpoint;
         this.partnerInfo = partnerInfo;
         this.target = target;
@@ -37,7 +37,7 @@ public class Environment {
      * @return
      * @throws IllegalArgumentException
      */
-    public static Environment selectEnv(String target) throws IllegalArgumentException {
+    public static MomoConfig selectEnv(String target) throws IllegalArgumentException {
         switch (target) {
             case "dev":
                 return selectEnv(EnvTarget.DEV);
@@ -55,8 +55,8 @@ public class Environment {
      * @param target EnvTarget (choose DEV or PROD)
      * @return
      */
-    public static Environment selectEnv(EnvTarget target) {
-        try (InputStream input = Environment.class.getClassLoader().getResourceAsStream("application.properties")) {
+    public static MomoConfig selectEnv(EnvTarget target) {
+        try (InputStream input = MomoConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
             Properties prop = new Properties();
             prop.load(input);
 
@@ -71,8 +71,8 @@ public class Environment {
                             prop.getProperty("TOKEN_BIND_URL"),
                             prop.getProperty("TOKEN_INQUIRY_URL"),
                             prop.getProperty("TOKEN_DELETE_URL"));
-                    PartnerInfoDto devInfo = new PartnerInfoDto(prop.getProperty("momo.api.partner.code"), prop.getProperty("momo.api.accsess.key"), prop.getProperty("momo.api.secret.key"));
-                    Environment dev = new Environment(devEndpoint, devInfo, target);
+                    PartnerInfoDto devInfo = new PartnerInfoDto(prop.getProperty("momo.api.partner.code"), prop.getProperty("momo.api.access.key"), prop.getProperty("momo.api.secret.key"));
+                    MomoConfig dev = new MomoConfig(devEndpoint, devInfo, target);
                     return dev;
                 case PROD:
                     MoMoEndpointDto prodEndpoint = new MoMoEndpointDto(prop.getProperty("momo.endpoint"),
@@ -84,8 +84,8 @@ public class Environment {
                             prop.getProperty("TOKEN_BIND_URL"),
                             prop.getProperty("TOKEN_INQUIRY_URL"),
                             prop.getProperty("TOKEN_DELETE_URL"));
-                    PartnerInfoDto prodInfo = new PartnerInfoDto(prop.getProperty("momo.api.partner.code"), prop.getProperty("momo.api.accsess.key"), prop.getProperty("momo.api.secret.key"));
-                    Environment prod = new Environment(prodEndpoint, prodInfo, target);
+                    PartnerInfoDto prodInfo = new PartnerInfoDto(prop.getProperty("momo.api.partner.code"), prop.getProperty("momo.api.access.key"), prop.getProperty("momo.api.secret.key"));
+                    MomoConfig prod = new MomoConfig(prodEndpoint, prodInfo, target);
                     return prod;
                 default:
                     throw new IllegalArgumentException("MoMo doesnt provide other environment: dev and prod");

@@ -4,7 +4,7 @@
  */
 package com.annp.service.impl;
 
-import com.annp.configs.Environment;
+import com.annp.configs.MomoConfig;
 import com.annp.dto.PaymentRequestDto;
 import com.annp.dto.PaymentResponseDto;
 import com.annp.enums.Language;
@@ -21,7 +21,7 @@ import com.mservice.shared.utils.Encoder;
  */
 public class CreateOrderMoMo extends AbstractProcess<PaymentRequestDto, PaymentResponseDto> {
 
-    public CreateOrderMoMo(Environment environment) {
+    public CreateOrderMoMo(MomoConfig environment) {
         super(environment);
     }
 
@@ -31,20 +31,21 @@ public class CreateOrderMoMo extends AbstractProcess<PaymentRequestDto, PaymentR
      * @param amount
      * @param extraData
      * @param orderInfo
-     * @param env       name of the environment (dev or prod)
-     * @param orderId   unique order ID in MoMo system
+     * @param env name of the environment (dev or prod)
+     * @param orderId unique order ID in MoMo system
      * @param requestId request ID
      * @param returnURL URL to redirect customer
      * @param notifyURL URL for MoMo to return transaction status to merchant
      * @return PaymentResponse
-     **/
-
-    public static PaymentResponseDto process(Environment env, String orderId, String requestId, String amount, String orderInfo, 
+     *
+     */
+    public static PaymentResponseDto process(MomoConfig env, String orderId, String requestId, String amount, String orderInfo,
             String returnURL, String notifyURL, String extraData, RequestType requestType, Boolean autoCapture) throws Exception {
         try {
             CreateOrderMoMo m2Processor = new CreateOrderMoMo(env);
 
-            PaymentRequestDto request = m2Processor.createPaymentCreationRequest(orderId, requestId, amount, orderInfo, returnURL, notifyURL, extraData, requestType, autoCapture);
+            PaymentRequestDto request = m2Processor.createPaymentCreationRequest(orderId, requestId, amount, orderInfo,
+                    returnURL, notifyURL, extraData, requestType, autoCapture);
             PaymentResponseDto captureMoMoResponse = m2Processor.execute(request);
 
             return captureMoMoResponse;
@@ -66,14 +67,14 @@ public class CreateOrderMoMo extends AbstractProcess<PaymentRequestDto, PaymentR
                 throw new MoMoException("[PaymentResponse] [" + request.getOrderId() + "] -> Error API");
             }
 
-            System.out.println("uweryei7rye8wyreow8: "+ response.getData());
+            System.out.println("uweryei7rye8wyreow8: " + response.getData());
 
             PaymentResponseDto captureMoMoResponse = getGson().fromJson(response.getData(), PaymentResponseDto.class);
-            String responserawData = Parameter.REQUEST_ID + "=" + captureMoMoResponse.getRequestId() +
-                    "&" + Parameter.ORDER_ID + "=" + captureMoMoResponse.getOrderId() +
-                    "&" + Parameter.MESSAGE + "=" + captureMoMoResponse.getMessage() +
-                    "&" + Parameter.PAY_URL + "=" + captureMoMoResponse.getPayUrl() +
-                    "&" + Parameter.RESULT_CODE + "=" + captureMoMoResponse.getResultCode();
+            String responserawData = Parameter.REQUEST_ID + "=" + captureMoMoResponse.getRequestId()
+                    + "&" + Parameter.ORDER_ID + "=" + captureMoMoResponse.getOrderId()
+                    + "&" + Parameter.MESSAGE + "=" + captureMoMoResponse.getMessage()
+                    + "&" + Parameter.PAY_URL + "=" + captureMoMoResponse.getPayUrl()
+                    + "&" + Parameter.RESULT_CODE + "=" + captureMoMoResponse.getResultCode();
 
             return captureMoMoResponse;
 
@@ -94,7 +95,7 @@ public class CreateOrderMoMo extends AbstractProcess<PaymentRequestDto, PaymentR
      * @return
      */
     public PaymentRequestDto createPaymentCreationRequest(String orderId, String requestId, String amount, String orderInfo,
-                                                           String returnUrl, String notifyUrl, String extraData, RequestType requestType, Boolean autoCapture) {
+            String returnUrl, String notifyUrl, String extraData, RequestType requestType, Boolean autoCapture) {
 
         try {
             String requestRawData = new StringBuilder()
@@ -120,5 +121,5 @@ public class CreateOrderMoMo extends AbstractProcess<PaymentRequestDto, PaymentR
 
         return null;
     }
-    
+
 }
