@@ -360,7 +360,7 @@ public class UserController {
     public String details(Model model, Authentication authentication, @PathVariable(value = "orderId") int id) {
         Users user = this.userService.getUserByUsername(authentication.getName());
         Orders orders = this.ordersService.getOrderById(id);
-        if (orders != null && user.getId() == orders.getUserid().getId()) {
+        if (orders != null && user.getId() == orders.getUserid().getId() || user.getUserRole().getId() < 3) {
             List<OrderDetail> orderdetails = this.ordersService.getOrderDetailByOrderId(id);
             model.addAttribute("orders", orderdetails);
             return "order-detail";

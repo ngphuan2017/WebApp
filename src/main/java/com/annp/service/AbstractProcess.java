@@ -4,7 +4,7 @@
  */
 package com.annp.service;
 
-import com.annp.configs.Environment;
+import com.annp.configs.MomoConfig;
 import com.annp.dto.PartnerInfoDto;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,10 +18,10 @@ import com.mservice.shared.utils.Execute;
 public abstract class AbstractProcess<T, V> {
 
     protected PartnerInfoDto partnerInfo;
-    protected Environment environment;
+    protected MomoConfig environment;
     protected Execute execute = new Execute();
 
-    public AbstractProcess(Environment environment) {
+    public AbstractProcess(MomoConfig environment) {
         this.environment = environment;
         this.partnerInfo = environment.getPartnerInfo();
     }

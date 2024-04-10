@@ -4,6 +4,7 @@
  */
 package com.annp.service;
 
+import com.annp.configs.MomoConfig;
 import com.annp.dto.PaymentResponseDto;
 import com.annp.enums.RequestType;
 
@@ -13,7 +14,7 @@ import com.annp.enums.RequestType;
  */
 public interface PaymentService {
     
-    public PaymentResponseDto createPayment(com.annp.configs.Environment environment, String orderId, String requestId,
-            String amount, String orderInfo, String extraData, RequestType requestType, Boolean autoCapture) throws Exception;
+    public PaymentResponseDto createPayment(MomoConfig environment, String orderId, String requestId, String amount, 
+            String orderInfo, String extraData, RequestType requestType, Boolean autoCapture) throws Exception;
     
 }

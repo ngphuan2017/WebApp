@@ -17,17 +17,16 @@ import java.util.Random;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 /**
  * @author phuan
  */
 public class VNPayConfig {
-
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "https://phuanshop.id.vn/payment";
-    public static String vnp_TmnCode = "BBZUR5PT";
-    public static String secretKey = "JAIOQQUZELTORFTSEVRSMEEIKDEIVXBB";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    
+    @Autowired
+    public static Environment env;
 
     public static String md5(String message) {
         String digest = null;
@@ -83,7 +82,7 @@ public class VNPayConfig {
                 sb.append("&");
             }
         }
-        return hmacSHA512(secretKey, sb.toString());
+        return hmacSHA512(env.getProperty("vnpay.api.secret.key"), sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {

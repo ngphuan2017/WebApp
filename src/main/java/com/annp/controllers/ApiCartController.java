@@ -4,6 +4,7 @@
  */
 package com.annp.controllers;
 
+import com.annp.configs.MomoConfig;
 import com.annp.configs.VNPayConfig;
 import com.annp.dto.PaymentResponseDto;
 import com.annp.enums.RequestType;
@@ -61,16 +62,7 @@ public class ApiCartController {
     @Autowired
     private Environment env;
 
-    String requestId = String.valueOf(System.currentTimeMillis());
-    String orderId = String.valueOf(System.currentTimeMillis());
-    Long transId = 2L;
-
-    String partnerClientId = "partnerClientId";
-    String orderInfo = "Thanh toán bằng ví điện tử MoMo";
-    String callbackToken = "callbackToken";
-    String token = "";
-
-    com.annp.configs.Environment environment = com.annp.configs.Environment.selectEnv("dev");
+    MomoConfig environment = MomoConfig.selectEnv("dev");
 
     @PostMapping(value = "/cart")
     public ResponseEntity<Map<String, String>> addToCart(@RequestBody Cart c, HttpSession session) {
@@ -129,15 +121,18 @@ public class ApiCartController {
     }
 
     @PostMapping("/pay")
-    public ResponseEntity pay(HttpSession session, Authentication authentication, @RequestBody Map<String, String> params, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, Exception {
+    public ResponseEntity pay(HttpSession session, Authentication authentication, @RequestBody Map<String, String> params,
+            HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, Exception {
 
         int option = Integer.parseInt(params.get("optionPay"));
         Integer discount = "".equals(params.get("discount")) ? 0 : Integer.parseInt(params.get("discount")) > 0 ? Integer.valueOf(params.get("discount")) : 0;
         Map<String, Cart> cart = (Map<String, Cart>) session.getAttribute("cart");
+        Integer count = 0;
         Integer amount = 0;
         if (cart != null) {
             for (Cart c : cart.values()) {
                 amount += c.getQuantity() * c.getPrice();
+                count += 1;
             }
         }
         String baseUrl = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath();
@@ -147,6 +142,8 @@ public class ApiCartController {
             case 1:
                 if (this.productService.addReceipt((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
+                    user.setNotification(user.getNotification() + count);
+                    this.userService.updateUser(user);
                     sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount, discount);
                     return new ResponseEntity(HttpStatus.OK);
                 }
@@ -154,6 +151,8 @@ public class ApiCartController {
             case 2:
                 if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
+                    user.setNotification(user.getNotification() + count);
+                    this.userService.updateUser(user);
                     sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount, discount);
                     HttpHeaders headers = new HttpHeaders();
                     String urlPayment = doPost(req, resp, amount);
@@ -161,11 +160,22 @@ public class ApiCartController {
                     return new ResponseEntity(headers, HttpStatus.OK);
                 }
                 break;
-            case 3:
+            case 3: {
+                Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"));
+                calendar.setTimeInMillis(System.currentTimeMillis());
+                String requestId = String.valueOf(calendar.getTimeInMillis());
+                String orderId = String.valueOf(calendar.getTimeInMillis());
+                Long transId = 2L;
+                String partnerClientId = "partnerClientId";
+                String orderInfo = "Thanh toán đơn đặt hàng tại Phú An Shop";
+                String callbackToken = "callbackToken";
+                String token = "";
                 if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
+                    user.setNotification(user.getNotification() + count);
+                    this.userService.updateUser(user);
                     sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount, discount);
-                    PaymentResponseDto pay = this.paymentService.createPayment(environment, orderId, requestId, Integer.toString(amount - discount),
+                    PaymentResponseDto pay = this.paymentService.createPayment(environment, orderId, requestId, Integer.toString((amount - discount > 0 ? amount - discount : 0)),
                             orderInfo, "", RequestType.CAPTURE_WALLET, Boolean.TRUE);
                     HttpHeaders headers = new HttpHeaders();
                     String urlPayment = pay.getPayUrl();
@@ -173,9 +183,13 @@ public class ApiCartController {
                     return new ResponseEntity(headers, HttpStatus.OK);
                 }
                 break;
+            }
             case 4:
                 if (this.productService.addReceiptPaid((Map<String, Cart>) session.getAttribute("cart"), discount)) {
                     session.removeAttribute("cart");
+                    user.setNotification(user.getNotification() + count);
+                    this.userService.updateUser(user);
+                    sendOrderToEmail(user.getFullname(), user.getEmail(), baseUrl, cart, amount, discount);
                     return new ResponseEntity(HttpStatus.OK);
                 }
                 break;
@@ -218,7 +232,7 @@ public class ApiCartController {
             htmlMessage += "<tr><td>Tổng tiền: </td><td style='color: #FA8072;'>" + decimalFormat.format(amount) + " VNĐ</td></tr>";
             htmlMessage += "<tr><td>Voucher từ Shop: </td><td style='color: #FA8072;'>" + decimalFormat.format(discount) + " VNĐ</td></tr>";
             htmlMessage += "<tr><td>Phí vận chuyển: </td><td style='color: #FA8072;'>0 VNĐ</td></tr>";
-            htmlMessage += "<tr><td>Tổng thanh toán: </td><td style='color: red;'>" + decimalFormat.format(amount - discount) + " VNĐ</td></tr>";
+            htmlMessage += "<tr><td>Tổng thanh toán: </td><td style='color: red;'>" + decimalFormat.format((amount - discount > 0 ? amount - discount : 0)) + " VNĐ</td></tr>";
             htmlMessage += "</tbody></table>";
             htmlMessage += "<p align='center' style='padding: 10px;'><a href='" + baseUrl + "' align='center' ";
             htmlMessage += "style='padding: 8px 30px; border-radius: 3px; background-color: #ee4d2d; color:#fff; text-decoration: none;'>Đi đến Shop</a></p>";
@@ -249,7 +263,7 @@ public class ApiCartController {
         String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
         String vnp_IpAddr = VNPayConfig.getIpAddress(req);
 
-        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
+        String vnp_TmnCode = env.getProperty("vnpay.api.access.code");
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -259,10 +273,10 @@ public class ApiCartController {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang: " + vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang tai PhuAnShop ");
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_ReturnUrl);
+        vnp_Params.put("vnp_ReturnUrl", env.getProperty("vnpay.api.redirect.return"));
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("GMT+7"));
@@ -299,9 +313,9 @@ public class ApiCartController {
             }
         }
         String queryUrl = query.toString();
-        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.secretKey, hashData.toString());
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(env.getProperty("vnpay.api.secret.key"), hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
-        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + queryUrl;
+        String paymentUrl = env.getProperty("vnpay.api.payurl") + "?" + queryUrl;
         return paymentUrl;
     }
 }

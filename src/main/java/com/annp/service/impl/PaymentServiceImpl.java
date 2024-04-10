@@ -4,6 +4,7 @@
  */
 package com.annp.service.impl;
 
+import com.annp.configs.MomoConfig;
 import com.annp.dto.PaymentResponseDto;
 import com.annp.enums.RequestType;
 import com.annp.service.PaymentService;
@@ -16,14 +17,14 @@ import org.springframework.stereotype.Service;
  * @author phuan
  */
 @Service
-public class PaymentServiceImpl implements PaymentService{
+public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private Environment env;
 
     @Override
-    public PaymentResponseDto createPayment(com.annp.configs.Environment environment, String orderId, String requestId,
-            String amount, String orderInfo, String extraData, RequestType requestType, Boolean autoCapture) throws Exception {
+    public PaymentResponseDto createPayment(MomoConfig environment, String orderId, String requestId, String amount,
+            String orderInfo, String extraData, RequestType requestType, Boolean autoCapture) throws Exception {
 
         PaymentResponseDto captureWalletMoMoResponse = CreateOrderMoMo.process(environment, orderId, requestId, amount,
                 orderInfo, env.getProperty("momo.api.redirect.return"),
