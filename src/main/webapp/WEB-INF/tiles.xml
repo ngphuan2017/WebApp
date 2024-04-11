@@ -43,6 +43,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Quản lý đơn hàng" />
         <put-attribute name="content" value="/WEB-INF/pages/admin/order/order.jsp" />
     </definition>
+    <definition name="admin-orders-detail" extends="adminLayout">
+        <put-attribute name="title" value="Quản lý các kiện hàng" />
+        <put-attribute name="content" value="/WEB-INF/pages/admin/order/orders-detail.jsp" />
+    </definition>
     <definition name="admin-category" extends="adminLayout">
         <put-attribute name="title" value="Phân loại sản phẩm" />
         <put-attribute name="content" value="/WEB-INF/pages/admin/category/category.jsp" />

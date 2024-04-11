@@ -96,7 +96,7 @@ public class AdminController {
         model.addAttribute("sidebar", "customer");
         return "admin-account";
     }
-
+    
     @GetMapping("/admin/order-management")
     public String adminOrder(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
         int limit = 25; //Số đơn hàng 1 trang
@@ -108,6 +108,19 @@ public class AdminController {
         model.addAttribute("orderDetail", orderDetail);
         model.addAttribute("sidebar", "order");
         return "admin-order";
+    }
+
+    @GetMapping("/admin/orders-detail-management")
+    public String adminOrderDetail(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 25; //Số đơn hàng 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.orderService.getOrderDetails(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<OrderDetail> orderDetail = this.orderService.getOrderDetails(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("orderDetail", orderDetail);
+        model.addAttribute("sidebar", "orderDetail");
+        return "admin-orders-detail";
     }
 
     @GetMapping("/admin/product-management")

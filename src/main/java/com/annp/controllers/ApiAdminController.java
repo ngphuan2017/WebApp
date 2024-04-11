@@ -93,7 +93,7 @@ public class ApiAdminController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    @GetMapping("/{view:(?:order|product)-management}/{productId}")
+    @GetMapping("/{view:(?:order|product|orders-detail)-management}/{productId}")
     public ResponseEntity<Object> aboutProductView(@PathVariable(value = "view") String view, @PathVariable(value = "productId") int id) {
         Product product = this.productService.getProductById(id);
         if ("product-management".equals(view)) {
@@ -173,7 +173,7 @@ public class ApiAdminController {
         }
     }
 
-    @PutMapping("/order-management/updated/{orderDetailId}")
+    @PutMapping("/orders-detail-management/updated/{orderDetailId}")
     public ResponseEntity updateOrder(@PathVariable(value = "orderDetailId") int id, @RequestBody Map<String, String> params, Authentication authentication) {
         try {
             OrderDetail od = this.ordersService.getOrderDetailById(id);
@@ -213,7 +213,7 @@ public class ApiAdminController {
         }
     }
 
-    @PutMapping("/order-management/deleted/{orderDetailId}")
+    @PutMapping("/orders-detail-management/deleted/{orderDetailId}")
     public ResponseEntity deleteOrder(@PathVariable(value = "orderDetailId") int id) {
         try {
             if (this.ordersService.deleteOrderDetail(id)) {

@@ -4,6 +4,7 @@
  */
 package com.annp.controllers;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -29,8 +30,10 @@ public class MomoController {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
         String formattedDateTime = localDateTime.format(formatter);
+        DecimalFormat decimalFormat = new DecimalFormat("###,###.##");
+        Double amount = Double.valueOf(params.get("amount"));
         model.addAttribute("orderId", params.get("orderId"));
-        model.addAttribute("amount", params.get("amount"));
+        model.addAttribute("amount", decimalFormat.format(amount));
         model.addAttribute("orderInfo", params.get("orderInfo"));
         model.addAttribute("resultCode", params.get("resultCode"));
         model.addAttribute("message", params.get("message"));

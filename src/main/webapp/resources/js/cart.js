@@ -5,8 +5,8 @@
 
 /* global Double */
 
-function addToCart(endpoint, id, name, price, image) {
-    fetch(endpoint, {
+function addToCart(checked, endpoint, id, name, price, image) {
+    fetch(checked, {
         method: "POST",
         body: JSON.stringify({
             "id": id,
@@ -18,10 +18,29 @@ function addToCart(endpoint, id, name, price, image) {
         headers: {
             "Content-Type": "application/json"
         }
-    }).then(res => res.json()).then(data => {
-        let counters = document.getElementsByClassName("cart-counter");
-        for (let d of counters)
-            d.innerText = data.totalCount;
+    }).then(res => {
+        if (res.status === 200) {
+            fetch(endpoint, {
+                method: "POST",
+                body: JSON.stringify({
+                    "id": id,
+                    "name": name,
+                    "price": price,
+                    "quantity": quantityCart,
+                    "image": image
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(res => res.json()).then(data => {
+                let quantity = document.getElementsByClassName("cart-quantity");
+                for (let d of quantity)
+                    d.innerText = data.totalQuantity;
+            });
+        }
+        else {
+            Swal.fire('Thêm không thành công!', 'Số lượng bạn thêm đã vượt tối đa.', 'warning');
+        }
     });
 }
 
@@ -63,9 +82,6 @@ function updateItem(endpoint, productUrl, obj, id, price) {
                     let quantitys = document.getElementsByClassName("cart-quantity");
                     for (let d of quantitys)
                         d.innerText = data.totalQuantity;
-                    let counters = document.getElementsByClassName("cart-counter");
-                    for (let d of counters)
-                        d.innerText = data.totalCount;
                     let amounts = document.getElementsByClassName("cart-amount");
                     for (let d of amounts)
                         d.innerText = parseFloat(data.totalAmount).toLocaleString("en-US");
@@ -106,9 +122,6 @@ function deleteItem(endpoint, id) {
                 let quantitys = document.getElementsByClassName("cart-quantity");
                 for (let d of quantitys)
                     d.innerText = data.totalQuantity;
-                let counters = document.getElementsByClassName("cart-counter");
-                for (let d of counters)
-                    d.innerText = data.totalCount;
                 let amounts = document.getElementsByClassName("cart-amount");
                 for (let d of amounts) {
                     d.innerText = parseFloat(data.totalAmount).toLocaleString("en-US");
@@ -118,10 +131,10 @@ function deleteItem(endpoint, id) {
                 let totalPrices = document.getElementById("total-price");
                 dTotalPrices.textContent = parseFloat(data.totalAmount);
                 let discount = parseInt(dVoucherValue.textContent);
-                    if (discount > 0) {
-                        totalPrices.textContent = numberWithCommas(parseFloat(data.totalAmount) - discount > 0 ? parseFloat(data.totalAmount) - discount : 0);
-                    }
-                    ;
+                if (discount > 0) {
+                    totalPrices.textContent = numberWithCommas(parseFloat(data.totalAmount) - discount > 0 ? parseFloat(data.totalAmount) - discount : 0);
+                }
+                ;
                 Swal.fire('Xóa thành công!', 'Sản phẩm đã bị xóa khỏi giỏ hàng!', 'success');
             });
         }
@@ -157,11 +170,8 @@ function pay(endpoint) {
                         } else {
                             let totalCount = document.getElementById("total-count").textContent;
                             let quantitys = document.getElementsByClassName("cart-quantity");
-                            let counters = document.getElementsByClassName("cart-counter");
                             document.querySelector('.table').innerHTML = ``;
                             document.querySelector('.cart-amount').innerHTML = 0;
-                            for (let d of counters)
-                                d.innerText = 0;
                             for (let d of quantitys)
                                 d.innerText = 0;
                             setNotification(1, totalCount);
