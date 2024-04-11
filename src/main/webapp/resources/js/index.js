@@ -87,7 +87,7 @@ for (var i = 0; i < discountElements.length; i++) {
 }
 
 ///////////////////
-function checkQuantity() {
+function checkQuantity(index) {
     var inputQuantity = document.getElementById('quantity');
     var minQuantity = 1;
     var maxQuantity = parseInt(document.getElementById('product-quantity').textContent);
@@ -96,7 +96,7 @@ function checkQuantity() {
         inputQuantity.value = minQuantity;
         quantityCart = minQuantity;
         Swal.fire('Lỗi!', 'Vui lòng nhập giá trị không âm!', 'error');
-    } else if (inputQuantity.value > maxQuantity) {
+    } else if (inputQuantity.value > maxQuantity - index) {
         Swal.fire('Lỗi!', 'Số lượng sản phẩm shop có sẳn: ' + maxQuantity + ' - Xin lỗi vì sự bất tiện này!', 'error');
         inputQuantity.value = minQuantity;
         quantityCart = minQuantity;

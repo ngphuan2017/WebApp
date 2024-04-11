@@ -11,6 +11,7 @@
 <c:url value="/products" var="detail"/>
 <c:url value="/api/products" var="endpointview"/>
 <c:url value="/api/cart" var="endpoint"/>
+<c:url value="/api/check/cart" var="checked"/>
 <c:url value="/api/users" var="usered"/>
 <c:url value="/api/users/level" var="leveled"/>
 
@@ -168,7 +169,7 @@
                             <div class="d-flex justify-content-center">
                                 <a href="${detail}/${p.id}" class="btn btn-primary" style="margin-right: 20px;"><i
                                         class="far fa-eye"></i></a>
-                                <a href="javascript:;" onclick="productView('${endpointview}/${p.id}', '${endpoint}')"
+                                <a href="javascript:;" onclick="productView('${endpointview}/${p.id}', '${checked}', '${endpoint}')"
                                    class="btn btn-danger js-add-cart"><i class="fa-solid fa-cart-shopping"></i></a>
                             </div>
                         </div>
@@ -334,17 +335,17 @@
                     <div class="col-md-4 col-sm-6 col-12">
                         <div class="input-group">
                             <span class="input-group-btn">
-                                <button type="button" style="padding: 9px;"
+                                <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
                                         class="quantity-left-minus btn btn-danger btn-number" data-type="minus"
                                         data-field="">
                                     <i class="fa-solid fa-minus"></i>
                                 </button>
                             </span>
                             <input type="number" id="quantity" name="quantity"
-                                   class="form-control input-number text-center" value="1" onblur="checkQuantity()"
+                                   class="form-control input-number text-center" value="1" onblur="checkQuantity(0)"
                                    min="1" max="1000">
                             <span class="input-group-btn">
-                                <button type="button" style="padding: 9px;"
+                                <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
                                         class="quantity-right-plus btn btn-success btn-number" data-type="plus"
                                         data-field="">
                                     <i class="fa-solid fa-plus"></i>

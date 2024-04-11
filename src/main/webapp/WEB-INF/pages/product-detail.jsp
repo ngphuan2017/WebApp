@@ -8,6 +8,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
 <c:url value="/api/cart" var="endpoint"/>
+<c:url value="/api/check/cart" var="checked"/>
 <c:url value="/api/products/${product.id}/rating" var="rating"/>
 <c:url value="/api/products/${product.id}/comments" var="comment"/>
 <c:url value="/api/products/${product.id}/comments/voted" var="voted"/>
@@ -82,16 +83,16 @@
                     <div class="input-group">
                         <span class="m-2" style="color: #757575">Số Lượng</span>
                         <span class="input-group-btn">
-                            <button type="button" style="padding: 9px;"
+                            <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
                                     class="quantity-left-minus btn btn-outline-secondary btn-number" data-type="minus"
                                     data-field="">
                                 <i class="fa-solid fa-minus"></i>
                             </button>
                         </span>
                         <input type="number" id="quantity" name="quantity" class="form-control input-number text-center"
-                               value="1" onblur="checkQuantity()" min="1" max="1000">
+                               value="1" onblur="checkQuantity(0)" min="1" max="1000">
                         <span class="input-group-btn">
-                            <button type="button" style="padding: 9px;"
+                            <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
                                     class="quantity-right-plus btn btn-outline-secondary btn-number" data-type="plus"
                                     data-field="">
                                 <i class="fa-solid fa-plus"></i>
@@ -102,7 +103,7 @@
                     </div>
                     <div class="d-flex justify-content-center" style="margin-top: 20px;">
                         <button style="font-size: 16px; padding: 10px;" type="button" class="btn btn-outline-success"
-                                onclick="addToCart('${endpoint}', ${product.id}, '${product.name}', ${product.discount.discount} > 0 ? ${product.price} * (1 - ${product.discount.discount} / 100) : ${product.price}, '${product.image}')">
+                                onclick="addToCart('${checked}', '${endpoint}', ${product.id}, '${product.name}', ${product.discount.discount > 0 ? product.price * (1 - product.discount.discount / 100) : product.price}, '${product.image}')">
                             <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ Hàng
                         </button>
                     </div>

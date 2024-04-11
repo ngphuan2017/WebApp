@@ -51,7 +51,7 @@ function hideAccount() {
     modalAccount.classList.remove('js-modal-open');
 }
 
-function productView(endpointview, endpoint) {
+function productView(endpointview, checked, endpoint) {
     fetch(endpointview, {
         method: 'GET',
         headers: {
@@ -70,7 +70,7 @@ function productView(endpointview, endpoint) {
         `;
         let jss = document.getElementById("modal-product-buy");
         jss.innerHTML = `
-            <a href="javascript:;" onclick="addToCart('${endpoint}', ${json.product.id}, '${json.product.name}', ${json.product.discount.discount} > 0 ? ${json.product.price} * (1 - ${json.product.discount.discount} / 100) : ${json.product.price}, '${json.product.image}')" id="btn-buy-product">
+            <a href="javascript:;" onclick="addToCart('${checked}', '${endpoint}', ${json.product.id}, '${json.product.name}', ${json.product.discount.discount > 0 ? json.product.price * (1 - json.product.discount.discount / 100) : json.product.price}, '${json.product.image}')" id="btn-buy-product">
                 <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng</a>
         `;
         for (const btn of btns) {

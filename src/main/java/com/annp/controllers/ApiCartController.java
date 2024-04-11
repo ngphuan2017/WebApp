@@ -64,6 +64,24 @@ public class ApiCartController {
 
     MomoConfig environment = MomoConfig.selectEnv("dev");
 
+    @PostMapping("/check/cart")
+    public ResponseEntity checkCart(@RequestBody Cart c, HttpSession session) {
+
+        Map<Integer, Cart> cart = (Map<Integer, Cart>) session.getAttribute("cart");
+        Product p = this.productService.getProductById(c.getId());
+        if (cart == null) {
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        if (cart.containsKey(c.getId()) == true) {
+            Cart t = cart.get(c.getId());
+            if (t.getQuantity() + c.getQuantity() > p.getQuantity()) {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity(HttpStatus.OK);
+
+    }
+
     @PostMapping(value = "/cart")
     public ResponseEntity<Map<String, String>> addToCart(@RequestBody Cart c, HttpSession session) {
 
