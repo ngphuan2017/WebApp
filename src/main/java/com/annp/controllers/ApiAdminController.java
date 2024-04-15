@@ -7,6 +7,7 @@ package com.annp.controllers;
 import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
 import com.annp.pojo.OrderDetail;
+import com.annp.pojo.Orders;
 import com.annp.pojo.Product;
 import com.annp.pojo.ProductImages;
 import com.annp.pojo.Promotion;
@@ -84,7 +85,7 @@ public class ApiAdminController {
         Users user = this.userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-    
+
     @GetMapping("/users/level/{userExp}")
     public ResponseEntity<Object> aboutProductView(@PathVariable(value = "userExp") int exp) {
         UserLevels level = this.userLevelsService.getUserLevelByExp(exp);
@@ -93,7 +94,7 @@ public class ApiAdminController {
         return new ResponseEntity<>(responseMap, HttpStatus.OK);
     }
 
-    @GetMapping("/{view:(?:order|product|orders-detail)-management}/{productId}")
+    @GetMapping("/{view:(?:product|orders-detail)-management}/{productId}")
     public ResponseEntity<Object> aboutProductView(@PathVariable(value = "view") String view, @PathVariable(value = "productId") int id) {
         Product product = this.productService.getProductById(id);
         if ("product-management".equals(view)) {
@@ -173,41 +174,54 @@ public class ApiAdminController {
         }
     }
 
-    @PutMapping("/orders-detail-management/updated/{orderDetailId}")
-    public ResponseEntity updateOrder(@PathVariable(value = "orderDetailId") int id, @RequestBody Map<String, String> params, Authentication authentication) {
+    @PutMapping("/order-management/updated/{orderId}")
+    public ResponseEntity updateOrder(@PathVariable(value = "orderId") int id, @RequestBody Map<String, String> params, Authentication authentication) {
         try {
-            OrderDetail od = this.ordersService.getOrderDetailById(id);
-            Product p = this.productService.getProductById(od.getProductId().getId());
             Users u = this.userService.getUserByUsername(authentication.getName());
-            od.setOrderstatus(new Status(Integer.valueOf(params.get("orderDetailStatus"))));
-            od.setUpdatedDate(new Date());
-            od.setUpdatedBy(u);
-            switch (Integer.parseInt(params.get("orderDetailStatus"))) {
-                case 10:
-                    p.setQuantity(p.getQuantity() - od.getNumber());
-                    p.setUnitsSold(p.getUnitsSold() + od.getNumber());
-                    break;
-                case 11:
-                    u.setExp(u.getExp() + 30);
-                    u.setWheel(u.getWheel() + 1);
-                    break;
-                case 13:
-                    p.setQuantity(p.getQuantity() + od.getNumber());
-                    p.setUnitsSold(p.getUnitsSold() - od.getNumber());
-                    break;
-                default:
-                    break;
-            }
-            if (this.ordersService.updateOrderDetail(od) && this.productService.updateProduct(p)) {
-                if (u.getNotification() == null || u.getNotification() == 0) {
-                    u.setNotification(1);
-                } else {
-                    u.setNotification(u.getNotification() + 1);
+            if (Integer.parseInt(params.get("orderStatus")) == 9 || Integer.parseInt(params.get("orderStatus")) == 10
+                    || Integer.parseInt(params.get("orderStatus")) == 11 || Integer.parseInt(params.get("orderStatus")) == 12
+                    || Integer.parseInt(params.get("orderStatus")) == 13) {
+                OrderDetail od = this.ordersService.getOrderDetailById(id);
+                Product p = this.productService.getProductById(od.getProductId().getId());
+                od.setOrderstatus(new Status(Integer.valueOf(params.get("orderStatus"))));
+                od.setUpdatedDate(new Date());
+                od.setUpdatedBy(u);
+                switch (Integer.parseInt(params.get("orderStatus"))) {
+                    case 10:
+                        p.setQuantity(p.getQuantity() - od.getNumber());
+                        p.setUnitsSold(p.getUnitsSold() + od.getNumber());
+                        break;
+                    case 11:
+                        u.setExp(u.getExp() + 30);
+                        u.setWheel(u.getWheel() + 1);
+                        break;
+                    case 13:
+                        p.setQuantity(p.getQuantity() + od.getNumber());
+                        p.setUnitsSold(p.getUnitsSold() - od.getNumber());
+                        break;
+                    default:
+                        break;
                 }
-                this.userService.updateUser(u);
-                return new ResponseEntity(HttpStatus.OK);
+                if (this.ordersService.updateOrderDetail(od) && this.productService.updateProduct(p)) {
+                    if (u.getNotification() == null || u.getNotification() == 0) {
+                        u.setNotification(1);
+                    } else {
+                        u.setNotification(u.getNotification() + 1);
+                    }
+                    this.userService.updateUser(u);
+                    return new ResponseEntity(HttpStatus.OK);
+                }
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            } else {
+                Orders o = this.ordersService.getOrderById(id);
+                o.setType(new Status(Integer.valueOf(params.get("orderStatus"))));
+                o.setUpdatedBy(u);
+                if (this.ordersService.updateOrders(o)) {
+                    return new ResponseEntity(HttpStatus.OK);
+                }
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+
         } catch (Exception ex) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -334,9 +348,9 @@ public class ApiAdminController {
             if (file3 != null) {
                 img.setFile3(file3);
             }
-            
+
             img.setUpdatedBy(u);
-            
+
             if (this.productService.addOrUpdateProduct(p) && this.productService.addOrUpdateProductImages(img)) {
                 return new ResponseEntity(HttpStatus.OK);
             }

@@ -179,4 +179,47 @@ public class OrdersRepositoryImpl implements OrdersRepository {
         }
         return false;
     }
+
+    @Override
+    public List<Orders> getOrders(Map<String, String> params, int start, int limit) {
+        try {
+            Session s = factory.getObject().getCurrentSession();
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Orders> q = b.createQuery(Orders.class);
+            Root root = q.from(Orders.class);
+            q.select(root);
+
+            if (params != null) {
+                List<Predicate> predicates = new ArrayList<>();
+                String orderId = params.get("orderId");
+                if (orderId != null && orderId.matches("^\\d+$")) {
+                    Predicate p = b.equal(root.get("id"), Integer.parseInt(orderId));
+                    predicates.add(p);
+                }
+                q.where(predicates.toArray(Predicate[]::new));
+            }
+
+            q.orderBy(b.desc(root.get("id")));
+            Query query = s.createQuery(q);
+            if (start > 0 && limit > 0) {
+                query.setFirstResult(start - 1); // Vị trí bắt đầu
+                query.setMaxResults(limit); // Số lượng kết quả trả về
+            }
+            return query.getResultList();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean updateOrders(Orders orders) {
+        Session session = this.factory.getObject().getCurrentSession();
+        try {
+            session.update(orders);
+            return true;
+        } catch (HibernateException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

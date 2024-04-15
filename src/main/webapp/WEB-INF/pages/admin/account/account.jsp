@@ -65,7 +65,7 @@
                     <tbody>
                         <c:forEach items="${users}" var="u" varStatus="loop">
                             <tr>
-                                <td><a class="js-add-cart" href="javascript:;" onclick="accountView('${customered}/${u.id}', '${leveled}/${u.exp}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td><a class="js-add-user" href="javascript:;" onclick="accountView('${customered}/${u.id}', '${leveled}/${u.exp}')"><i class='fas fa-eye text-info'></i></a></td>
                                 <td>${loop.index + 1}</td>
                                 <td><img class="rounded-circle me-2" width="30" height="30" src="${u.avatar}">${u.fullname}</td>
                                 <td>${u.userRole.id == 1 ? "<span class='text-danger'>Quản trị</span>" : u.userRole.id == 2 ? "<span class='text-success'>Quản lý</span>" : "Người dùng"}</td>

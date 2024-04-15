@@ -64,4 +64,14 @@ public class OrdersServiceImpl implements OrdersService {
         return this.ordersRepository.updateOrderDetail(orderDetail);
     }
 
+    @Override
+    public List<Orders> getOrders(Map<String, String> params, int start, int limit) {
+        return this.ordersRepository.getOrders(params, start, limit);
+    }
+
+    @Override
+    public boolean updateOrders(Orders orders) {
+        return this.ordersRepository.updateOrders(orders);
+    }
+
 }

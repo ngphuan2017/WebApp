@@ -15,6 +15,7 @@ import java.util.Map;
  * @author phuan
  */
 public interface OrdersRepository {
+    public List<Orders> getOrders(Map<String, String> params, int start, int limit);
     public List<OrderDetail> getOrderDetails(Map<String, String> params, int start, int limit);
     public List<OrderDetail> getOrderDetailByStatus(Status status);
     public Orders getOrderById(int id);
@@ -22,5 +23,6 @@ public interface OrdersRepository {
     public OrderDetail getOrderDetailById(int id);
     public List<OrderDetail> getOrderDetailByOrderId(int id);
     public boolean updateOrderDetail(OrderDetail orderDetail);
+    public boolean updateOrders(Orders orders);
     public boolean deleteOrderDetail(int id);
 }
