@@ -8,6 +8,7 @@ import com.annp.dto.PaginatesDto;
 import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
 import com.annp.pojo.OrderDetail;
+import com.annp.pojo.Orders;
 import com.annp.pojo.Product;
 import com.annp.pojo.Promotion;
 import com.annp.pojo.Report;
@@ -68,6 +69,7 @@ public class AdminController {
     @ModelAttribute
     public void commonAttributes(Model model) {
         model.addAttribute("reportbar", this.reportService.getReportByStatus(new Status(14)).size());
+        model.addAttribute("orderStatus", this.statusService.getStatus("ORDERSTATUS"));
         model.addAttribute("orderDetailbar", this.orderService.getOrderDetailByStatus(new Status(9)).size());
         model.addAttribute("orderDetailStatus", this.statusService.getStatus("ORDERDETAILSTATUS"));
     }
@@ -101,11 +103,11 @@ public class AdminController {
     public String adminOrder(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
         int limit = 25; //Số đơn hàng 1 trang
         int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-        int totalData = this.orderService.getOrderDetails(params, 0, 0).size();
+        int totalData = this.orderService.getOrders(params, 0, 0).size();
         PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
         model.addAttribute("page", paginates);
-        List<OrderDetail> orderDetail = this.orderService.getOrderDetails(params, paginates.getStart(), paginates.getLimit());
-        model.addAttribute("orderDetail", orderDetail);
+        List<Orders> orders = this.orderService.getOrders(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("orders", orders);
         model.addAttribute("sidebar", "order");
         return "admin-order";
     }

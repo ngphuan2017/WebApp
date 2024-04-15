@@ -59,7 +59,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     white-space: normal;
 }
 
-.text-order-name {
+.text-order-name, .text-user-name {
     max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;

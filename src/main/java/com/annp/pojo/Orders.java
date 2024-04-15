@@ -6,7 +6,6 @@ package com.annp.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,14 +16,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import lombok.AllArgsConstructor;
 
 /**
@@ -43,6 +40,10 @@ import lombok.AllArgsConstructor;
     @NamedQuery(name = "Orders.findByShippedDate", query = "SELECT o FROM Orders o WHERE o.shippedDate = :shippedDate"),
     @NamedQuery(name = "Orders.findByNote", query = "SELECT o FROM Orders o WHERE o.note = :note")})
 public class Orders implements Serializable {
+
+    @JoinColumn(name = "UPDATED_BY", referencedColumnName = "ID")
+    @ManyToOne
+    private Users updatedBy;
 
     @Column(name = "DISCOUNT")
     private Integer discount;
@@ -72,8 +73,6 @@ public class Orders implements Serializable {
     @JoinColumn(name = "USERID", referencedColumnName = "ID")
     @ManyToOne
     private Users userid;
-    @OneToMany(mappedBy = "orderId")
-    private Set<OrderDetail> orderDetailSet;
 
     public Orders() {
     }
@@ -130,15 +129,6 @@ public class Orders implements Serializable {
         this.userid = userid;
     }
 
-    @XmlTransient
-    public Set<OrderDetail> getOrderDetailSet() {
-        return orderDetailSet;
-    }
-
-    public void setOrderDetailSet(Set<OrderDetail> orderDetailSet) {
-        this.orderDetailSet = orderDetailSet;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -178,6 +168,14 @@ public class Orders implements Serializable {
 
     public void setDiscount(Integer discount) {
         this.discount = discount;
+    }
+
+    public Users getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Users updatedBy) {
+        this.updatedBy = updatedBy;
     }
     
 }

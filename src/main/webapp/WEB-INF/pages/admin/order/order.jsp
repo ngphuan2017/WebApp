@@ -8,9 +8,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:url value="/admin/order-management" var="order" />
-<c:url value="/admin/api/order-management" var="ordered" />
+<c:url value="/admin/api/customer-management" var="customered" />
+<c:url value="/admin/api/users/level" var="leveled"/>
 <c:url value="/admin/api/order-management/updated" var="updated" />
-<c:url value="/admin/api/order-management/deleted" var="deleted" />
 
 <div class="container-fluid">
     <h3 class="text-dark mb-4">Quản lý đơn hàng</h3>
@@ -38,44 +38,43 @@
                         <tr>
                             <th></th>
                             <th>STT</th>
-                            <th>Sản phẩm</th>
-                            <th>Đơn giá</th>
-                            <th>Số lượng</th>
-                            <th>Thành tiền</th>
+                            <th>Khách hàng</th>
+                            <th>Tổng tiền</th>
                             <th>Voucher</th>
+                            <th>Tổng thanh toán</th>
+                            <th>Ngày đặt hàng</th>
+                            <th>Ghi chú</th>
                             <th>Trạng thái thanh toán</th>
-                            <th>Ngày mua</th>
-                            <th>Trạng thái</th>
-                            <th>Ngày cập nhật</th>
+                            <th>Người duyệt</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach items="${orderDetail}" var="o" varStatus="loop">
+                        <c:forEach items="${orders}" var="o" varStatus="loop">
                             <tr>
-                                <td><a class="js-add-cart" href="javascript:;" onclick="productOrderView('${ordered}/${o.productId.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td>
+                                    <span class="d-none required-exp-${o.userid.id}">${o.userid.exp}</span>
+                                    <a class="js-add-user" href="javascript:;" onclick="accountView('${customered}/${o.userid.id}', '${leveled}/${o.userid.exp}')"><i class='fas fa-user-tag text-primary'></i></a>
+                                </td>
                                 <td>${loop.index + 1}</td>
-                                <td class="text-order-name"><img class="rounded-circle me-2" width="30" height="30" src="${o.productId.image}">${o.productId.name}</td>
-                                <td class="currency"><span class="money">${o.price}</span></td>
-                                <td>${o.number}</td>
-                                <td class="currency"><span class="money">${o.price * o.number}</span></td>
-                                <td class="currency"><span class="money">${o.orderId.discount}</span></td>
-                                <td class="text-customer-email">${o.orderId.type.statusname}</td>
+                                <td class="text-user-name"><img class="rounded-circle me-2" width="30" height="30" src="${o.userid.avatar}">${o.userid.fullname}</td>
+                                <td class="currency"><span class="money">${o.amount}</span></td>
+                                <td class="currency"><span class="money">${o.discount}</span></td>
+                                <td class="currency"><span class="text-danger money">${o.amount - o.discount > 0 ? o.amount - o.discount : 0}</span></td>
                                 <td class="create-date">${o.createdDate}</td>
+                                <td>${o.note}</td>
                                 <td class="text-order-name" id="order-status${o.id}">
-                                    <span id="order-status-old${o.id}" class="text-customer-${o.orderstatus.id == 9 ? "warning" : o.orderstatus.id == 10 ? "primary" : o.orderstatus.id == 11 ? "active" : "danger"}">${o.orderstatus.statusname}</span>
+                                    <span id="order-status-old${o.id}" class="text-customer-${o.type.id == 18 ? "active" : "primary"}">${o.type.statusname}</span>
                                     <select class="form-select d-none" id="order-status-new${o.id}" onchange="updateOrderStatus('${updated}/${o.id}', ${o.id})">
-                                        <c:forEach items="${orderDetailStatus}" var="s">
-                                            <option value="${s.id}" ${o.orderstatus.id == s.id ? "selected" : ""}>${s.statusname}</option>
+                                        <c:forEach items="${orderStatus}" var="s">
+                                            <option value="${s.id}" ${o.type.id == s.id ? "selected" : ""}>${s.statusname}</option>
                                         </c:forEach>
                                     </select>
                                 </td>
+                                <td class="text-user-name">${o.updatedBy.fullname}</td>
                                 <td>
                                     <a class="m-2" id="order-edit${o.id}" href="javascript:;" onclick="showStatus(${o.id})"><i class="fas fa-edit text-primary"></i></a>
                                     <a class="m-2 d-none" id="order-cancel${o.id}" href="javascript:;" onclick="cancelStatus(${o.id})"><i class="fas fa-times-circle text-danger"></i></a>
-                                    <a class="m-2" href="javascript:;" onclick="deleteOrder('${deleted}/${o.id}', ${o.id})">
-                                        <i class='fas fa-trash text-danger'></i>
-                                    </a>
                                 </td>
                             </tr>
                         </c:forEach>

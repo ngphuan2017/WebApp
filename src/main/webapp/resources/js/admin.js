@@ -66,7 +66,7 @@ function accountView(endpoint, leveled) {
             </div>
         `;
         levelCmt(leveled, json.users.id);
-        let btns = document.querySelectorAll('.js-add-cart');
+        let btns = document.querySelectorAll('.js-add-user');
         let cart = document.querySelector('.js-modal');
         let modalClose = document.querySelector('.js-modal-close');
         let modalContainer = document.querySelector('.js-modal-container');
@@ -1327,7 +1327,7 @@ function updateOrderStatus(endpoint, id) {
             fetch(endpoint, {
                 method: "Put",
                 body: JSON.stringify({
-                    "orderDetailStatus": orderStatusNew.selectedOptions[0].value
+                    "orderStatus": orderStatusNew.selectedOptions[0].value
                 }),
                 headers: {
                     'Content-Type': 'application/json'
@@ -1336,7 +1336,9 @@ function updateOrderStatus(endpoint, id) {
                 if (res.status === 200) {
                     let cls = orderStatusNew.selectedOptions[0].value === "9" ? "warning" :
                             orderStatusNew.selectedOptions[0].value === "10" ? "primary" :
-                            orderStatusNew.selectedOptions[0].value === "11" ? "active" : "danger";
+                            orderStatusNew.selectedOptions[0].value === "11" ? "active" :
+                            orderStatusNew.selectedOptions[0].value === "12" ? "danger" :
+                            orderStatusNew.selectedOptions[0].value === "17" ? "primary" : "active";
                     orderStatusOld.classList.remove(...orderStatusOld.classList);
                     orderStatusOld.classList.add("text-customer-" + cls);
                     orderStatusOld.textContent = orderStatusNew.selectedOptions[0].textContent;

@@ -8,8 +8,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:url value="/admin/orders-detail-management" var="order" />
+<c:url value="/admin/api/customer-management" var="customered" />
+<c:url value="/admin/api/users/level" var="leveled"/>
 <c:url value="/admin/api/orders-detail-management" var="ordered" />
-<c:url value="/admin/api/orders-detail-management/updated" var="updated" />
+<c:url value="/admin/api/order-management/updated" var="updated" />
 <c:url value="/admin/api/orders-detail-management/deleted" var="deleted" />
 
 <div class="container-fluid">
@@ -42,25 +44,26 @@
                             <th>Đơn giá</th>
                             <th>Số lượng</th>
                             <th>Thành tiền</th>
-                            <th>Voucher</th>
-                            <th>Trạng thái thanh toán</th>
                             <th>Ngày mua</th>
                             <th>Trạng thái</th>
                             <th>Ngày cập nhật</th>
+                            <th>Người cập nhật</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach items="${orderDetail}" var="o" varStatus="loop">
                             <tr>
-                                <td><a class="js-add-cart" href="javascript:;" onclick="productOrderView('${ordered}/${o.productId.id}')"><i class='fas fa-eye text-info'></i></a></td>
+                                <td>
+                                    <span class="d-none required-exp-${o.orderId.userid.id}">${o.orderId.userid.exp}</span>
+                                    <a class="m-1 js-add-user" href="javascript:;" onclick="accountView('${customered}/${o.orderId.userid.id}', '${leveled}/${o.orderId.userid.exp}')"><i class='fas fa-user-tag text-primary'></i></a>
+                                    <a class="m-1 js-add-cart" href="javascript:;" onclick="productOrderView('${ordered}/${o.productId.id}')"><i class='fas fa-eye text-info'></i></a>
+                                </td>
                                 <td>${loop.index + 1}</td>
                                 <td class="text-order-name"><img class="rounded-circle me-2" width="30" height="30" src="${o.productId.image}">${o.productId.name}</td>
                                 <td class="currency"><span class="money">${o.price}</span></td>
                                 <td>${o.number}</td>
                                 <td class="currency"><span class="money">${o.price * o.number}</span></td>
-                                <td class="currency"><span class="money">${o.orderId.discount}</span></td>
-                                <td class="text-customer-email">${o.orderId.type.statusname}</td>
                                 <td class="create-date">${o.createdDate}</td>
                                 <td class="text-order-name" id="order-status${o.id}">
                                     <span id="order-status-old${o.id}" class="text-customer-${o.orderstatus.id == 9 ? "warning" : o.orderstatus.id == 10 ? "primary" : o.orderstatus.id == 11 ? "active" : "danger"}">${o.orderstatus.statusname}</span>
@@ -70,6 +73,8 @@
                                         </c:forEach>
                                     </select>
                                 </td>
+                                <td class="create-date">${o.updatedDate}</td>
+                                <td class="text-user-name">${o.updatedBy.fullname}</td>
                                 <td>
                                     <a class="m-2" id="order-edit${o.id}" href="javascript:;" onclick="showStatus(${o.id})"><i class="fas fa-edit text-primary"></i></a>
                                     <a class="m-2 d-none" id="order-cancel${o.id}" href="javascript:;" onclick="cancelStatus(${o.id})"><i class="fas fa-times-circle text-danger"></i></a>
