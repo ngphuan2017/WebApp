@@ -52,6 +52,11 @@ function hideAccount() {
 }
 
 function productView(endpointview, checked, endpoint) {
+    var inputQuantity = document.getElementById('quantity');
+    inputQuantity.value = 1;
+    quantityCart = 1;
+    document.getElementById("quantity-left-minus").classList.remove("disabled");
+    document.getElementById("quantity-right-plus").classList.remove("disabled");
     fetch(endpointview, {
         method: 'GET',
         headers: {
@@ -69,10 +74,33 @@ function productView(endpointview, checked, endpoint) {
             <i class="d-none" id="product-quantity">${json.product.quantity}</i>
         `;
         let jss = document.getElementById("modal-product-buy");
-        jss.innerHTML = `
-            <a href="javascript:;" onclick="addToCart('${checked}', '${endpoint}', ${json.product.id}, '${json.product.name}', ${json.product.discount.discount > 0 ? json.product.price * (1 - json.product.discount.discount / 100) : json.product.price}, '${json.product.image}')" id="btn-buy-product">
-                <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng</a>
-        `;
+        if (parseInt(json.product.quantity) < 1) {
+            document.getElementById("quantity-left-minus").classList.add("disabled");
+            document.getElementById("quantity-right-plus").classList.add("disabled");
+            jss.innerHTML = `
+                <a href="javascript:;" class="btn disabled" id="btn-not-product">
+                    <i class="fa-solid fa-cart-plus"></i> Sản phẩm hết hàng
+                </a>
+            `;
+        } else if (json.product.quantity === "1") {
+            document.getElementById("quantity-left-minus").classList.add("disabled");
+            document.getElementById("quantity-right-plus").classList.add("disabled");
+            jss.innerHTML = `
+                <a href="javascript:;" onclick="addToCart('${checked}', '${endpoint}', ${json.product.id}, '${json.product.name}', 
+                ${json.product.discount.discount > 0 ? json.product.price * (1 - json.product.discount.discount / 100)
+                    : json.product.price}, '${json.product.image}')" id="btn-buy-product">
+                    <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
+                </a>
+            `;
+        } else {
+            jss.innerHTML = `
+                <a href="javascript:;" onclick="addToCart('${checked}', '${endpoint}', ${json.product.id}, '${json.product.name}', 
+                ${json.product.discount.discount > 0 ? json.product.price * (1 - json.product.discount.discount / 100)
+                    : json.product.price}, '${json.product.image}')" id="btn-buy-product">
+                    <i class="fa-solid fa-cart-plus"></i> Thêm vào giỏ hàng
+                </a>
+            `;
+        }
         for (const btn of btns) {
             btn.addEventListener('click', showCart);
         }

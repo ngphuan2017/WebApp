@@ -80,33 +80,94 @@
                     <div>
                         <p class="text-success">${product.description}</p>
                     </div>
-                    <div class="input-group">
-                        <span class="m-2" style="color: #757575">Số Lượng</span>
-                        <span class="input-group-btn">
-                            <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
-                                    class="quantity-left-minus btn btn-outline-secondary btn-number" data-type="minus"
-                                    data-field="">
-                                <i class="fa-solid fa-minus"></i>
-                            </button>
-                        </span>
-                        <input type="number" id="quantity" name="quantity" class="form-control input-number text-center"
-                               value="1" onblur="checkQuantity(0)" min="1" max="1000">
-                        <span class="input-group-btn">
-                            <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
-                                    class="quantity-right-plus btn btn-outline-secondary btn-number" data-type="plus"
-                                    data-field="">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </span>
-                        <span class="m-2" style="color: #757575">( ${product.quantity} sản phẩm có sẵn )</span>
-                        <i class="d-none" id="product-quantity">${product.quantity}</i>
-                    </div>
-                    <div class="d-flex justify-content-center" style="margin-top: 20px;">
-                        <button style="font-size: 16px; padding: 10px;" type="button" class="btn btn-outline-success"
-                                onclick="addToCart('${checked}', '${endpoint}', ${product.id}, '${product.name}', ${product.discount.discount > 0 ? product.price * (1 - product.discount.discount / 100) : product.price}, '${product.image}')">
-                            <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ Hàng
-                        </button>
-                    </div>
+                    <c:choose>
+                        <c:when test="${product.quantity < 1}">
+                            <div class="input-group">
+                                <span class="m-2" style="color: #757575">Số Lượng</span>
+                                <span class="input-group-btn">
+                                    <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
+                                            class="quantity-left-minus btn btn-outline-secondary btn-number disabled" data-type="minus"
+                                            data-field="">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                </span>
+                                <input type="number" id="quantity" name="quantity" class="form-control input-number text-center"
+                                       value="1" onblur="checkQuantity(0)" min="1" max="1000">
+                                <span class="input-group-btn">
+                                    <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
+                                            class="quantity-right-plus btn btn-outline-secondary btn-number disabled" data-type="plus"
+                                            data-field="">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </span>
+                                <span class="m-2" style="color: #757575">( ${product.quantity} sản phẩm có sẵn )</span>
+                                <i class="d-none" id="product-quantity">${product.quantity}</i>
+                            </div>
+                            <div class="d-flex justify-content-center" style="margin-top: 20px;">
+                                <button style="font-size: 16px; padding: 10px;" type="button" class="btn btn-danger disabled">
+                                    <i class="fa-solid fa-cart-plus"></i> Sản phẩm hết hàng
+                                </button>
+                            </div>
+                        </c:when>
+                        <c:when test="${product.quantity == 1}">
+                            <div class="input-group">
+                                <span class="m-2" style="color: #757575">Số Lượng</span>
+                                <span class="input-group-btn">
+                                    <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
+                                            class="quantity-left-minus btn btn-outline-secondary btn-number disabled" data-type="minus"
+                                            data-field="">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                </span>
+                                <input type="number" id="quantity" name="quantity" class="form-control input-number text-center"
+                                       value="1" onblur="checkQuantity(0)" min="1" max="1000">
+                                <span class="input-group-btn">
+                                    <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
+                                            class="quantity-right-plus btn btn-outline-secondary btn-number disabled" data-type="plus"
+                                            data-field="">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </span>
+                                <span class="m-2" style="color: #757575">( ${product.quantity} sản phẩm có sẵn )</span>
+                                <i class="d-none" id="product-quantity">${product.quantity}</i>
+                            </div>
+                            <div class="d-flex justify-content-center" style="margin-top: 20px;">
+                                <button style="font-size: 16px; padding: 10px;" type="button" class="btn btn-outline-success"
+                                        onclick="addToCart('${checked}', '${endpoint}', ${product.id}, '${product.name}', ${product.discount.discount > 0 ? product.price * (1 - product.discount.discount / 100) : product.price}, '${product.image}')">
+                                    <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ Hàng
+                                </button>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="input-group">
+                                <span class="m-2" style="color: #757575">Số Lượng</span>
+                                <span class="input-group-btn">
+                                    <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
+                                            class="quantity-left-minus btn btn-outline-secondary btn-number" data-type="minus"
+                                            data-field="">
+                                        <i class="fa-solid fa-minus"></i>
+                                    </button>
+                                </span>
+                                <input type="number" id="quantity" name="quantity" class="form-control input-number text-center"
+                                       value="1" onblur="checkQuantity(0)" min="1" max="1000">
+                                <span class="input-group-btn">
+                                    <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
+                                            class="quantity-right-plus btn btn-outline-secondary btn-number" data-type="plus"
+                                            data-field="">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+                                </span>
+                                <span class="m-2" style="color: #757575">( ${product.quantity} sản phẩm có sẵn )</span>
+                                <i class="d-none" id="product-quantity">${product.quantity}</i>
+                            </div>
+                            <div class="d-flex justify-content-center" style="margin-top: 20px;">
+                                <button style="font-size: 16px; padding: 10px;" type="button" class="btn btn-outline-success"
+                                        onclick="addToCart('${checked}', '${endpoint}', ${product.id}, '${product.name}', ${product.discount.discount > 0 ? product.price * (1 - product.discount.discount / 100) : product.price}, '${product.image}')">
+                                    <i class="fa-solid fa-cart-plus"></i> Thêm Vào Giỏ Hàng
+                                </button>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                     <div class="d-flex justify-content-center text-center" style="margin-top: 20px;">
                         <span class="p-2"><i class="fa-solid fa-rotate-left" style="color: #d0011b"></i> 7 ngày miễn phí trả hàng</span>
                         <span class="p-2"><i class="fa-solid fa-shield" style="color: #d0011b"></i> Hàng chính hãng 100%</span>

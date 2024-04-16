@@ -336,7 +336,7 @@
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
-                                        class="quantity-left-minus btn btn-danger btn-number" data-type="minus"
+                                        class="quantity-left-minus btn btn-danger btn-number" id="quantity-left-minus" data-type="minus"
                                         data-field="">
                                     <i class="fa-solid fa-minus"></i>
                                 </button>
@@ -346,7 +346,7 @@
                                    min="1" max="1000">
                             <span class="input-group-btn">
                                 <button type="button" style="padding: 9px;" onclick="checkQuantity(1)"
-                                        class="quantity-right-plus btn btn-success btn-number" data-type="plus"
+                                        class="quantity-right-plus btn btn-success btn-number" id="quantity-right-plus" data-type="plus"
                                         data-field="">
                                     <i class="fa-solid fa-plus"></i>
                                 </button>

@@ -187,10 +187,14 @@ public class ApiAdminController {
                 od.setUpdatedDate(new Date());
                 od.setUpdatedBy(u);
                 switch (Integer.parseInt(params.get("orderStatus"))) {
-                    case 10:
+                    case 10: {
+                        if (p.getQuantity() - od.getNumber() < 0) {
+                            return new ResponseEntity(HttpStatus.PAYLOAD_TOO_LARGE);
+                        }
                         p.setQuantity(p.getQuantity() - od.getNumber());
                         p.setUnitsSold(p.getUnitsSold() + od.getNumber());
                         break;
+                    }
                     case 11:
                         u.setExp(u.getExp() + 30);
                         u.setWheel(u.getWheel() + 1);
