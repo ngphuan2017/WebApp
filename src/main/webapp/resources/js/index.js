@@ -95,11 +95,11 @@ function checkQuantity(index) {
     if (inputQuantity.value < minQuantity) {
         inputQuantity.value = minQuantity;
         quantityCart = minQuantity;
-        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị không âm!', 'error');
+        Swal.fire('Lỗi!', 'Vui lòng nhập giá trị dương!', 'error');
     } else if (inputQuantity.value > maxQuantity - index) {
-        Swal.fire('Lỗi!', 'Số lượng sản phẩm shop có sẳn: ' + maxQuantity + ' - Xin lỗi vì sự bất tiện này!', 'error');
         inputQuantity.value = minQuantity;
         quantityCart = minQuantity;
+        Swal.fire('Cảnh báo!', 'Số lượng sản phẩm shop có sẳn: ' + maxQuantity + ' - Xin lỗi vì sự bất tiện này!', 'warning');
     }
 }
 

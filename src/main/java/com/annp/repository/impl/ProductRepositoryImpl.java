@@ -6,6 +6,7 @@ import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Product;
 import com.annp.pojo.ProductImages;
 import com.annp.pojo.Status;
+import com.annp.pojo.Users;
 import com.annp.repository.ProductRepository;
 import com.annp.repository.UserRepository;
 import org.hibernate.HibernateException;
@@ -115,13 +116,15 @@ public class ProductRepositoryImpl implements ProductRepository {
         Session s = this.factory.getObject().getCurrentSession();
 
         try {
+            Users u = this.userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
             Orders r = new Orders();
             r.setId(0);
-            r.setUserid(userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
+            r.setUserid(u);
             r.setAmount(amount);
             r.setDiscount(discount);
             r.setType(new Status(17));
             r.setCreatedDate(new Date());
+            r.setNote(u.getAddress());
             s.save(r);
 
             for (Cart c : cart.values()) {
@@ -147,13 +150,15 @@ public class ProductRepositoryImpl implements ProductRepository {
         Session s = this.factory.getObject().getCurrentSession();
 
         try {
+            Users u = this.userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
             Orders r = new Orders();
             r.setId(0);
-            r.setUserid(userRepository.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName()));
+            r.setUserid(u);
             r.setAmount(amount);
             r.setDiscount(discount);
             r.setType(new Status(18));
             r.setCreatedDate(new Date());
+            r.setNote(u.getAddress());
             s.save(r);
 
             for (Cart c : cart.values()) {
