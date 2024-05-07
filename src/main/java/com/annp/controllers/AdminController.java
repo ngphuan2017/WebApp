@@ -7,6 +7,7 @@ package com.annp.controllers;
 import com.annp.dto.PaginatesDto;
 import com.annp.pojo.Category;
 import com.annp.pojo.CategorySub;
+import com.annp.pojo.Comment;
 import com.annp.pojo.OrderDetail;
 import com.annp.pojo.Orders;
 import com.annp.pojo.Product;
@@ -17,6 +18,7 @@ import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
 import com.annp.service.CategoryService;
 import com.annp.service.CategorySubService;
+import com.annp.service.CommentService;
 import com.annp.service.OrdersService;
 import com.annp.service.PaginatesService;
 import com.annp.service.ProductService;
@@ -63,6 +65,8 @@ public class AdminController {
     private CategoryService categoryService;
     @Autowired
     private PromotionService promotionService;
+    @Autowired
+    private CommentService commentService;
     @Autowired
     private PaginatesService paginatesService;
 
@@ -166,6 +170,19 @@ public class AdminController {
         model.addAttribute("promotions", promotions);
         model.addAttribute("sidebar", "promotion");
         return "admin-promotion";
+    }
+    
+    @GetMapping("/admin/comment-management")
+    public String adminComment(Model model, HttpServletRequest request, @RequestParam Map<String, String> params) {
+        int limit = 25; //Số danh mục 1 trang
+        int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
+        int totalData = this.commentService.getComments(params, 0, 0).size();
+        PaginatesDto paginates = paginatesService.getInfoPaginates(page, limit, totalData);
+        model.addAttribute("page", paginates);
+        List<Comment> comments = this.commentService.getComments(params, paginates.getStart(), paginates.getLimit());
+        model.addAttribute("comments", comments);
+        model.addAttribute("sidebar", "comment");
+        return "admin-comment";
     }
 
     @GetMapping("/admin/report-management")

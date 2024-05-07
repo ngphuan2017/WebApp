@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -115,6 +116,27 @@ public class CommentRepositoryImpl implements CommentRepository {
             return true;
         } catch (HibernateException ex) {
             return false;
+        }
+    }
+
+    @Override
+    public List<Comment> getComments(Map<String, String> params, int start, int limit) {
+        try {
+            Session s = factory.getObject().getCurrentSession();
+            CriteriaBuilder b = s.getCriteriaBuilder();
+            CriteriaQuery<Comment> q = b.createQuery(Comment.class);
+            Root root = q.from(Comment.class);
+            q.select(root);
+            q.orderBy(b.desc(root.get("createdDate")));
+            Query query = s.createQuery(q);
+            if (start > 0 && limit > 0) {
+                query.setFirstResult(start - 1); // Vị trí bắt đầu
+                query.setMaxResults(limit); // Số lượng kết quả trả về
+            }
+            return query.getResultList();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 }

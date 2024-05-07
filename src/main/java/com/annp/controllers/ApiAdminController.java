@@ -17,6 +17,7 @@ import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
 import com.annp.service.CategorySubService;
+import com.annp.service.CommentService;
 import com.annp.service.OrdersService;
 import com.annp.service.ProductService;
 import com.annp.service.PromotionService;
@@ -79,6 +80,8 @@ public class ApiAdminController {
     private StatsService statsService;
     @Autowired
     private UserLevelsService userLevelsService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/customer-management/{userId}")
     public ResponseEntity<Users> aboutAccountView(@PathVariable(value = "userId") int id) {
@@ -491,6 +494,18 @@ public class ApiAdminController {
     public ResponseEntity deleteReport(@PathVariable(value = "reportId") int id) {
         try {
             if (this.reportService.deleteReport(id)) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @DeleteMapping("/comment-management/deleted/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable(value = "commentId") int id) {
+        try {
+            if (this.commentService.deleteComment(id)) {
                 return new ResponseEntity(HttpStatus.OK);
             }
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

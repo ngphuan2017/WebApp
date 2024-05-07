@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -52,5 +53,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean deleteComment(int id) {
         return this.commentRepo.deleteComment(id);
+    }
+
+    @Override
+    public List<Comment> getComments(Map<String, String> params, int start, int limit) {
+        return this.commentRepo.getComments(params, start, limit);
     }
 }

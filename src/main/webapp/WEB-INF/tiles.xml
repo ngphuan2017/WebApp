@@ -55,6 +55,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/XML/XMLDocument.xml to edit this 
         <put-attribute name="title" value="Chương trình khuyến mãi" />
         <put-attribute name="content" value="/WEB-INF/pages/admin/promotion/promotion.jsp" />
     </definition>
+    <definition name="admin-comment" extends="adminLayout">
+        <put-attribute name="title" value="Quản lý bình luận" />
+        <put-attribute name="content" value="/WEB-INF/pages/admin/comments/comment.jsp" />
+    </definition>
     <definition name="admin-report" extends="adminLayout">
         <put-attribute name="title" value="Xử lý yêu cầu" />
         <put-attribute name="content" value="/WEB-INF/pages/admin/report/report.jsp" />

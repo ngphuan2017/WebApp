@@ -1278,6 +1278,10 @@ function deletedItem(endpoint, id) {
                     if (reportTr !== null) {
                         reportTr.innerHTML = ``;
                     }
+                    let commentTr = document.getElementById(`comment-${id}`);
+                    if (commentTr !== null) {
+                        commentTr.innerHTML = ``;
+                    }
                     Swal.fire('Xóa thành công!', 'Bạn đã xóa thành công!', 'success');
                 } else {
                     Swal.fire('Xóa không thành công!', 'Danh mục này đang được áp dụng!', 'error');
