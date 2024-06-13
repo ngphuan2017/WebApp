@@ -15,4 +15,7 @@ import java.util.List;
 public interface NotificationService {
     List<Notification> getNotificationsByUserId(Users userId);
     boolean addNotification(Notification n);
+    Notification getNotificationById(int id);
+    List<Notification> getNotificationsByThanDay(int day);
+    boolean deleteNotification(int id);
 }

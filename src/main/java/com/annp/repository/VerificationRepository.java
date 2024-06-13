@@ -5,6 +5,7 @@
 package com.annp.repository;
 
 import com.annp.pojo.Verification;
+import java.util.List;
 
 /**
  *
@@ -13,4 +14,7 @@ import com.annp.pojo.Verification;
 public interface VerificationRepository {
     boolean addOrUpdateOtpCode(Verification verification);
     Verification getVerificationByEmail(String email);
+    Verification getVerificationById(int id);
+    List<Verification> getVerificationsByThanDay(int day); // Lấy danh sách có ngày tạo cách đây [day] hoặc lâu hơn.
+    boolean deleteVerification(int id);
 }

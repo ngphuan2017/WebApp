@@ -15,4 +15,7 @@ import java.util.List;
 public interface NotificationRepository {
     List<Notification> getNotificationsByUserId(Users userId);
     boolean addNotification(Notification n);
+    Notification getNotificationById(int id);
+    List<Notification> getNotificationsByThanDay(int day); // Lấy danh sách có ngày tạo cách đây [day] hoặc lâu hơn.
+    boolean deleteNotification(int id);
 }

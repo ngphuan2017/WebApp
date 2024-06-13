@@ -35,4 +35,19 @@ public class NotificationServiceImpl implements NotificationService {
         return this.notificationRepository.addNotification(n);
     }
 
+    @Override
+    public Notification getNotificationById(int id) {
+        return this.notificationRepository.getNotificationById(id);
+    }
+
+    @Override
+    public boolean deleteNotification(int id) {
+        return this.notificationRepository.deleteNotification(id);
+    }
+
+    @Override
+    public List<Notification> getNotificationsByThanDay(int day) {
+        return this.notificationRepository.getNotificationsByThanDay(day);
+    }
+
 }
