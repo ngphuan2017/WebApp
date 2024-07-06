@@ -28,7 +28,7 @@ public class ScheduledHandler {
     private VerificationService verificationService;
 
     @Async
-    @Scheduled(cron = "*/60 * * * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void performAsyncScheduledTaskUsingCron() {
         int day = 30;    // Lấy danh sách được tạo cách đây [day] ngày trở về trước.
         List<Notification> notifications = this.notificationService.getNotificationsByThanDay(day);
