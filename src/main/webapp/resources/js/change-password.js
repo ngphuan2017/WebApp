@@ -112,7 +112,7 @@ function initOtpInputHandlers() {
             }
         });
 
-        // Ngăn không cho nhập ký tự không phải là số khi nhấn phím
+        // Ngăn không cho nhập ký tự không phải là số khi nhấn phím.
         input.addEventListener('keydown', (e) => {
             const key = e.key;
             const isCtrlV = (e.ctrlKey || e.metaKey) && key === 'v';
@@ -122,12 +122,12 @@ function initOtpInputHandlers() {
                 e.preventDefault();
             }
 
-            // Xử lý Backspace: Di chuyển con trỏ về ô trước đó
+            // Xử lý Backspace: Di chuyển con trỏ về ô trước đó.
             if (key === 'Backspace' && index > 0 && input.value === '') {
                 inputs[index - 1].focus();
             }
 
-            // Xử lý Delete: Di chuyển con trỏ sang ô kế tiếp
+            // Xử lý Delete: Di chuyển con trỏ sang ô kế tiếp.
             if (key === 'Delete' && index < inputs.length - 1) {
                 inputs[index + 1].focus();
             }
