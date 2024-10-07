@@ -64,11 +64,11 @@ public class Users implements Serializable {
     private Integer notification;
 
     @Size(max = 45)
-    @Column(name = "OTP")
-    private String otp;
-    @Column(name = "OtpGeneratedTime")
+    @Column(name = "Ticket")
+    private String ticket;
+    @Column(name = "TicketGeneratedTime")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date otpGeneratedTime;
+    private Date ticketGeneratedTime;
 
     @Size(max = 255)
     @Column(name = "GoogleID")
@@ -498,20 +498,20 @@ public class Users implements Serializable {
         this.tokenFacbook = tokenFacbook;
     }
 
-    public String getOtp() {
-        return otp;
+    public String getTicket() {
+        return ticket;
     }
 
-    public void setOtp(String otp) {
-        this.otp = otp;
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
     }
 
-    public Date getOtpGeneratedTime() {
-        return otpGeneratedTime;
+    public Date getTicketGeneratedTime() {
+        return ticketGeneratedTime;
     }
 
-    public void setOtpGeneratedTime(Date otpGeneratedTime) {
-        this.otpGeneratedTime = otpGeneratedTime;
+    public void setTicketGeneratedTime(Date ticketGeneratedTime) {
+        this.ticketGeneratedTime = ticketGeneratedTime;
     }
 
     public Integer getNotification() {

@@ -297,17 +297,12 @@ public class UserController {
     }
 
     @PostMapping("/forgot-password")
-    public ModelAndView forgotPassword(HttpServletRequest request, @RequestParam("g-recaptcha-response") String captchaResponse,
-            @RequestParam("email") String email, @RequestParam("selectedUserId") Integer userId) {
+    public ModelAndView forgotPassword(HttpServletRequest request, @RequestParam("email") String email, @RequestParam("selectedUserId") Integer userId) {
         ModelAndView modelAndView = new ModelAndView();
 
         String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
         baseUrl += "/forgot-password/change-password";
-        if (!userService.verifyRecaptcha(captchaResponse)) {
-            modelAndView.addObject("information", "reCaptcha verification failed");
-            modelAndView.setViewName("information");
-            return modelAndView;
-        } else if (!this.userService.sendCodeToEmail(userId, email, baseUrl)) {
+        if (!this.userService.sendTicketToEmail(userId, email, baseUrl)) {
             modelAndView.addObject("information", "Hệ thống đang có lỗi, vui lòng quay lại sau!");
             modelAndView.setViewName("information");
             return modelAndView;
@@ -319,34 +314,32 @@ public class UserController {
     }
 
     @GetMapping("/forgot-password/change-password")
-    public String getChangePassword(Model model, HttpServletRequest request) {
+    public String getChangePassword(Model model, HttpServletRequest request, Authentication authentication) {
 
+        Users user = new Users();
+        if (authentication != null) {
+            user = this.userService.getUserByUsername(authentication.getName());
+        }
+        model.addAttribute("currentUser", user);
         String ticket = request.getParameter("ticket");
         model.addAttribute("ticket", ticket);
         return "change-password";
     }
 
     @PostMapping("/forgot-password/change-password")
-    public String changePassword(Model model, HttpServletRequest request, @RequestParam("g-recaptcha-response") String captchaResponse,
-            HttpServletResponse response, @RequestParam("password") String password, Authentication authentication) {
+    public String changePassword(Model model, HttpServletRequest request, HttpServletResponse response, @RequestParam("password") String password, Authentication authentication) {
 
         String ticket = request.getParameter("ticket");
         if (authentication != null) {
-            if (!userService.verifyRecaptcha(captchaResponse)) {
-                return "redirect:/forgot-password/change-password?reCaptch=error";
-            }
             Users user = this.userService.getUserByUsername(authentication.getName());
             if (this.userService.changePassword(password, user)) {
                 new SecurityContextLogoutHandler().logout(request, response, authentication);
                 return "redirect:/login";
             }
         } else if (ticket != null && !ticket.isEmpty()) {
-            if (!userService.verifyRecaptcha(captchaResponse)) {
-                return "redirect:/forgot-password/change-password?reCaptch=error";
-            }
             Users user = this.userService.getUserByTicket(ticket);
             Date currentDate = new Date();
-            if (this.userValidator.isOneHourApart(user.getOtpGeneratedTime(), currentDate)) {
+            if (this.userValidator.isOneHourApart(user.getTicketGeneratedTime(), currentDate)) {
                 if (this.userService.changePassword(password, user)) {
                     return "login";
                 }

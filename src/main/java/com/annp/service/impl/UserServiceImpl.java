@@ -264,13 +264,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean sendCodeToEmail(int userId, String email, String baseUrl) {
+    public boolean sendTicketToEmail(int userId, String email, String baseUrl) {
         try {
             Users user = this.userRepository.getUserById(userId);
             UUID token = UUID.randomUUID();
             String ticket = token.toString().replace("-", "");
-            user.setOtp(ticket);
-            user.setOtpGeneratedTime(new Date());
+            user.setTicket(ticket);
+            user.setTicketGeneratedTime(new Date());
             this.userRepository.updateUser(user);
             HtmlEmail htmlEmail = new HtmlEmail();
             htmlEmail.setHostName(env.getProperty("spring.mail.host")); // SMTP server
@@ -281,14 +281,16 @@ public class UserServiceImpl implements UserService {
             htmlEmail.setFrom(env.getProperty("spring.mail.username"), "PhuAnShop");
             htmlEmail.setCharset("UTF-8");
             htmlEmail.setSubject("Phục hồi mật khẩu cho tài khoản tại PhuAnShop");
-            String htmlMessage = "<html><body>";
+            String htmlMessage = "<html><body style='margin-right: auto; margin-left: auto; padding-left: 5px; padding-right: 5px; width: 90%; font-size:16px;'>";
+            htmlMessage += "<p align='center'><img src='https://res.cloudinary.com/dkmug1913/image/upload/v1687075830/WebApp/logo_km2dfc.png' alt='Phú An Shop' /></p>";
+            htmlMessage += "<h1 style='text-align: center;'>Phục hồi mật khẩu qua Email</h1>";
             htmlMessage += "<p>Chào bạn,</p>";
             htmlMessage += "<p>Bạn vừa thực hiện yêu cầu phục hồi mật khẩu, để thay đổi mật khẩu, bạn vui lòng click vào đường link bên dưới:</p>";
-            htmlMessage += "<p><a href=\"" + baseUrl + "?ticket=" + ticket + "\">Đường dẫn đến trang đổi mật khẩu</a></p>";
+            htmlMessage += "<p><a style='text-decoration: none;' href=\"" + baseUrl + "?ticket=" + ticket + "\"><strong><span style='color: #4ea4dc'>Đường dẫn đến trang đổi mật khẩu</span></strong></a></p>";
             htmlMessage += "<p>Lưu ý: Đường dẫn trên chỉ tồn tại trong vòng 1 giờ.</p>";
             htmlMessage += "<p>Trân trọng,</p>";
             htmlMessage += "<p>PhuAnShop</p>";
-            htmlMessage += "<h5><span style='font-size: 13px;'>Đây là email tự động, vui lòng không phản hồi lại trên email này.</span></h5>";
+            htmlMessage += "<h5><span style='font-size: 13px; color: #777'>Đây là email tự động, vui lòng không phản hồi lại trên email này.</span></h5>";
             htmlMessage += "</body></html>";
             htmlEmail.setHtmlMsg(htmlMessage);
             htmlEmail.addTo(email);
@@ -319,6 +321,7 @@ public class UserServiceImpl implements UserService {
             htmlMessage += "<p>Chào bạn,</p>";
             htmlMessage += "<p>Mã xác minh của bạn là: <strong><span style='color: #4ea4dc'>" + verification.getOtpCode() + "</span></strong></p>";
             htmlMessage += "<p>Lưu ý: Vui lòng hoàn thành xác nhận trong vòng 30 phút.</p>";
+            htmlMessage += "<p>Trân trọng,</p>";
             htmlMessage += "<p>PhuAnShop</p>";
             htmlMessage += "<h5><span style='font-size: 13px; color: #777'>Đây là email tự động, vui lòng không phản hồi lại trên email này.</span></h5>";
             htmlMessage += "</body></html>";
