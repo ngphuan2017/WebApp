@@ -279,25 +279,33 @@
                 </div>
 
                 <div class="row gutters-sm">
-                    <div class="col-sm-7 mb-3">
+                    <div class="col-sm-6 mb-3">
                         <div class="card-profile h-100">
                             <div class="card-body-profile">
                                 <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-list-ul" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Đơn Mua</h6>
                                 <div style="overflow: auto; height: 125px;">
                                     <c:forEach items="${orders}" var="o">
                                         <li id="${o.id}">
-                                            <a href="${ordered}/${o.id}">Đơn hàng: #${o.id} - Ngày: <span class="create-date">${o.createdDate}</span> ( ${o.type.statusname} )</a>
+                                            <a href="${ordered}/${o.id}">Đơn #${o.id} ~ <span class="create-date">${o.createdDate}</span> ( ${o.type.statusname} )</a>
                                         </li>
                                     </c:forEach>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-5 mb-3">
+                    <div class="col-sm-6 mb-3">
                         <div class="card-profile h-100">
                             <div class="card-body-profile">
-                                <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-calendar-days" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Sự kiện</h6>
-                                <span>Chưa có sự kiện nào từ Shop</span>
+                                <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-calendar-days" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Lịch sử đăng nhập</h6>
+                                <div style="overflow: auto; height: 125px;">
+                                    <c:forEach items="${clients}" var="c">
+                                        <li style="display: flex; flex-wrap: wrap; gap: 4px" id="${c.id}">
+                                            <span class="badge text-bg-warning create-date">${c.timestamp}</span>
+                                            <span class="badge text-bg-success">IP: ${c.ip}</span>
+                                            <span class="badge text-bg-secondary">Device: ${c.device}</span>
+                                        </li>
+                                    </c:forEach>
+                                </div>
                             </div>
                         </div>
                     </div>

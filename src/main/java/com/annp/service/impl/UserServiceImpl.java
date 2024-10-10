@@ -1,5 +1,6 @@
 package com.annp.service.impl;
 
+import com.annp.pojo.ClientInfo;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Frame;
 import com.annp.pojo.Google;
@@ -361,6 +362,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean deleteCustomer(int id) {
         return this.userRepository.deleteCustomer(id);
+    }
+
+    @Override
+    public void saveClientInfo(ClientInfo clientInfo) {
+        this.userRepository.saveClientInfo(clientInfo);
+    }
+
+    @Override
+    public ClientInfo getClientInfoByUserId(int userId, String clientIp) {
+        return this.userRepository.getClientInfoByUserId(userId, clientIp);
+    }
+
+    @Override
+    public void updateClientInfo(ClientInfo clientInfo) {
+        this.userRepository.updateClientInfo(clientInfo);
+    }
+
+    @Override
+    public List<ClientInfo> getAllClientInfoByUserId(int userId) {
+        return this.userRepository.getAllClientInfoByUserId(userId);
     }
 
     @Override
