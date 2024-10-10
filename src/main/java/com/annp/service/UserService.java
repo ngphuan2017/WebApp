@@ -26,7 +26,7 @@ public interface UserService extends UserDetailsService {
     public Users getUserByFacebookId(String facebookId);
     public boolean verifyRecaptcha(String captchaResponse);
     public List<Users> getUserByEmail(String email);
-    public boolean sendCodeToEmail(int userId, String email, String baseUrl);
+    public boolean sendTicketToEmail(int userId, String email, String baseUrl);
     public boolean sendOtpCodeToEmail(Verification verification);
     public boolean changePassword(String password, Users user);
     public Users getUserByTicket(String ticket);

@@ -163,7 +163,7 @@ public class UserRepositoryImpl implements UserRepository {
         CriteriaQuery<Users> q = b.createQuery(Users.class);
         Root root = q.from(Users.class);
         q.select(root);
-        q.where(b.equal(root.get("otp"), ticket));
+        q.where(b.equal(root.get("ticket"), ticket));
         Query query = s.createQuery(q);
         try {
             Users user = (Users) query.getSingleResult();
