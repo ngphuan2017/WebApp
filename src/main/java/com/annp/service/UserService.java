@@ -1,5 +1,6 @@
 package com.annp.service;
 
+import com.annp.pojo.ClientInfo;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Google;
 import com.annp.pojo.Users;
@@ -32,4 +33,8 @@ public interface UserService extends UserDetailsService {
     public Users getUserByTicket(String ticket);
     public Users getUserAccountById(int id);
     public boolean deleteCustomer(int id);
+    public void saveClientInfo(ClientInfo clientInfo);
+    public ClientInfo getClientInfoByUserId(int userId, String clientIp);
+    public void updateClientInfo(ClientInfo clientInfo);
+    public List<ClientInfo> getAllClientInfoByUserId(int userId);
 }

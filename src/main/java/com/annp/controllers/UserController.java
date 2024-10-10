@@ -7,6 +7,7 @@ package com.annp.controllers;
 import com.annp.handlers.FacebookHandler;
 import com.annp.handlers.GoogleHandler;
 import com.annp.pojo.City;
+import com.annp.pojo.ClientInfo;
 import com.annp.pojo.Facebook;
 import com.annp.pojo.Frame;
 import com.annp.pojo.Google;
@@ -105,8 +106,10 @@ public class UserController {
         model.addAttribute("user", user);
         Users userid = this.userService.getUserByUsername(authentication.getName());
         List<Orders> orders = this.ordersService.getOrderByUserId(userid.getId());
+        List<ClientInfo> clients = this.userService.getAllClientInfoByUserId(userid.getId());
         List<Frame> frames = this.frameService.getFrames();
         model.addAttribute("orders", orders);
+        model.addAttribute("clients", clients);
         model.addAttribute("frames", frames);
         return "profile";
     }
@@ -169,7 +172,7 @@ public class UserController {
     }
 
     @RequestMapping("/login")
-    public String index(Model model, Authentication authentication) {
+    public String index(Authentication authentication) {
         if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
             return "redirect:/";
         }
