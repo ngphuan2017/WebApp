@@ -290,9 +290,8 @@ public class UserRepositoryImpl implements UserRepository {
             Root root = query.from(ClientInfo.class);
             query = query.select(root);
             query.where(builder.equal(root.get("userId"), userId));
-
+            query.orderBy(builder.desc(root.get("timestamp")));
             Query q = session.createQuery(query);
-
             List<ClientInfo> c = q.getResultList();
             return c != null && !c.isEmpty() ? c : new ArrayList<>();
         } catch (Exception ex) {

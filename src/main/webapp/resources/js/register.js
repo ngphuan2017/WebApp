@@ -261,6 +261,7 @@ function checkVerification(endpoint) {
                 document.getElementById("form-register").style.display = 'none';
                 document.getElementById("verification-email").style.display = 'block';
                 sendEmail.textContent = email.value;
+                initOtpInputHandlers();
                 document.getElementById("form-submit").style.display = 'block';
                 document.getElementById("spinner-loading").style.display = 'none';
             }
@@ -275,6 +276,65 @@ function checkVerification(endpoint) {
 function cancelCheckVerification() {
     document.getElementById("form-register").style.display = 'block';
     document.getElementById("verification-email").style.display = 'none';
+}
+
+function initOtpInputHandlers() {
+    document.querySelectorAll('.otp-email').forEach((input, index, inputs) => {
+        input.addEventListener('input', (e) => {
+            let value = e.target.value;
+
+            // Chuyển sang ô tiếp theo nếu đã nhập 1 ký tự
+            if (value.length === 1 && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        // Ngăn không cho nhập ký tự không phải là số khi nhấn phím.
+        input.addEventListener('keydown', (e) => {
+            const key = e.key;
+            const isCtrlV = (e.ctrlKey || e.metaKey) && key === 'v';
+
+            // Chỉ cho phép các phím số từ 0-9 và các phím điều hướng như Backspace, Tab, Arrow keys, Delete, hoặc Ctrl + V
+            if (!/^[0-9]$/.test(key) && key !== "Backspace" && key !== "Tab" && key !== "ArrowLeft" && key !== "ArrowRight" && key !== "Delete" && !isCtrlV) {
+                e.preventDefault();
+            }
+
+            // Xử lý Backspace: Di chuyển con trỏ về ô trước đó.
+            if (key === 'Backspace' && index > 0 && input.value === '') {
+                inputs[index - 1].focus();
+            }
+
+            // Xử lý Delete: Di chuyển con trỏ sang ô kế tiếp.
+            if (key === 'Delete' && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+        });
+
+        // Xử lý khi người dùng dán cả chuỗi
+        input.addEventListener('paste', (e) => {
+            e.preventDefault();
+
+            // Lấy dữ liệu từ clipboard
+            let pasteData = e.clipboardData.getData('text');
+
+            // Kiểm tra xem chuỗi có đúng 6 ký tự và chỉ chứa số không
+            if (/^\d{6}$/.test(pasteData)) {
+                const pasteArray = pasteData.split(''); // Chia từng ký tự
+
+                pasteArray.forEach((char, i) => {
+                    if (inputs[index + i]) {
+                        inputs[index + i].value = char; // Điền ký tự vào các ô
+                        if (index + i < inputs.length - 1) {
+                            inputs[index + i + 1].focus(); // Di chuyển con trỏ sang ô tiếp theo
+                        }
+                    }
+                });
+            } else {
+                // Nếu chuỗi dán không hợp lệ, hiển thị thông báo
+                Swal.fire('Thông báo!', 'Chuỗi dán không hợp lệ. Vui lòng dán đúng 6 số.', 'info');
+            }
+        });
+    });
 }
 
 var flagCaptcha = 0;
