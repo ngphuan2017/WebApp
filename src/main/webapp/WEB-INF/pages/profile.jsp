@@ -299,7 +299,7 @@
                                 <h6 class="d-flex align-items-center mb-3"><i class="fa-solid fa-calendar-days" style="color: #0dcaf0;"></i>&nbsp;&nbsp;&nbsp;&nbsp;Lịch sử đăng nhập</h6>
                                 <div style="overflow: auto; height: 125px;">
                                     <c:forEach items="${clients}" var="c">
-                                        <li style="display: flex; flex-wrap: wrap; gap: 4px" id="${c.id}">
+                                        <li style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px;" id="${c.id}">
                                             <span class="badge text-bg-warning create-date">${c.timestamp}</span>
                                             <span class="badge text-bg-success">IP: ${c.ip}</span>
                                             <span class="badge text-bg-secondary">Device: ${c.device}</span>

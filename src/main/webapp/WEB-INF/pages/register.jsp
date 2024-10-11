@@ -197,12 +197,12 @@
                     <p>Đã gửi email với mã xác minh đến "<span id="send-email"></span>. Nhập mã ở đây:</p>
                 </div>
                 <div class="v-form-group">
-                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
-                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
-                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
-                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
-                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
-                    <input type="text" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
+                    <input type="text" inputmode="numeric" pattern="[0-9]*" class="v-form-input otp-email" onchange="handleAllInputsFilled()" maxlength="1">
                 </div>
                 <div class="resend-email">
                     <a class="disabled-link" href="javascript:;" style="color: #09f;">Gửi lại mã</a>
