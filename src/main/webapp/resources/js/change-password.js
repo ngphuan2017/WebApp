@@ -152,6 +152,8 @@ function initOtpInputHandlers() {
                         }
                     }
                 });
+                let submitButton = document.getElementById("submit-send");
+                submitButton.classList.remove("disabled-link");
             } else {
                 // Nếu chuỗi dán không hợp lệ, hiển thị thông báo
                 Swal.fire('Thông báo!', 'Chuỗi dán không hợp lệ. Vui lòng dán đúng 6 số.', 'info');
@@ -160,13 +162,11 @@ function initOtpInputHandlers() {
     });
 }
 
-var flagOtpInput = 0;
-
 function checkAllInputsFilled() {
     let otpInputs = document.querySelectorAll('.v-form-group .otp-email');
     for (var i = 0; i < otpInputs.length; i++) {
         if (otpInputs[i].value === "") {
-            var submitButton = document.getElementById("submit-send");
+            let submitButton = document.getElementById("submit-send");
             submitButton.classList.add("disabled-link");
             return false;
         }
@@ -175,11 +175,8 @@ function checkAllInputsFilled() {
 }
 function handleAllInputsFilled() {
     if (checkAllInputsFilled()) {
-        flagOtpInput = 1;
-        if (flagCaptcha === 1 && flagOtpInput === 1) {
-            var submitButton = document.getElementById("submit-send");
-            submitButton.classList.remove("disabled-link");
-        }
+        var submitButton = document.getElementById("submit-send");
+        submitButton.classList.remove("disabled-link");
     }
 }
 

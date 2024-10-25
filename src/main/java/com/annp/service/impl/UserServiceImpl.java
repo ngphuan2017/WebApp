@@ -364,25 +364,6 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.deleteCustomer(id);
     }
 
-    @Override
-    public void saveClientInfo(ClientInfo clientInfo) {
-        this.userRepository.saveClientInfo(clientInfo);
-    }
-
-    @Override
-    public ClientInfo getClientInfoByUserId(int userId, String clientIp) {
-        return this.userRepository.getClientInfoByUserId(userId, clientIp);
-    }
-
-    @Override
-    public void updateClientInfo(ClientInfo clientInfo) {
-        this.userRepository.updateClientInfo(clientInfo);
-    }
-
-    @Override
-    public List<ClientInfo> getAllClientInfoByUserId(int userId) {
-        return this.userRepository.getAllClientInfoByUserId(userId);
-    }
 
     @Override
     public List<Object[]> getTopUsers(int limit) {

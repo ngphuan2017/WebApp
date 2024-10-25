@@ -8,13 +8,13 @@ import com.annp.dto.GeoIPDto;
 import com.annp.pojo.ClientInfo;
 import com.annp.pojo.Notification;
 import com.annp.pojo.Users;
+import com.annp.service.ClientService;
 import com.annp.service.NotificationService;
 import com.annp.service.UserService;
 
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +38,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private UserService userService;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private ClientService clientService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication a) throws IOException, ServletException {
@@ -71,12 +73,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             c.setDevice(deviceInfo);
             c.setLocation(location);
             c.setTimestamp(currentDate);
-            this.userService.saveClientInfo(c);
+            this.clientService.saveClientInfo(c);
         } else {
-            ClientInfo checkClient = this.userService.getClientInfoByUserId(u.getId(), clientIp);
+            ClientInfo checkClient = this.clientService.getClientInfoByUserId(u.getId(), clientIp);
             if (checkClient != null) {
                 checkClient.setTimestamp(new Date());
-                this.userService.updateClientInfo(checkClient);
+                this.clientService.updateClientInfo(checkClient);
             } else {
                 ClientInfo c = new ClientInfo();
                 c.setId(0);
@@ -86,7 +88,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 c.setDevice(deviceInfo);
                 c.setLocation(location);
                 c.setTimestamp(currentDate);
-                this.userService.saveClientInfo(c);
+                this.clientService.saveClientInfo(c);
             }
         }
         u.setUpdatedDate(currentDate);

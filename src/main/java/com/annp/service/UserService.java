@@ -33,8 +33,4 @@ public interface UserService extends UserDetailsService {
     public Users getUserByTicket(String ticket);
     public Users getUserAccountById(int id);
     public boolean deleteCustomer(int id);
-    public void saveClientInfo(ClientInfo clientInfo);
-    public ClientInfo getClientInfoByUserId(int userId, String clientIp);
-    public void updateClientInfo(ClientInfo clientInfo);
-    public List<ClientInfo> getAllClientInfoByUserId(int userId);
 }
