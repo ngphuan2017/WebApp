@@ -24,57 +24,49 @@ body a:hover {
     text-decoration: none;
 }
 .shop {
-    margin: 0px 10%;
-    position: relative;
+    margin: 0 10%;
 }
-.inline-block {
-    display: inline-block;
+.logo img {
+    max-width: 100%;
+    height: auto;
 }
-.shop .logo{
-    width: 20%;
-    outline: none;
-    border: none;
-}
-.shop .search {
-    position: absolute;
-    width: 40%;
-    top: 40%;
-    right: 10%;
-    margin: 0;
-}
-.text-search {
-    width: 85%;
-    float: left;
-}
-.btn-search {
-    width: 15%;
+.search {
+    display: flex;
+    justify-content: center;
 }
 #text-search {
-    width: 100%;
-    height: 34px;
-    padding: 3% 0px 3% 5%;
+    height: 40px;
+    padding: 0 16px;
     background-color: #F0F0F0;
+    font-family: inherit; /* Đặt lại font chữ mặc định */
     outline: none;
     border: 1px solid #00bbb3;
     border-right: none;
     border-radius: 999px 0px 0px 999px;
+    box-shadow: none; /* Xóa bỏ hiệu ứng viền xanh */
+}
+#text-search:focus {
+    border-color: #00bbb3; /* Đặt viền khi focus giống như lúc bình thường */
 }
 #btn-search {
-    height: 34px;
-    width: 100%;
+    height: 40px;
+    background-color: #F0F0F0;
     border: 1px solid #00bbb3;
     border-left: none;
     border-radius: 0px 999px 999px 0px;
 }
-#btn-search:hover{
+#btn-search:hover {
     background-color: #28a745;
     cursor: pointer;
 }
-#text-search:hover{
+#text-search:hover {
     background-color: white;
 }
-#searchToggle:focus, #searchToggle:active, #searchToggle:focus-visible {
-    border: none;
+.dropdown-item {
+    transition: background-color 0.2s ease; /* Hiệu ứng mượt */
+}
+.dropdown-item:hover {
+    background-color: #9e9e9e3e !important;
 }
 /* navigation */
 .container-fluid {

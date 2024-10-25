@@ -12,6 +12,7 @@
 <c:url value="/login" var="login"/>
 <c:url value="/register" var="register"/>
 <c:url value="/forgot-password" var="forgot"/>
+<c:url value="/api/users/forgot-password" var="apiForgot"/>
 <c:url value="https://res.cloudinary.com/dkmug1913/image/upload/v1680755795/gzivuxwv1azal0niw2vk.png"
        var="logoBackground"/>
 <div class="main">
@@ -112,7 +113,7 @@
                 <div class="form-group">
                     <i class="fa-solid fa-envelope"></i>
                     <input type="email" class="form-input" id="sendverify" name="email" placeholder="Email"
-                           onchange="selectUserByEmail('${forgot}', this)">
+                           onchange="selectUserByEmail('${apiForgot}', this)">
                 </div>
                 <input type="hidden" id="selectedUserId" name="selectedUserId" value="">
                 <div style="margin-top: 15px; margin-bottom: 20px; line-height: 20px;" id="user-email">

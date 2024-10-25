@@ -19,6 +19,7 @@ import com.annp.pojo.Status;
 import com.annp.pojo.UserLevels;
 import com.annp.pojo.Users;
 import com.annp.service.CityService;
+import com.annp.service.ClientService;
 import com.annp.service.FrameService;
 import com.annp.service.NotificationService;
 import com.annp.service.OrdersService;
@@ -38,8 +39,6 @@ import javax.validation.Valid;
 
 import org.apache.http.client.ClientProtocolException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -81,6 +80,8 @@ public class UserController {
     @Autowired
     private FrameService frameService;
     @Autowired
+    private ClientService clientService;
+    @Autowired
     private UserValidator userValidator;
     @Autowired
     private GoogleHandler googleHandler;
@@ -106,7 +107,7 @@ public class UserController {
         model.addAttribute("user", user);
         Users userid = this.userService.getUserByUsername(authentication.getName());
         List<Orders> orders = this.ordersService.getOrderByUserId(userid.getId());
-        List<ClientInfo> clients = this.userService.getAllClientInfoByUserId(userid.getId());
+        List<ClientInfo> clients = this.clientService.getAllClientInfoByUserId(userid.getId());
         List<Frame> frames = this.frameService.getFrames();
         model.addAttribute("orders", orders);
         model.addAttribute("clients", clients);
@@ -289,16 +290,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/forgot-password")
-    public ResponseEntity<List<Users>> getUserByEmail(@RequestParam("email") String email) {
-        List<Users> users = this.userService.getUserByEmail(email);
-        if (users != null && !users.isEmpty()) {
-            return ResponseEntity.ok(users);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
     @PostMapping("/forgot-password")
     public ModelAndView forgotPassword(HttpServletRequest request, @RequestParam("email") String email, @RequestParam("selectedUserId") Integer userId) {
         ModelAndView modelAndView = new ModelAndView();
@@ -320,11 +311,13 @@ public class UserController {
     public String getChangePassword(Model model, HttpServletRequest request, Authentication authentication) {
 
         Users user = new Users();
+        String ticket = request.getParameter("ticket");
         if (authentication != null) {
             user = this.userService.getUserByUsername(authentication.getName());
+        } else if (ticket != null && !ticket.isEmpty()){
+            user = this.userService.getUserByTicket(ticket);
         }
         model.addAttribute("currentUser", user);
-        String ticket = request.getParameter("ticket");
         model.addAttribute("ticket", ticket);
         return "change-password";
     }

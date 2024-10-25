@@ -87,6 +87,40 @@ for (var i = 0; i < discountElements.length; i++) {
 }
 
 ///////////////////
+document.addEventListener('DOMContentLoaded', function() {
+    // Lấy ngôn ngữ từ localStorage hoặc mặc định là 'vi'
+    const langCode = localStorage.getItem('selectedLang') || 'vi';
+
+    // Cập nhật ngôn ngữ khi trang tải
+    changeLanguage(langCode);
+});
+
+// Hàm thay đổi ngôn ngữ
+function changeLanguage(langCode) {
+    // Lưu ngôn ngữ vào localStorage
+    localStorage.setItem('selectedLang', langCode);
+
+    // Cập nhật cờ và văn bản hiển thị
+    if (langCode === 'vi') {
+        document.getElementById('selectedFlag').src = 'https://flagcdn.com/w20/vn.png';
+        document.getElementById('selectedLanguage').textContent = 'Tiếng Việt';
+    } else if (langCode === 'en') {
+        document.getElementById('selectedFlag').src = 'https://flagcdn.com/w20/gb.png';
+        document.getElementById('selectedLanguage').textContent = 'English';
+    }
+
+    // Ẩn tất cả các dấu check
+    document.getElementById('check-vi').style.display = 'none';
+    document.getElementById('check-en').style.display = 'none';
+
+    // Hiển thị dấu check cho ngôn ngữ được chọn
+    if (langCode === 'vi') {
+        document.getElementById('check-vi').style.display = 'inline';
+    } else if (langCode === 'en') {
+        document.getElementById('check-en').style.display = 'inline';
+    }
+}
+
 function checkQuantity(index) {
     var inputQuantity = document.getElementById('quantity');
     var minQuantity = 1;
